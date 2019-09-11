@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/Navegador/ControlRobot.h</itemPath>
+      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotConnection.h</itemPath>
+      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.h</itemPath>
+      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Instruction.h</itemPath>
+      <itemPath>OCVCam/OCVCam.h</itemPath>
+      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Serial.h</itemPath>
+      <itemPath>YdLidarX4.h</itemPath>
+      <itemPath>Lidar/nlohmann/json.hpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/Navegador/ControlRobot.cpp</itemPath>
+      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotConnection.cpp</itemPath>
+      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.cpp</itemPath>
+      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Instruction.cpp</itemPath>
+      <itemPath>OCVCam/OCVCam.cpp</itemPath>
+      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Serial.cpp</itemPath>
+      <itemPath>YdLidarX4.cpp</itemPath>
+      <itemPath>main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerOptionItem>-lwiringPi</linkerOptionItem>
+            <linkerOptionItem>-lbluetooth</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotConnection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotConnection.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Instruction.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Instruction.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Serial.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Serial.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/Navegador/ControlRobot.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/Navegador/ControlRobot.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="Lidar/nlohmann/json.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OCVCam/OCVCam.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OCVCam/OCVCam.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="YdLidarX4.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="YdLidarX4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotConnection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotConnection.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Instruction.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Instruction.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Serial.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Serial.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/Navegador/ControlRobot.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/Navegador/ControlRobot.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="Lidar/nlohmann/json.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OCVCam/OCVCam.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OCVCam/OCVCam.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="YdLidarX4.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="YdLidarX4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
