@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   YdLidarX4.h
  * Author: chris
  *
@@ -31,73 +31,69 @@ using json = nlohmann::json;
 
 using namespace std;
 
-// Lista de comandos posibles para enviar
+#define BUFF_SIZE 2048 // TODO: Para que es esta variable?
+#define PORT 25138 // TODO: Para que es esta variable?
 
+/* Lista de comandos posibles para enviar */
 constexpr struct cmd {
-	int CMD_CONNECT = 1000;
-	int CMD_START_SCANNING = 2000;
-	int CMD_GET_DEVICE_INFO = 3000;
-	int CMD_DISCONNECT = 4000;
-	int CMD_RESET = 5000;
-	int CMD_GET_HEALTH_STATUS = 6000;
-	int CMD_GET_SAMPLE_DATA = 7000;
-	int CMD_STOP_SCANNING = 8000;
+    int CMD_CONNECT = 1000;
+    int CMD_START_SCANNING = 2000;
+    int CMD_GET_DEVICE_INFO = 3000;
+    int CMD_DISCONNECT = 4000;
+    int CMD_RESET = 5000;
+    int CMD_GET_HEALTH_STATUS = 6000;
+    int CMD_GET_SAMPLE_DATA = 7000;
+    int CMD_STOP_SCANNING = 8000;
 } cmd;
 
-// Lista de respuestas Opt: Se pueden añadir mas respuestas dependiendo del tipo
-// de error
-
+/* Lista de respuestas Opt: Se pueden añadir mas respuestas dependiendo del tipo de error*/
 constexpr struct res {
-	int RES_OK = 1001;
-	int RES_FAIL = 1002;
-	int HEALTH_OK = 2001;
-	int HEALTH_BAD = 2002;
-
+    int RES_OK = 1001;
+    int RES_FAIL = 1002;
+    int HEALTH_OK = 2001;
+    int HEALTH_BAD = 2002;
 } res;
 
+/* TODO: Documentar*/
 struct dev {
-	string modelnumber;
-	string firmware_version;
-	string hardware_version;
-	string serial_number;
+    string modelnumber;
+    string firmware_version;
+    string hardware_version;
+    string serial_number;
 };
 
-#define BUFF_SIZE 2048
-
-#define PORT 25138
-
+/* TODO: Documentar*/
 class YdLidarX4 {
 public:
-	YdLidarX4();
-	YdLidarX4(int chunk_size);
-	virtual ~YdLidarX4();
+    YdLidarX4();
+    YdLidarX4(int chunk_size);
+    virtual ~YdLidarX4();
 
-	bool Connect();
-	bool Disconnect();
-	bool Reset();
-		
-	bool StartScanning();
-	bool StopScanning();
-	int* GetSampleData();
-		
-	struct dev * GetDeviceInfo();
-	int GetHealthStatus();
-		
+    bool Connect();
+    bool Disconnect();
+    bool Reset();
+
+    bool StartScanning();
+    bool StopScanning();
+    int* GetSampleData();
+
+    struct dev * GetDeviceInfo();
+    int GetHealthStatus();
+
 private:
-	
-	bool is_connected;
-	bool is_scanning;
+    bool is_connected;
+    bool is_scanning;
 
-	int health;
-	int* sampledata;
+    int health;
+    int* sampledata;
 
-	struct dev deviceinfo;
+    struct dev deviceinfo;
 
-	int sock;
+    int sock;
 
-	bool _send_command(int command);
-	bool _get_response();
-	string _create_command(int command);
+    bool _send_command(int command);
+    bool _get_response();
+    string _create_command(int command);
 };
 
 #endif /* YDLIDARX4H */

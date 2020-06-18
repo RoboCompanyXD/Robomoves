@@ -17,8 +17,13 @@
 #include <wiringPi.h>
 #include <wiringSerial.h>
 
-class Serial
-{
+/*
+ * TODO: Documentar clase
+ * - TODO: Para qué sirve
+ * - TODO: Documentar TODAS las variables
+ * - TODO: Documentar TODAS las funciones y procedimientos
+ */
+class Serial {
 private:
     const char * portName;
     int fd_serial;
@@ -40,6 +45,5 @@ public:
     //PRUEBA
     int receive_all(char *buffer);
 };
-
 
 #endif	/* SERIAL_H */

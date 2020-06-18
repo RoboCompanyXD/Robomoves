@@ -11,15 +11,21 @@
 #pragma once
 #include <malloc.h>
 
-class Instruction{
+/*
+ * TODO: documentar la clase
+ * - Para que sirve?
+ */
+class Instruction {
 public:
-	char * instruction; //Instruction bytes
-	int length;			//How many bytes compose the instruction
-	int response;		//How many bytes will the instruction generate as return by the machine
+    char * instruction; //Instruction bytes
+    int length; //How many bytes compose the instruction
+    int response; //How many bytes will the instruction generate as return by the machine
 
-	Instruction();
-	~Instruction(){}
-	Instruction & operator=(const Instruction &aux);
+    Instruction();
+
+    ~Instruction() {
+    }
+    Instruction & operator=(const Instruction &aux);
 };
 
 #endif
