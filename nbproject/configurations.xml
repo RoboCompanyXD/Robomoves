@@ -4,14 +4,23 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/Navegador/ControlRobot.h</itemPath>
-      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotConnection.h</itemPath>
-      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.h</itemPath>
-      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Instruction.h</itemPath>
+      <logicalFolder name="f2" displayName="iRobotFramework" projectFiles="true">
+        <itemPath>IRobotFramework/IRobotConnection.h</itemPath>
+        <itemPath>IRobotFramework/IRobotInstructionSet.h</itemPath>
+        <itemPath>IRobotFramework/Instruction.h</itemPath>
+        <itemPath>IRobotFramework/Serial.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="Lidar" projectFiles="true">
+        <itemPath>Lidar/Lidar.h</itemPath>
+        <itemPath>Lidar/YdLidarX4/YdLidarX4.h</itemPath>
+        <itemPath>Lidar/nlohmann/json.hpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="Navi" projectFiles="true">
+        <itemPath>Navegador/ControlRobot.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="OCVCam" projectFiles="true">
+      </logicalFolder>
       <itemPath>OCVCam/OCVCam.h</itemPath>
-      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Serial.h</itemPath>
-      <itemPath>YdLidarX4.h</itemPath>
-      <itemPath>Lidar/nlohmann/json.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -20,13 +29,22 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/Navegador/ControlRobot.cpp</itemPath>
-      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotConnection.cpp</itemPath>
-      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.cpp</itemPath>
-      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Instruction.cpp</itemPath>
-      <itemPath>OCVCam/OCVCam.cpp</itemPath>
-      <itemPath>C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Serial.cpp</itemPath>
-      <itemPath>YdLidarX4.cpp</itemPath>
+      <logicalFolder name="f2" displayName="iRobotFramework" projectFiles="true">
+        <itemPath>IRobotFramework/IRobotConnection.cpp</itemPath>
+        <itemPath>IRobotFramework/IRobotInstructionSet.cpp</itemPath>
+        <itemPath>IRobotFramework/Instruction.cpp</itemPath>
+        <itemPath>IRobotFramework/Serial.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="Lidar" projectFiles="true">
+        <itemPath>Lidar/Lidar.cpp</itemPath>
+        <itemPath>Lidar/YdLidarX4/YdLidarX4.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="Navi" projectFiles="true">
+        <itemPath>Navegador/ControlRobot.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="OCVCam" projectFiles="true">
+        <itemPath>OCVCam/OCVCam.cpp</itemPath>
+      </logicalFolder>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -106,10 +124,9 @@
             tool="1"
             flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/Navegador/ControlRobot.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="Lidar/Lidar.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lidar/YdLidarX4/YdLidarX4.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Lidar/nlohmann/json.hpp" ex="false" tool="3" flavor2="0">
       </item>
@@ -189,10 +206,9 @@
             tool="1"
             flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/Navegador/ControlRobot.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="Lidar/Lidar.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lidar/YdLidarX4/YdLidarX4.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Lidar/nlohmann/json.hpp" ex="false" tool="3" flavor2="0">
       </item>
