@@ -84,10 +84,7 @@
             tool="1"
             flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotConnection.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="IRobotFramework/IRobotConnection.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.cpp"
             ex="false"
@@ -99,44 +96,29 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Instruction.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="IRobotFramework/Instruction.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Instruction.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="IRobotFramework/Instruction.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Serial.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="IRobotFramework/Serial.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Serial.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="IRobotFramework/Serial.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/Navegador/ControlRobot.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="Lidar/Lidar.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Lidar/Lidar.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Lidar/YdLidarX4/YdLidarX4.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="Lidar/YdLidarX4/YdLidarX4.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Lidar/nlohmann/json.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Navegador/ControlRobot.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OCVCam/OCVCam.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OCVCam/OCVCam.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="YdLidarX4.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="YdLidarX4.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -166,10 +148,7 @@
             tool="1"
             flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotConnection.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="IRobotFramework/IRobotConnection.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.cpp"
             ex="false"
@@ -181,44 +160,27 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Instruction.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="IRobotFramework/Instruction.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Instruction.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="IRobotFramework/Instruction.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Serial.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="IRobotFramework/Serial.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/Serial.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/Navegador/ControlRobot.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="IRobotFramework/Serial.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Lidar/Lidar.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Lidar/YdLidarX4/YdLidarX4.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="Lidar/YdLidarX4/YdLidarX4.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Lidar/nlohmann/json.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Navegador/ControlRobot.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OCVCam/OCVCam.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OCVCam/OCVCam.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="YdLidarX4.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="YdLidarX4.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>

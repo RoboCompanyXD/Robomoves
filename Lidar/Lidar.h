@@ -8,16 +8,20 @@
 #ifndef LIDAR_H
 #define	LIDAR_H
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
-
-
-
-#ifdef	__cplusplus
+class Lidar{
+public:
+    Lidar();
+    virtual ~Lidar();
+    
+    set_lidar_params();
+    
+private:
+    
+    YdLidarX4 lidar;
+    
+    int 
+    
 }
-#endif
 
 #endif	/* LIDAR_H */
 
