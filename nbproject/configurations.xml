@@ -79,19 +79,19 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotConnection.cpp"
+      <item path="IRobotFramework/IRobotConnection.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       <item path="IRobotFramework/IRobotConnection.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.cpp"
+      <item path="IRobotFramework/IRobotInstructionSet.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.h"
+      <item path="IRobotFramework/IRobotInstructionSet.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -115,6 +115,8 @@
       <item path="Lidar/nlohmann/json.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Navegador/ControlRobot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Navegador/ControlRobot.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="OCVCam/OCVCam.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -143,22 +145,7 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotConnection.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
       <item path="IRobotFramework/IRobotConnection.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/ehu/Documents/GitHub/Robomoves/IRobotFramework/IRobotInstructionSet.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="IRobotFramework/Instruction.cpp" ex="false" tool="1" flavor2="0">
       </item>
