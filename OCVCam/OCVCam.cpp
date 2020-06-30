@@ -5,35 +5,21 @@
  * Created on 2 de marzo de 2020, 11:03
  */
 
-#include <cstdlib>
-#include <stdlib.h>
-#include <poll.h>
-#include <termios.h>
-#include <unistd.h>
-#include <iostream>
-//#include "ControlRobot.h"
-#include <wiringPi.h>
-#include <vector>
 
-#include <sys/stat.h>
-#include <time.h>
-
-//#include <cv.h>
-#include <opencv2/highgui.hpp>
-#include <opencv2/core.hpp>
-
-#include <opencv2/videoio.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/objdetect.hpp>
-#include <opencv2/highgui.hpp>
 
 #include "OCVCam.h"
 
 using namespace std;
 using namespace cv;
 
-int x, xp, y, yp, area, frame_width, frame_height, foto = 0; // TODO explicar qué es cada variable por separado
+OCVCam::OCVCam(){
+}
+
+OCVCam::~OCVCam(){
+}
+
+
+//int x, xp, y, yp, area, frame_width, frame_height, foto = 0; // TODO explicar qué es cada variable por separado
 
 /*
  * Esta clase configura la cámara con el patrón y el espacio de color.
@@ -48,11 +34,11 @@ int x, xp, y, yp, area, frame_width, frame_height, foto = 0; // TODO explicar qu
  *       - Explicar lo de la medición del tiempo
  *       - Explicar cómo utilizar los resultados de esta clase fuera de ella
  */
-int OCVCam(void) {
+OCVCam::AnalyzeCam(void) {
 
     //cout << "OpenCV version: "<< CV_VERSION << endl;
-    xp = 30;
-    yp = 45;
+    //xp = 30;
+    //yp = 45;
 
     clock_t start_t, end_t;
     start_t = clock();
@@ -147,7 +133,7 @@ int OCVCam(void) {
         } else {
             frames_nodetect++;
         }
-
+                        
         /** Interseccion de deteccion por color y reconocimiento */
 
         bitwise_and(mask, mask_grey, final_mask); //interseccion de deteccion por color y reconocimiento

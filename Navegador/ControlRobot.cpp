@@ -216,7 +216,7 @@ void ControlRobot::logicaEstados(int x, int y, int area, int frame_width, int fr
             if (sensores.br == 1 || sensores.bl == 1) {
                 estado_actual = RET;
                 sensores.sum_distance = 0;
-            } else if ((sensores.lightbumper & 0b00011110) != 0)estado_actual = GIR;
+            } else if ((sensores.lightbumper & 0b00011110) != 0)estado_actual = GIR2;
             else if ((sensores.lightbumper & 0b00100000) == 0) { // lightbump lateral izqdo
                 estado_actual = AVPLUS;
                 sensores.sum_distance = 0;
@@ -227,7 +227,7 @@ void ControlRobot::logicaEstados(int x, int y, int area, int frame_width, int fr
             if (sensores.br == 1 || sensores.bl == 1) {
                 estado_actual = RET;
                 sensores.sum_distance = 0;
-            } else if ((sensores.lightbumper & 0b00011110) != 0)estado_actual = GIR;
+            } else if ((sensores.lightbumper & 0b00011110) != 0)estado_actual = GIR2;
             else if ((sensores.lightbumper & 0b00100000) != 0)estado_actual = AV;
             else if (sensores.sum_distance > 300) estado_actual = GIRPLUS;
             break;
@@ -236,7 +236,7 @@ void ControlRobot::logicaEstados(int x, int y, int area, int frame_width, int fr
             if (sensores.br == 1 || sensores.bl == 1) {
                 estado_actual = RET;
                 sensores.sum_distance = 0;
-            } else if ((sensores.lightbumper & 0b00011110) != 0)estado_actual = GIR;
+            } else if ((sensores.lightbumper & 0b00011110) != 0)estado_actual = GIR2;
             else if ((sensores.lightbumper & 0b00100000) != 0)estado_actual = AV;
             else if ((sensores.sum_angle < 25)&&(sensores.sum_angle>-25))estado_actual = WAIT; // orientacion +- 25 grados de la que tenia al chocar
             break;
