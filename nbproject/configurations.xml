@@ -21,6 +21,15 @@
       <logicalFolder name="f4" displayName="OCVCam" projectFiles="true">
         <itemPath>OCVCam/OCVCam.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f5" displayName="Tools" projectFiles="true">
+        <logicalFolder name="f1" displayName="Timer" projectFiles="true">
+          <itemPath>Tools/Timer/timer.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f6" displayName="UC" projectFiles="true">
+        <itemPath>UC/UC.h</itemPath>
+      </logicalFolder>
+      <itemPath>OCVCam/OCVCam.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -44,6 +53,14 @@
       </logicalFolder>
       <logicalFolder name="f4" displayName="OCVCam" projectFiles="true">
         <itemPath>OCVCam/OCVCam.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="Tools" projectFiles="true">
+        <logicalFolder name="f1" displayName="Timer" projectFiles="true">
+          <itemPath>Tools/Timer/timer.cpp</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f6" displayName="UC" projectFiles="true">
+        <itemPath>UC/UC.cpp</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -129,6 +146,14 @@
       <item path="OCVCam/OCVCam.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OCVCam/OCVCam.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Tools/Timer/timer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Tools/Timer/timer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UC/UC.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="UC/UC.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
         <cTool>
@@ -227,6 +252,14 @@
       <item path="OCVCam/OCVCam.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OCVCam/OCVCam.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Tools/Timer/timer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Tools/Timer/timer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UC/UC.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="UC/UC.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
         <cTool>
