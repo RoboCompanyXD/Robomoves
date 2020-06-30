@@ -19,9 +19,10 @@ private:
     
     YdLidarX4 lidar;
     
-    int 
+    void LidarThread();
+    
+    
     
 }
 
 #endif	/* LIDAR_H */
-
