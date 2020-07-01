@@ -19,3 +19,5 @@ void UC::initStatechart() {
     CrashAlgorithm_subState = OMNonState;
     CliffAhead_subState = OMNonState;
 }
+
+UC::statechart_process(){}

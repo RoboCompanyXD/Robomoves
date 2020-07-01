@@ -14,6 +14,8 @@ class UC{
 
 public:
     
+    void statechart_process();
+    
     inline bool rootState_IN() const;
     inline bool UnDock_IN() const;
     inline bool UnDock_Rotate180_IN() const;
