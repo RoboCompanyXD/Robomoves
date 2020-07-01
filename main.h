@@ -10,8 +10,24 @@
 
 #include <cstdlib>
 
+#include "Lidar/Lidar.h"
+#include "OCVCam/OCVCam.h"
 
-int init();
+class Robot{
+    public:
+        int init();
+        
+        Lidar lidar;
+        OCVCam cam;
 
+    private:
+        
+
+    protected:
+};
+
+int main(int argc, char** argv);
+
+        
 #endif	/* MAIN_H */
 

@@ -19,6 +19,16 @@ int main(int argc, char** argv) {
 }
 
 int init(){
+    
+    // Instanciar Objetos globales
+    
+    //  Instanciar Camara
+    //  Instanciar Lidar
+    
+    // Crear Threads
+    
+    //  Crear Thread Camara
+    //  Crear Thread Lidar
 
 
 }

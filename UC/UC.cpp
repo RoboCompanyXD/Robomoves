@@ -14,7 +14,7 @@ void UC::initStatechart() {
     TrackingByCamera_subState = OMNonState;
     PersonOutView_subState = OMNonState;
     PersonInView_subState = OMNonState;
-    PersonInView_timeout = NULL;
+    PersonInView_timeout = 0;
     DodgeObstacle_subState = OMNonState;
     CrashAlgorithm_subState = OMNonState;
     CliffAhead_subState = OMNonState;
