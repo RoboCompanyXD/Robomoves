@@ -34,8 +34,8 @@
  
 class OCVCam{ 
 public: 
-    OCVCam(void); 
-    virtual ~OCVCam(void); 
+    OCVCam(); 
+    virtual ~OCVCam(); 
      
     int AnalyzeCam(void);  
      

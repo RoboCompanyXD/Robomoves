@@ -50,16 +50,16 @@ using namespace std;
 using namespace cv;
 
 
-OCVCam micam = new OCVCam();
+OCVCam *micam; 
 
 
 PI_THREAD(thread1) {
-    while (1) micam.AnalyzeCam();   
+    while (1) micam->AnalyzeCam();   
 };
 
 int main(int argc, char** argv) {
-    
+    micam = new OCVCam();
     while (1){
-        cout << "TEST X:" << micam.x << "   Y:" << micam.y << "   area:" << micam.area << endl;
+        cout << "TEST X:" << micam->x << "   Y:" << micam->y << "   area:" << micam->area << endl;
     }
 }

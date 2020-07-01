@@ -49,6 +49,7 @@ OCVCam::AnalyzeCam(void) {
     compression_params.push_back(IMWRITE_JPEG_QUALITY); 
     compression_params.push_back(90); 
  
+    VideoCapture cap(0); 
     Mat frame, hsv_frame, mask, frame_gray, mask_grey, final_mask; 
     int frames_nodetect = 0; 
  
@@ -80,7 +81,7 @@ OCVCam::AnalyzeCam(void) {
     Scalar lower_green = Scalar(54, 145, 16, 0); 
     Scalar upper_green = Scalar(100, 255, 128, 0); 
  
-    VideoCapture cap(0); 
+    
  
     /* 
      * Haar-cascade Detection 
