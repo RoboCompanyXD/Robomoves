@@ -29,6 +29,8 @@ int init(){
     
     //  Crear Thread Camara
     //  Crear Thread Lidar
+    
+    // Instanciar Navegacion
 
 
 }
