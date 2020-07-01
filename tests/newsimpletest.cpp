@@ -60,6 +60,6 @@ PI_THREAD(thread1) {
 int main(int argc, char** argv) {
     
     while (1){
-        cout << "TEST X:" << micam.x << endl;
+        cout << "TEST X:" << micam.x << "   Y:" << micam.y << "   area:" << micam.area << endl;
     }
 }
