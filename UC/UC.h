@@ -12,38 +12,45 @@ extern bool check_btnSpot();
 extern bool check_btnClean();
 extern bool check_btnDock();
 
-//## attribute BumpObstacle
-extern int BumpObstacle;
+////    Attributes    ////
+    
+    extern int BumpObstacle;		//## attribute BumpObstacle
+    
+    extern int ComputeStepTime;		//## attribute ComputeStepTime
+    
+    extern bool cameraIsPersonInView;		//## attribute cameraIsPersonInView
+    
+    extern int initStatus;		//## attribute initStatus
+    
+    extern int lidarIsObstable;		//## attribute lidarIsObstable
+    
+    extern int sensoresBateria;		//## attribute sensoresBateria
+    
+    extern bool sensoresBl;		//## attribute sensoresBl
+    
+    extern bool sensoresBr;		//## attribute sensoresBr
+    
+    extern bool sensoresCliff;		//## attribute sensoresCliff
+    
+    extern int sensoresInDock;		//## attribute sensoresInDock
+    
+    extern bool sensoresLBumpFront;		//## attribute sensoresLBumpFront
+    
+    extern bool sensoresLBumpSide;		//## attribute sensoresLBumpSide
+    
+    extern int sensoresSumAngulo;		//## attribute sensoresSumAngulo
+    
+    extern int sensoresSumDistancia;		//## attribute sensoresSumDistancia
 
-//## attribute ComputeStepTime
-extern int ComputeStepTime;
 
-//## attribute cameraIsPersonInView
-extern bool cameraIsPersonInView;
+void gotoDock();
 
-//## attribute initStatus
-extern int initStatus;
 
-//## attribute lidarIsObstable
-extern int lidarIsObstable;
+void computeCameraApproach();
+void computeCameraWithObstacle();
 
-//## attribute sensoresBateria
-extern int sensoresBateria;
-
-//## attribute sensoresInDock
-extern int sensoresInDock;
-
-//## attribute sensoresLBumpFront
-extern bool sensoresLBumpFront;
-
-//## attribute sensoresLBumpSide
-extern bool sensoresLBumpSide;
-
-//## attribute sensoresSumAngulo
-extern int sensoresSumAngulo;
-
-//## attribute sensoresSumDistancia
-extern int sensoresSumDistancia;
+void reproducirSonidoBloqueado();
+void reproducirSonidoDesbloqueado();
 
 class UC {
     UC();
@@ -54,6 +61,23 @@ public:
     void statechart_process();
 
 private:
+    
+    void rootState_entDef();
+    void UnDock_entDef();
+    void NormalOperate_entDef();
+    void NormalOperateEntDef();
+    
+    void TrackingByCamera_entDef();
+    void TrackingByCameraEntDef();
+    
+    void PersonInView_entDef();
+    void PersonOutView_entDef();
+    
+    void DodgeObstacle_entDef();
+    void CliffAhead_entDef();
+    
+    void endBehavior();
+    
 protected:
 
     void initStatechart();
