@@ -45,12 +45,25 @@ extern bool check_btnDock();
 
 void gotoDock();
 
+// Funciones para calcular a donde ir con la camara
 
 void computeCameraApproach();
 void computeCameraWithObstacle();
 
+// Funciones sonidos
+
 void reproducirSonidoBloqueado();
 void reproducirSonidoDesbloqueado();
+
+// Funciones para calcular a donde ir con el lidar
+
+void computeLidarSectorAngleDistance();
+
+// Variables resultado de computeLidarSectorAngleDistance()
+int computedAngle;
+int computedDistance;
+
+
 
 class UC {
     UC();
