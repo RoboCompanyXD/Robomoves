@@ -57,6 +57,10 @@ private:
         unsigned int lbr;
 
         bool clean; //LED CLEAN
+        
+        int charger_available;
+        int battery_charge;
+        int battery_capacity;
     };
     struct Sensores_iCreate sensores;
 
