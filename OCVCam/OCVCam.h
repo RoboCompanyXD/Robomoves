@@ -44,6 +44,7 @@ public:
     int area; 
     int frame_width; 
     int frame_height; 
+    bool isPersonInView;
      
 }; 
  
