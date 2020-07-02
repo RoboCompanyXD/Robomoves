@@ -34,7 +34,7 @@ OCVCam::~OCVCam(){
  *       - Explicar lo de la medición del tiempo 
  *       - Explicar cómo utilizar los resultados de esta clase fuera de ella 
  */ 
-OCVCam::AnalyzeCam(void) { 
+int OCVCam::AnalyzeCam() { 
  
     //cout << "OpenCV version: "<< CV_VERSION << endl; 
     //xp = 30; 

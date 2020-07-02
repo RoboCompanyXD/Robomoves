@@ -37,7 +37,7 @@ public:
     OCVCam(); 
     virtual ~OCVCam(); 
      
-    int AnalyzeCam(void);  
+    int AnalyzeCam();  
      
     int x; 
     int y; 

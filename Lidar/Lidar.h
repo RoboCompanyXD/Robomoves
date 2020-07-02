@@ -7,13 +7,14 @@
 
 #ifndef LIDAR_H
 #define	LIDAR_H
+#include "YdLidarX4/YdLidarX4.h"
 
 class Lidar{
 public:
     Lidar();
     virtual ~Lidar();
     
-    set_lidar_params();
+    //set_lidar_params();
     
 private:
     
@@ -23,6 +24,7 @@ private:
     
     
     
-}
+};
 
 #endif	/* LIDAR_H */
+

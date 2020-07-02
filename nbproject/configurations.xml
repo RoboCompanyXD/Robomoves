@@ -76,7 +76,7 @@
         <itemPath>tests/LidarTest.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="OCVTEST" projectFiles="true" kind="TEST">
-        <itemPath>tests/newsimpletest.cpp</itemPath>
+        <itemPath>tests/CamTest.cpp</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -180,9 +180,9 @@
       </item>
       <item path="old_main.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="tests/LidarTest.cpp" ex="false" tool="1" flavor2="0">
+      <item path="tests/CamTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="tests/newsimpletest.cpp" ex="false" tool="1" flavor2="0">
+      <item path="tests/LidarTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -290,9 +290,9 @@
       </item>
       <item path="old_main.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="tests/LidarTest.cpp" ex="false" tool="1" flavor2="0">
+      <item path="tests/CamTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="tests/newsimpletest.cpp" ex="false" tool="1" flavor2="0">
+      <item path="tests/LidarTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>
