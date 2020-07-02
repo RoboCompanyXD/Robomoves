@@ -88,6 +88,7 @@ public:
     void imprimirInfo();
     void computeCamaraApproach();
     void computeCamaraWithObstacle();
+    void gotoDock();
 
     void drive(int der, int izq);
 };
