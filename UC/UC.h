@@ -89,6 +89,8 @@ private:
     void DodgeObstacle_entDef();
     void CliffAhead_entDef();
     
+    void CrashAlgorithm_entDef();
+    
     void endBehavior();
     
 protected:

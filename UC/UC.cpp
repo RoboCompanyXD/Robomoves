@@ -102,6 +102,12 @@ void UC::CliffAhead_entDef() {
     rootState_active = CliffAhead_Rotate180;
 }
 
+void UC::CrashAlgorithm_entDef() {
+    DodgeObstacle_subState = CrashAlgorithm;
+    CrashAlgorithm_subState = CrashAlgorithm_Dodge;
+    rootState_active = CrashAlgorithm_Dodge;
+}
+
 void UC::statechart_process() {
     switch (rootState_active) {
             // State Initializing
@@ -204,18 +210,13 @@ void UC::statechart_process() {
                 {
                     //## transition UnDock.2 
                     if (sensoresSumAngulo > 180) {
-                        UnDock_subState = EndUndoParkHelperState;
-                        rootState_active = EndUndoParkHelperState;
+                        UnDock_subState = OMNonState;
+                    NormalOperate_entDef();
                     }
                 }
                     break;
-                    // State EndUndoParkHelperState
-                case EndUndoParkHelperState:
-                {
-                    UnDock_subState = OMNonState;
-                    NormalOperate_entDef();
-                }
-                    break;
+                
+                
                 default:
                     break;
             }
@@ -378,13 +379,31 @@ void UC::statechart_process() {
                     // Rodear el obstaculo y volver a encontrar a la persona.
                 case DodgeObstacle:
                 {
+                    if (sensoresCliff == true) {
+
+                        CrashAlgorithm_subState = OMNonState;
+                        DodgeObstacle_subState = OMNonState;
+                        CliffAhead_entDef();
+                    }
+
                     switch (DodgeObstacle_subState) {
+
+                            if (sensoresCliff == true) {
+
+                                CrashAlgorithm_subState = OMNonState;
+                                DodgeObstacle_subState = OMNonState;
+                                CliffAhead_entDef();
+                            }
+
                             // State Dodge_MoveBack
                         case Dodge_MoveBack:
                         {
-                            
-                            
-                            
+
+                            //## transition 10 
+                            if (sensoresSumDistancia<-30) {
+                                CrashAlgorithm_entDef();
+                            }
+
                         }
                             break;
                             // State CrashAlgorithm
@@ -392,6 +411,90 @@ void UC::statechart_process() {
                             // (El del TFG)
                         case CrashAlgorithm:
                         {
+                            if (sensoresBl == true || sensoresBr == true) {
+                                CrashAlgorithm_subState = OMNonState;
+                                //#[ transition 11 
+                                sensoresSumDistancia = 0;
+                                //#]
+                                DodgeObstacle_subState = Dodge_MoveBack;
+                                rootState_active = Dodge_MoveBack;
+                            }
+                            switch (CrashAlgorithm_subState) {
+                                    // State CrashAlgorithm_Dodge
+                                case CrashAlgorithm_Dodge:
+                                {
+                                    if (sensoresSumAngulo > 25) {
+                                        CrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
+                                        rootState_active = CrashAlgorithm_DodgeParallel;
+                                    }
+                                }
+                                    break;
+                                    // State CrashAlgorithm_DodgeParallel
+                                case CrashAlgorithm_DodgeParallel:
+                                {
+                                    if (sensoresLBumpFront == false) {
+                                        CrashAlgorithm_subState = CrashAlgorithm_GoForward;
+                                        rootState_active = CrashAlgorithm_GoForward;
+                                    }
+                                }
+                                    break;
+                                    // State CrashAlgorithm_GoForward
+                                case CrashAlgorithm_GoForward:
+                                {
+                                    if (sensoresLBumpSide == false) {
+                                        //#[ transition NormalOperate.DodgeObstacle.CrashAlgorithm.5 
+                                        sensoresSumDistancia = 0;
+                                        //#]
+                                        CrashAlgorithm_subState = CrashAlgorithm_GoForwardExtended;
+                                        rootState_active = CrashAlgorithm_GoForwardExtended;
+                                    } else if (sensoresLBumpFront == true) {
+                                        CrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
+                                        rootState_active = CrashAlgorithm_DodgeParallel;
+                                    }
+
+                                }
+                                    break;
+                                    // State CrashAlgorithm_GoForwardExtended
+                                case CrashAlgorithm_GoForwardExtended:
+                                {
+                                    if (sensoresSumDistancia > 300) {
+                                        CrashAlgorithm_subState = CrashAlgorithm_RecoverTrajectory;
+                                        rootState_active = CrashAlgorithm_RecoverTrajectory;
+                                    } else if (sensoresLBumpFront == false && sensoresLBumpSide == true) {
+                                        CrashAlgorithm_subState = CrashAlgorithm_GoForward;
+                                        rootState_active = CrashAlgorithm_GoForward;
+                                    } else if (sensoresLBumpFront == true) {
+                                        CrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
+                                        rootState_active = CrashAlgorithm_DodgeParallel;
+                                    }
+
+
+                                }
+                                    break;
+                                    // State CrashAlgorithm_RecoverTrajectory
+                                case CrashAlgorithm_RecoverTrajectory:
+                                {
+
+                                    if (sensoresSumAngulo < 25) {
+                                        DodgeObstacle_subState = OMNonState;
+                                        TrackingByCamera_entDef();
+                                    } else if (sensoresLBumpFront == true) {
+                                        CrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
+                                        rootState_active = CrashAlgorithm_DodgeParallel;
+                                    } else if (sensoresLBumpFront == false && sensoresLBumpSide == true) {
+                                        CrashAlgorithm_subState = CrashAlgorithm_GoForward;
+                                        rootState_active = CrashAlgorithm_GoForward;
+                                    }
+
+
+
+                                }
+                                    break;
+
+                                default:
+                                    break;
+                            }
+
                         }
                             break;
                         default:
@@ -408,11 +511,21 @@ void UC::statechart_process() {
                             // State CliffAhead_Rotate180
                         case CliffAhead_Rotate180:
                         {
+
+                            if (sensoresSumAngulo > 180) {
+                                CliffAhead_subState = CliffAhead_GoForward;
+                                rootState_active = CliffAhead_GoForward;
+                            }
                         }
                             break;
                             // State CliffAhead_GoForward
                         case CliffAhead_GoForward:
                         {
+                            if (sensoresSumDistancia > 300) {
+                                
+                                CliffAhead_subState = OMNonState;
+                                TrackingByCamera_entDef();
+                            }
                         }
                             break;
                         default:
