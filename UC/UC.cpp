@@ -2,9 +2,8 @@
 #include "UC.h"
 
 UC::UC() {
-    initStatechart();
+initStatechart();
 }
-
 void UC::initStatechart() {
     rootState_subState = OMNonState;
     rootState_active = OMNonState;
@@ -19,17 +18,12 @@ void UC::initStatechart() {
     CliffAhead_subState = OMNonState;
     rootState_entDef();
 }
-
 void UC::rootState_entDef() {
     {
-        rootState_subState = Initializing;
-        rootState_active = Initializing;
-        //#[ state Initializing.(Entry) 
-        init();
-        //#]
+        rootState_subState = Idle;
+        rootState_active = Idle;
     }
 }
-
 void UC::UnDock_entDef() {
     rootState_subState = UnDock;
     //#[ transition UnDock.0 
@@ -38,21 +32,17 @@ void UC::UnDock_entDef() {
     UnDock_subState = ExitDock;
     rootState_active = ExitDock;
 }
-
 void UC::NormalOperate_entDef() {
     rootState_subState = NormalOperate;
     NormalOperateEntDef();
 }
-
 void UC::NormalOperateEntDef() {
     TrackingByCamera_entDef();
 }
-
 void UC::TrackingByCamera_entDef() {
     NormalOperate_subState = TrackingByCamera;
     TrackingByCameraEntDef();
 }
-
 void UC::TrackingByCameraEntDef() {
     //## transition 14 
     if (cameraIsPersonInView == true) {
@@ -61,7 +51,6 @@ void UC::TrackingByCameraEntDef() {
         PersonOutView_entDef();
     }
 }
-
 void UC::PersonInView_entDef() {
     TrackingByCamera_subState = PersonInView;
     PersonInView_subState = PersonInView_ApproachUser;
@@ -71,7 +60,6 @@ void UC::PersonInView_entDef() {
     //#]
     //PersonInView_timeout = scheduleTimeout(ComputeStepTime, "ROOT.NormalOperate.TrackingByCamera.PersonInView.ROOT.PersonInView.PersonInView_ApproachUser");
 }
-
 void UC::PersonOutView_entDef() {
     TrackingByCamera_subState = PersonOutView;
     //#[ transition NormalOperate.TrackingByCamera.PersonOutView.4 
@@ -81,7 +69,6 @@ void UC::PersonOutView_entDef() {
     PersonOutView_subState = PersonOutView_Rotate360;
     rootState_active = PersonOutView_Rotate360;
 }
-
 void UC::DodgeObstacle_entDef() {
     NormalOperate_subState = DodgeObstacle;
     //#[ transition 9 
@@ -91,7 +78,6 @@ void UC::DodgeObstacle_entDef() {
     DodgeObstacle_subState = Dodge_MoveBack;
     rootState_active = Dodge_MoveBack;
 }
-
 void UC::CliffAhead_entDef() {
     NormalOperate_subState = CliffAhead;
     //#[ transition 12 
@@ -101,41 +87,13 @@ void UC::CliffAhead_entDef() {
     CliffAhead_subState = CliffAhead_Rotate180;
     rootState_active = CliffAhead_Rotate180;
 }
-
 void UC::CrashAlgorithm_entDef() {
     DodgeObstacle_subState = CrashAlgorithm;
     CrashAlgorithm_subState = CrashAlgorithm_Dodge;
     rootState_active = CrashAlgorithm_Dodge;
 }
-
 void UC::statechart_process() {
     switch (rootState_active) {
-            // State Initializing
-            // Description: Estado de iniciacilación.
-            // Mediante la funcion Init se prepara todo el sistema.
-        case Initializing:
-        {
-            //## transition 1 
-            if (initStatus == 1) {
-                rootState_subState = Idle;
-                rootState_active = Idle;
-            } else if (initStatus > 1) {
-                rootState_subState = InitFailed;
-                rootState_active = InitFailed;
-            } else if (check_btnSpot()) {
-                rootState_subState = Shutdown;
-                rootState_active = Shutdown;
-            }
-        }
-            break;
-            // State InitFailed
-            // Description: Fallo de Inicializacion.
-            // Si es necesario ejecutar algo antes de abortar la ejecucion.
-        case InitFailed:
-        {
-            endBehavior();
-        }
-            break;
             // State Idle
             // Description: Modo de espera.
             // Se pulsa el boton "Clean" para empezar con el modo normal de operación.
@@ -211,12 +169,10 @@ void UC::statechart_process() {
                     //## transition UnDock.2 
                     if (sensoresSumAngulo > 180) {
                         UnDock_subState = OMNonState;
-                    NormalOperate_entDef();
+                        NormalOperate_entDef();
                     }
                 }
                     break;
-                
-                
                 default:
                     break;
             }
@@ -250,13 +206,13 @@ void UC::statechart_process() {
                     if (sensoresBl == true || sensoresBr == true) {
                         TrackingByCamera_subState = OMNonState;
                         PersonInView_subState = OMNonState;
-                        PersonOutView_subState = OMNonState
-                            DodgeObstacle_entDef();
+                        PersonOutView_subState = OMNonState;
+                        DodgeObstacle_entDef();
                     } else if (sensoresCliff == true) {
                         TrackingByCamera_subState = OMNonState;
                         PersonInView_subState = OMNonState;
-                        PersonOutView_subState = OMNonState
-                            CliffAhead_entDef();
+                        PersonOutView_subState = OMNonState;
+                        CliffAhead_entDef();
                     }
                     switch (TrackingByCamera_subState) {
                             // State PersonInView
@@ -332,9 +288,7 @@ void UC::statechart_process() {
                                     // Encontrar sector con mayor media de distancia.
                                 case PersonOutView_ComputePosition:
                                 {
-                                    // Calcular la posicion a la que dirigirse
-
-                                    //#[ transition NormalOperate.TrackingByCamera.PersonOutView.0 
+                                    // Calcular la posicion a la que dirigirse                                    //#[ transition NormalOperate.TrackingByCamera.PersonOutView.0 
                                     sensoresSumAngulo = 0;
                                     //#]
                                     PersonOutView_subState = PersonOutView_RotateToMove;
@@ -370,8 +324,6 @@ void UC::statechart_process() {
                         default:
                             break;
                     }
-                    default:
-                    break;
                 }
                     break;
                     // State DodgeObstacle
@@ -380,30 +332,16 @@ void UC::statechart_process() {
                 case DodgeObstacle:
                 {
                     if (sensoresCliff == true) {
-
                         CrashAlgorithm_subState = OMNonState;
                         DodgeObstacle_subState = OMNonState;
                         CliffAhead_entDef();
                     }
-
-                    switch (DodgeObstacle_subState) {
-
-                            if (sensoresCliff == true) {
-
-                                CrashAlgorithm_subState = OMNonState;
-                                DodgeObstacle_subState = OMNonState;
-                                CliffAhead_entDef();
-                            }
-
-                            // State Dodge_MoveBack
+                    switch (DodgeObstacle_subState) { // State Dodge_MoveBack
                         case Dodge_MoveBack:
-                        {
-
-                            //## transition 10 
+                        { //## transition 10 
                             if (sensoresSumDistancia<-30) {
                                 CrashAlgorithm_entDef();
                             }
-
                         }
                             break;
                             // State CrashAlgorithm
@@ -451,7 +389,6 @@ void UC::statechart_process() {
                                         CrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
                                         rootState_active = CrashAlgorithm_DodgeParallel;
                                     }
-
                                 }
                                     break;
                                     // State CrashAlgorithm_GoForwardExtended
@@ -467,14 +404,11 @@ void UC::statechart_process() {
                                         CrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
                                         rootState_active = CrashAlgorithm_DodgeParallel;
                                     }
-
-
                                 }
                                     break;
                                     // State CrashAlgorithm_RecoverTrajectory
                                 case CrashAlgorithm_RecoverTrajectory:
                                 {
-
                                     if (sensoresSumAngulo < 25) {
                                         DodgeObstacle_subState = OMNonState;
                                         TrackingByCamera_entDef();
@@ -485,16 +419,11 @@ void UC::statechart_process() {
                                         CrashAlgorithm_subState = CrashAlgorithm_GoForward;
                                         rootState_active = CrashAlgorithm_GoForward;
                                     }
-
-
-
                                 }
                                     break;
-
-                                default:
+                                    default:
                                     break;
                             }
-
                         }
                             break;
                         default:
@@ -511,7 +440,6 @@ void UC::statechart_process() {
                             // State CliffAhead_Rotate180
                         case CliffAhead_Rotate180:
                         {
-
                             if (sensoresSumAngulo > 180) {
                                 CliffAhead_subState = CliffAhead_GoForward;
                                 rootState_active = CliffAhead_GoForward;
@@ -522,7 +450,6 @@ void UC::statechart_process() {
                         case CliffAhead_GoForward:
                         {
                             if (sensoresSumDistancia > 300) {
-                                
                                 CliffAhead_subState = OMNonState;
                                 TrackingByCamera_entDef();
                             }
