@@ -35,8 +35,10 @@ using namespace std;
 /**
  * ControlRobot class constructor
  */
-ControlRobot::ControlRobot(void) {
-
+ControlRobot::ControlRobot(Lidar l, OCVCam c) {
+    this->lidar=l;
+    this->cam=c;
+    
 }
 
 /**
@@ -295,5 +297,37 @@ bool ControlRobot::condicionSalida() {
  */
 void ControlRobot::drive(int der, int izq) {
     robot->driveDirect(der, izq);
+}
+
+void ControlRobot::computeCamaraApproach() {
+    if (x < (frame_width / 3)) { // WEBCAM detecta a la izqda
+        if (area > 5500000 || (y != 0 && y < (frame_height / 3)))motores_actual = BACK_L; //cerca
+        else if (area != 0 && area < 3500000)motores_actual = FWD_L; //lejos
+        else motores_actual = LEFT;
+    } else if (x > ((frame_width / 3)*2)) { // WEBCAM detecta a la dcha
+        if (area > 5500000 || (y != 0 && y < (frame_height / 3)))motores_actual = BACK_R; //cerca
+        else if (area != 0 && area < 3500000)motores_actual = FWD_R; //lejos
+        else motores_actual = RIGHT;
+    } else { // WEBCAM detecta centrado
+        if (area > 5500000 || (y != 0 && y < (frame_height / 3)))motores_actual = BACK; //cerca
+        else if (area != 0 && area < 3500000)motores_actual = FWD; //lejos
+        else motores_actual = STOP;
+    }
+}
+
+void ControlRobot::computeCamaraWithObstacle() {
+    if (x < (frame_width / 3)) { // WEBCAM detecta a la izqda
+        if (area > 5500000 || (y != 0 && y < (frame_height / 3)))motores_actual = BACK_L; //cerca
+        else if (area != 0 && area < 3500000)motores_actual = LEFT; //lejos
+        else motores_actual = LEFT;
+    } else if (x > ((frame_width / 3)*2)) { // WEBCAM detecta a la dcha
+        if (area > 5500000 || (y != 0 && y < (frame_height / 3)))motores_actual = BACK_R; //cerca
+        else if (area != 0 && area < 3500000)motores_actual = RIGHT; //lejos
+        else motores_actual = RIGHT;
+    } else { // WEBCAM detecta centrado
+        if (area > 5500000 || (y != 0 && y < (frame_height / 3)))motores_actual = BACK; //cerca
+        else if (area != 0 && area < 3500000)motores_actual = WAIT; //lejos
+        else motores_actual = STOP;
+    }
 }
 

@@ -2,7 +2,10 @@
 #pragma once
 
 #include "../IRobotFramework/IRobotConnection.h"
+#include "../Lidar/Lidar.h"
+#include "../OCVCam/OCVCam.h"
 #include <iostream>
+
 
 /**
  * TODO: Documentar clase
@@ -12,6 +15,8 @@ class ControlRobot {
 private:
 
     IRobotConnection *robot;
+    Lidar lidar;
+    OCVCam cam;
 
     struct Sensores_iCreate {
         // variables para almacenar informaci�n del
@@ -71,7 +76,7 @@ private:
     char motores_anterior;
 
 public:
-    ControlRobot(void);
+    ControlRobot(Lidar l, OCVCam c);
     ~ControlRobot(void);
 
     void inicializacion();
@@ -81,6 +86,8 @@ public:
     void logicaEstados(int x, int y, int area, int frame_width, int frame_height);
     void moverActuadores();
     void imprimirInfo();
+    void computeCamaraApproach();
+    void computeCamaraWithObstacle();
 
     void drive(int der, int izq);
 };
