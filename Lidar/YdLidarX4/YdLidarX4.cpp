@@ -1,4 +1,4 @@
-/*
+/**
  * File:   YdLidarX4.cpp
  * Author: Christian Martín
  */
@@ -7,13 +7,13 @@
 
 using namespace std;
 
-/*
+/**
  * Class destructor
  */
 YdLidarX4::~YdLidarX4() {
 }
 
-/*
+/**
  * YdLidarX3 class constructor:
  * - Crea objeto lidar con los parámetros por defecto
  * - Abre la conexion con el servidor
@@ -55,7 +55,7 @@ YdLidarX4::YdLidarX4() {
     deviceinfo.serial_number = string();
 }
 
-/*
+/**
  * Generar comando:
  * Dado un comando devuelve un string JSON bien formado
  * con el comando introducido.
@@ -70,7 +70,7 @@ string YdLidarX4::_create_command(int command) {
     return cmd_str;
 }
 
-/*
+/**
  * Enviar comando:
  * Dado un comando genera el string JSON correspondiente y lo envia al servidor
  * Params: Numero de comando, debe pertenecer al struct cmd
@@ -84,7 +84,7 @@ bool YdLidarX4::_send_command(int command) {
     return true;
 }
 
-/*
+/**
  * Recibir respuesta:
  * 1- Obtiene la respuesta del servidor
  * 2- Interpreta y almacena la información en los fields correspondientes
@@ -137,7 +137,7 @@ bool YdLidarX4::_get_response() {
     return true;
 }
 
-/*
+/**
  * Conectar al Lidar:
  * - Envia un comando de conexión y obtiene la respuesta
  */
@@ -153,7 +153,7 @@ bool YdLidarX4::Connect(void) {
     return true;
 }
 
-/*
+/**
  * Iniciar escaneo:
  * Envía comando para iniciar escaneo y obtiene la respuesta
  */
@@ -171,7 +171,7 @@ bool YdLidarX4::StartScanning(void) {
         return false;
 }
 
-/*
+/**
  * Obtener informacion del dispositivo:
  * Envia comando para obtener informacion del dispositivo
  *
@@ -196,7 +196,7 @@ struct dev * YdLidarX4::GetDeviceInfo(void) {
     }
 }
 
-/*
+/**
  * Desconectar:
  * Envia un comando para desconectar y finalizar la conexion
  */
@@ -217,7 +217,7 @@ bool YdLidarX4::Disconnect(void) {
     }
 }
 
-/*
+/**
  * Reiniciar:
  * Reinicia el dispositivo pero no reinicia la conexion
  */
@@ -233,7 +233,7 @@ bool YdLidarX4::Reset(void) {
     return true;
 }
 
-/*
+/**
  * Obtener estado:
  * Obtiene y devuelve el estado actual del dispositivo
  */
@@ -250,7 +250,7 @@ int YdLidarX4::GetHealthStatus(void) {
         return 0;
 }
 
-/*
+/**
  * Obtener muestra:
  * Obtiene una muestra de datos y devuelve un pointer a un vector de muestras
  */
@@ -267,7 +267,7 @@ int* YdLidarX4::GetSampleData() {
         return 0;
 }
 
-/*
+/**
  * Detener escaneo:
  * Envia comando para detener el escaneo y obtiene la respuesta
  */

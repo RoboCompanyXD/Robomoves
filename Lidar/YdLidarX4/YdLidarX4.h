@@ -1,4 +1,4 @@
-/*
+/**
  * File:   YdLidarX4.h
  * Author: chris
  *
@@ -34,7 +34,7 @@ using namespace std;
 #define BUFF_SIZE 2048 // TODO: Para que es esta variable?
 #define PORT 25138 // TODO: Para que es esta variable?
 
-/* Lista de comandos posibles para enviar */
+/** Lista de comandos posibles para enviar */
 constexpr struct cmd {
     int CMD_CONNECT = 1000;
     int CMD_START_SCANNING = 2000;
@@ -46,7 +46,7 @@ constexpr struct cmd {
     int CMD_STOP_SCANNING = 8000;
 } cmd;
 
-/* Lista de respuestas Opt: Se pueden añadir mas respuestas dependiendo del tipo de error*/
+/** Lista de respuestas Opt: Se pueden añadir mas respuestas dependiendo del tipo de error*/
 constexpr struct res {
     int RES_OK = 1001;
     int RES_FAIL = 1002;
@@ -54,7 +54,7 @@ constexpr struct res {
     int HEALTH_BAD = 2002;
 } res;
 
-/* TODO: Documentar*/
+/** TODO: Documentar*/
 struct dev {
     string modelnumber;
     string firmware_version;
@@ -62,37 +62,99 @@ struct dev {
     string serial_number;
 };
 
-/* TODO: Documentar*/
+/**
+ * TODO: Documentar clase
+ *
+ */
 class YdLidarX4 {
+
 public:
+
+    /**
+     * Default Class constructor
+     *
+     * TODO: ¿se puede borrar este constructor?
+     */
     YdLidarX4();
+
+    /**
+     * Class constructor
+     *
+     * TODO: ¿en que se diferencia del otro constructor?
+     * TODO: Documentar constructor
+     */
     YdLidarX4(int chunk_size);
+
+    /**
+     * Class destructor
+     */
     virtual ~YdLidarX4();
 
+
+    /**
+     * TODO: Documentar
+     */
     bool Connect();
+
+    /**
+     * TODO: Documentar
+     */
     bool Disconnect();
+
+    /**
+     * TODO: Documentar
+     */
     bool Reset();
 
+    /**
+     * TODO: Documentar
+     */
     bool StartScanning();
+
+    /**
+     * TODO: Documentar
+     */
     bool StopScanning();
+
+    /**
+     * TODO: Documentar
+     */
     int* GetSampleData();
 
+    /**
+     * TODO: Documentar
+     */
     struct dev * GetDeviceInfo();
+
+    /**
+     * TODO: Documentar
+     */
     int GetHealthStatus();
 
 private:
-    bool is_connected;
-    bool is_scanning;
+    bool is_connected; // TODO: documentar
+    bool is_scanning; // TODO: Documentar
 
-    int health;
-    int* sampledata;
+    int health; // TODO: Documentar
+    int* sampledata; // TODO: Documentar
 
-    struct dev deviceinfo;
+    struct dev deviceinfo; // TODO: Documentar
 
-    int sock;
+    int sock; // TODO: Documentar
 
+    /**
+     * TODO: Documentar
+     */
     bool _send_command(int command);
+
+    /**
+     * TODO: Documentar
+     */
     bool _get_response();
+
+    /**
+     * TODO: Documentar
+     */
     string _create_command(int command);
 };
 

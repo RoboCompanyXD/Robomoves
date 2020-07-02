@@ -1,4 +1,4 @@
-/* 
+/**
  * File:   main.cpp
  * Author: chris
  *
@@ -6,7 +6,6 @@
  */
 
 #include "main.h"
-
 
 using namespace std;
 
@@ -18,25 +17,23 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-int init(){
-    
+int init() {
+
     // Controlar Init state (si se inicia todo bien)
-    
+
     // Instanciar Objetos globales
-    
+
     //  Instanciar Camara
     //  Instanciar Lidar
-    
+
     // Inctanciar Controlrobot y pasarle Camara Lidar
-    
+
     // Inctanciar UC y pasarle Controlrobot
-    
-    
+
+
     // Crear Threads
-    
+
     //  Crear Thread Camara
     //  Crear Thread Lidar
-    
-
 
 }

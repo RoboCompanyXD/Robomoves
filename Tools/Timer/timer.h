@@ -1,4 +1,4 @@
-/* 
+/**
  * File:   timer.h
  * Author: chris
  *
@@ -18,45 +18,118 @@ using namespace std;
 #define CLOCKID CLOCK_REALTIME
 #define SIG SIGUSR1
 
-typedef void (*TimerHandler)(sigval_t signum);
+typedef void (*TimerHandler)(sigval_t signum); // TODO: Documentar
 
-class TimerTimeoutHandler
-{
-    public:
-        virtual void handlerFunction( void ) = 0;
+/**
+ * TODO: Documentar clase (breve)
+ */
+class TimerTimeoutHandler {
+
+public:
+    virtual void handlerFunction(void) = 0;
 };
 
-class Timer
-{
-    public:
-        Timer( TimerTimeoutHandler * timeHandler );
-        ~Timer();
+/**
+ * TODO: Documentar clase (mas extenso)
+ */
+class Timer {
 
-        void setDuration(long int seconds);
-        void start();
-        void restart();
-        void timeout();
-        void stop();
-        void callbackWrapper( void );
-        static void timeOutHandler( sigval_t This  );
+public:
 
-    private:
-        void createTimer(timer_t *timerid, TimerHandler handler_cb);
-        void startTimer(timer_t timerid, int startTimeout, int cyclicTimeout);
-        void stopTimer(timer_t timerid);
+    /**
+     * Class Constructor
+     */
+    Timer(TimerTimeoutHandler * timeHandler);
 
-    long int m_Duration;
-        TimerTimeoutHandler * timeOutHandlerImp;
-        timer_t timerid;
+    /**
+     * Class Destructor
+     */
+    ~Timer();
+
+    /**
+     * TODO: Documentar metodo
+     */
+    void setDuration(long int seconds);
+
+    /**
+     * TODO: Documentar metodo
+     */
+    void start();
+
+    /**
+     * TODO: Documentar metodo
+     */
+    void restart();
+
+    /**
+     * TODO: Documentar metodo
+     */
+    void timeout();
+
+    /**
+     * TODO: Documentar metodo
+     */
+
+    /**
+     * TODO: Documentar metodo
+     */
+    void stop();
+
+    /**
+     * TODO: Documentar metodo
+     */
+    void callbackWrapper(void);
+
+    /**
+     * TODO: Documentar metodo
+     */
+    static void timeOutHandler(sigval_t This);
+
+private:
+
+    /**
+     * TODO: Documentar metodo
+     */
+    void createTimer(timer_t *timerid, TimerHandler handler_cb);
+
+    /**
+     * TODO: Documentar metodo
+     */
+    void startTimer(timer_t timerid, int startTimeout, int cyclicTimeout);
+
+    /**
+     * TODO: Documentar metodo
+     */
+    void stopTimer(timer_t timerid);
+
+    long int m_Duration; // TODO: Documentar
+    TimerTimeoutHandler * timeOutHandlerImp; // TODO: Documentar
+    timer_t timerid; // TODO: Documentar
 };
 
-class TimeTimeoutHandlerImp : public TimerTimeoutHandler
-{
-    public:
-        TimeTimeoutHandlerImp(){}
-        ~TimeTimeoutHandlerImp(){}
+/**
+ * Documentar clase (breve)
+ */
+class TimeTimeoutHandlerImp : public TimerTimeoutHandler {
 
-        void handlerFunction( void );
+public:
+
+        /**
+     * Class constructor
+     */
+    TimeTimeoutHandlerImp() {
+    }
+
+        /**
+     * Class destructor
+     */
+    ~TimeTimeoutHandlerImp() {
+    }
+
+    /**
+     * TODO: Documentar metodo
+     */
+    void handlerFunction(void);
 };
 
 #endif /* TIMERHELPER_H */

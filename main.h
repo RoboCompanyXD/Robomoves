@@ -1,4 +1,4 @@
-/* 
+/**
  * File:   main.h
  * Author: chris
  *
@@ -13,21 +13,25 @@
 #include "Lidar/Lidar.h"
 #include "OCVCam/OCVCam.h"
 
-class Robot{
-    public:
-        int init();
-        
-        Lidar lidar;
-        OCVCam cam;
+/**
+ * TODO: Documentar clase
+ */
+class Robot {
 
-    private:
-        
+public:
+    int init();
 
-    protected:
+    Lidar lidar;
+    OCVCam cam;
+
+private:
+
+
+protected:
 };
 
 int main(int argc, char** argv);
 
-        
+
 #endif	/* MAIN_H */
 

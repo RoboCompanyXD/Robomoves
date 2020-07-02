@@ -8,21 +8,22 @@
 
 #include "../UC/UC.h"
 
-
 /**
  * TODO: Documentar clase
  * - para que sirve?
  */
 class ControlRobot {
+
 private:
 
     IRobotConnection *robot;
     Lidar lidar;
     OCVCam cam;
-    
+
     UC uc;
 
     struct Sensores_iCreate {
+
         // variables para almacenar informaci�n del
         // sensor de acantilado frontal izquierdo
         unsigned int front_left;
@@ -61,7 +62,7 @@ private:
         unsigned int lbr;
 
         bool clean; //LED CLEAN
-        
+
         int charger_available;
         int battery_charge;
         int battery_capacity;
@@ -69,6 +70,7 @@ private:
     struct Sensores_iCreate sensores;
 
     struct Actuadores_iCreate {
+
         // variables para el comando Drive direct
         int vel_der;
         int vel_izq;
@@ -99,7 +101,7 @@ public:
     void gotoDock();
 
     void drive(int der, int izq);
-    
- 
+
+
 };
 

@@ -1,3 +1,10 @@
+/**
+ * File:   ControlRobot.cpp
+ * Author:
+ *
+ * Created on 10 de enero de 2020, 12:33
+ */
+
 #include "ControlRobot.h"
 #include <iostream>
 
@@ -36,10 +43,10 @@ using namespace std;
  * ControlRobot class constructor
  */
 ControlRobot::ControlRobot(Lidar l, OCVCam c, UC u) {
-    this->lidar=l;
-    this->cam=c;
+    this->lidar = l;
+    this->cam = c;
     this->uc = u;
-    
+
 }
 
 /**
@@ -49,7 +56,7 @@ ControlRobot::~ControlRobot(void) {
 
 }
 
-/*
+/**
  * TODO: documentar
  */
 void ControlRobot::inicializacion(void) {
@@ -89,15 +96,17 @@ void ControlRobot::inicializacion(void) {
     motores_anterior = STOP;
 }
 
-/*
- * TODO: documentar
+/**
+ * TODO: documentar metodo
  */
 void ControlRobot::finalizacion(void) {
     robot->stop();
 }
 
-// TODO: documentar TODAS las variables
-int nsensores = 11;
+
+int nsensores = 11; // TODO: documentar variable
+
+/** TODO: Documentar variable*/
 char lsensores[] = {
     iRobotSensors::BUTTONS,
     iRobotSensors::BUMPERS_AND_WHEELDROPS,
@@ -111,15 +120,17 @@ char lsensores[] = {
     iRobotSensors::DISTANCE,
     iRobotSensors::ANGLE
 };
-char lsensores2[] = {
+
+/** TODO: Documentar variable*/char lsensores2[] = {
     iRobotSensors::BUTTONS,
     iRobotSensors::BUMPERS_AND_WHEELDROPS,
 };
-int *data;
-int *dataserie;
 
-/*
- * TODO: documentar
+int *data; // TODO: documentar variable
+int *dataserie; // TODO: documentar variable
+
+/**
+ * TODO: documentar metodo
  */
 void ControlRobot::leerSensores() {
 
@@ -148,8 +159,8 @@ void ControlRobot::leerSensores() {
     sensores.sum_angle += sensores.angle;
 }
 
-/*
- * TODO: documentar
+/**
+ * TODO: documentar metodo
  */
 void ControlRobot::imprimirInfo(void) {
     if (estado_anterior != estado_actual) {
@@ -157,7 +168,7 @@ void ControlRobot::imprimirInfo(void) {
     }
 }
 
-/*
+/**
  * TODO: documentar
  * - Detallar un poco cada estado
  * - Indicar donde se encuentra la documentación completa (grafo de estados etc)
@@ -165,7 +176,7 @@ void ControlRobot::imprimirInfo(void) {
 void ControlRobot::logicaEstados(int x, int y, int area, int frame_width, int frame_height) {
 
     uc.statechart_process();
-    
+
     estado_anterior = estado_actual;
     switch (estado_anterior) {
         case READY:
@@ -249,7 +260,7 @@ void ControlRobot::logicaEstados(int x, int y, int area, int frame_width, int fr
 
 } //end void logicaEstados(...))
 
-/*
+/**
  * TODO: documentar
  */
 void ControlRobot::moverActuadores() {
@@ -287,7 +298,7 @@ void ControlRobot::moverActuadores() {
     }
 }
 
-/*
+/**
  * TODO: documentar
  */
 bool ControlRobot::condicionSalida() {
@@ -295,13 +306,16 @@ bool ControlRobot::condicionSalida() {
     return false;
 }
 
-/*
+/**
  * TODO: documentar
  */
 void ControlRobot::drive(int der, int izq) {
     robot->driveDirect(der, izq);
 }
 
+/**
+ * TODO: documentar
+ */
 void ControlRobot::computeCamaraApproach() {
     if (cam.x < (cam.frame_width / 3)) { // WEBCAM detecta a la izqda
         if (cam.area > 5500000 || (cam.y != 0 && cam.y < (cam.frame_height / 3)))motores_actual = BACK_L; //cerca
@@ -318,6 +332,9 @@ void ControlRobot::computeCamaraApproach() {
     }
 }
 
+/**
+ * TODO: documentar
+ */
 void ControlRobot::computeCamaraWithObstacle() {
     if (cam.x < (cam.frame_width / 3)) { // WEBCAM detecta a la izqda
         if (cam.area > 5500000 || (cam.y != 0 && cam.y < (cam.frame_height / 3)))motores_actual = BACK_L; //cerca
@@ -334,6 +351,9 @@ void ControlRobot::computeCamaraWithObstacle() {
     }
 }
 
-void ControlRobot::gotoDock(){
+/**
+ * TODO: documentar
+ */
+void ControlRobot::gotoDock() {
     robot->coverAndDock();
 }

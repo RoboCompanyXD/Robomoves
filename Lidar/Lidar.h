@@ -1,4 +1,4 @@
-/* 
+/**
  * File:   Lidar.h
  * Author: chris
  *
@@ -9,21 +9,38 @@
 #define	LIDAR_H
 #include "YdLidarX4/YdLidarX4.h"
 
-class Lidar{
+/**
+ * TODO: Documentar Clase
+ */
+class Lidar {
+
 public:
+
+    /**
+     * Class Constructor
+     */
     Lidar();
+
+
+    /**
+     * Class desctructor
+     */
     virtual ~Lidar();
-    
+
     //set_lidar_params();
-    
+
 private:
-    
-    YdLidarX4 lidar;
-    
+
+    YdLidarX4 lidar; // TODO: documentar variable
+
+
+    /**
+     * TODO: Documentar Metodo
+     */
     void LidarThread();
-    
-    
-    
+
+
+
 };
 
 #endif	/* LIDAR_H */
