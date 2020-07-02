@@ -6,6 +6,8 @@
 #include "../OCVCam/OCVCam.h"
 #include <iostream>
 
+#include "../UC/UC.h"
+
 
 /**
  * TODO: Documentar clase
@@ -17,6 +19,8 @@ private:
     IRobotConnection *robot;
     Lidar lidar;
     OCVCam cam;
+    
+    UC uc;
 
     struct Sensores_iCreate {
         // variables para almacenar informaci�n del
@@ -95,5 +99,7 @@ public:
     void gotoDock();
 
     void drive(int der, int izq);
+    
+ 
 };
 

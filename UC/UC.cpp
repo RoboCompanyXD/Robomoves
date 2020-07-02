@@ -1,8 +1,11 @@
 
 #include "UC.h"
 
-UC::UC() {
-initStatechart();
+UC::UC(ControlRobot c) {
+
+    this->control = c;
+
+    initStatechart();
 }
 void UC::initStatechart() {
     rootState_subState = OMNonState;
@@ -12,7 +15,7 @@ void UC::initStatechart() {
     TrackingByCamera_subState = OMNonState;
     PersonOutView_subState = OMNonState;
     PersonInView_subState = OMNonState;
-    PersonInView_timeout = 0;
+    PersonInView_timeout = 0; // BORRAR?
     DodgeObstacle_subState = OMNonState;
     CrashAlgorithm_subState = OMNonState;
     CliffAhead_subState = OMNonState;
@@ -93,6 +96,7 @@ void UC::CrashAlgorithm_entDef() {
     rootState_active = CrashAlgorithm_Dodge;
 }
 void UC::statechart_process() {
+    
     switch (rootState_active) {
             // State Idle
             // Description: Modo de espera.
@@ -124,6 +128,7 @@ void UC::statechart_process() {
             // Description: Dirigirse a la base.
         case Dock:
         {
+            
             //## transition 29 
             if (sensoresInDock == true) {
                 rootState_subState = Idle;
@@ -166,6 +171,7 @@ void UC::statechart_process() {
                     // State UnDock_Rotate180
                 case UnDock_Rotate180:
                 {
+                    
                     //## transition UnDock.2 
                     if (sensoresSumAngulo > 180) {
                         UnDock_subState = OMNonState;
@@ -288,7 +294,8 @@ void UC::statechart_process() {
                                     // Encontrar sector con mayor media de distancia.
                                 case PersonOutView_ComputePosition:
                                 {
-                                    // Calcular la posicion a la que dirigirse                                    //#[ transition NormalOperate.TrackingByCamera.PersonOutView.0 
+                                    // Calcular la posicion a la que dirigirse
+                                    //#[ transition NormalOperate.TrackingByCamera.PersonOutView.0 
                                     sensoresSumAngulo = 0;
                                     //#]
                                     PersonOutView_subState = PersonOutView_RotateToMove;
@@ -421,7 +428,7 @@ void UC::statechart_process() {
                                     }
                                 }
                                     break;
-                                    default:
+                                default:
                                     break;
                             }
                         }

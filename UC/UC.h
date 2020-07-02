@@ -13,35 +13,33 @@ extern bool check_btnClean();
 extern bool check_btnDock();
 
 ////    Attributes    ////
-    
-    extern int BumpObstacle;		//## attribute BumpObstacle
-    
-    extern int ComputeStepTime;		//## attribute ComputeStepTime
-    
-    extern bool cameraIsPersonInView;		//## attribute cameraIsPersonInView
-    
-    extern int initStatus;		//## attribute initStatus
-    
-    extern int lidarIsObstable;		//## attribute lidarIsObstable
-    
-    extern int sensoresBateria;		//## attribute sensoresBateria
-    
-    extern bool sensoresBl;		//## attribute sensoresBl
-    
-    extern bool sensoresBr;		//## attribute sensoresBr
-    
-    extern bool sensoresCliff;		//## attribute sensoresCliff
-    
-    extern int sensoresInDock;		//## attribute sensoresInDock
-    
-    extern bool sensoresLBumpFront;		//## attribute sensoresLBumpFront
-    
-    extern bool sensoresLBumpSide;		//## attribute sensoresLBumpSide
-    
-    extern int sensoresSumAngulo;		//## attribute sensoresSumAngulo
-    
-    extern int sensoresSumDistancia;		//## attribute sensoresSumDistancia
 
+
+extern bool cameraIsPersonInView;           //## attribute cameraIsPersonInView
+
+extern int lidarIsObstable;                 //## attribute lidarIsObstable
+
+extern int computedAngle;                   //## attribute computedAngle
+
+extern int computedDistance;                //## attribute computedDistance
+
+extern int sensoresBateria;                 //## attribute sensoresBateria
+
+extern bool sensoresBl;                     //## attribute sensoresBl
+
+extern bool sensoresBr;                     //## attribute sensoresBr
+
+extern bool sensoresCliff;                  //## attribute sensoresCliff
+
+extern int sensoresInDock;                  //## attribute sensoresInDock
+
+extern bool sensoresLBumpFront;             //## attribute sensoresLBumpFront
+
+extern bool sensoresLBumpSide;              //## attribute sensoresLBumpSide
+
+extern int sensoresSumAngulo;               //## attribute sensoresSumAngulo
+
+extern int sensoresSumDistancia;            //## attribute sensoresSumDistancia
 
 void gotoDock();
 
@@ -57,16 +55,10 @@ void reproducirSonidoDesbloqueado();
 
 // Funciones para calcular a donde ir con el lidar
 
-void computeLidarSectorAngleDistance();
-
-// Variables resultado de computeLidarSectorAngleDistance()
-int computedAngle;
-int computedDistance;
-
-
+void computeLidarTripPersonOutOfView();
 
 class UC {
-    UC();
+    UC(ControlRobot c);
     ~UC();
 
 public:
@@ -74,30 +66,32 @@ public:
     void statechart_process();
 
 private:
-    
-    void rootState_entDef();
-    void UnDock_entDef();
-    void NormalOperate_entDef();
-    void NormalOperateEntDef();
-    
-    void TrackingByCamera_entDef();
-    void TrackingByCameraEntDef();
-    
-    void PersonInView_entDef();
-    void PersonOutView_entDef();
-    
-    void DodgeObstacle_entDef();
-    void CliffAhead_entDef();
-    
-    void CrashAlgorithm_entDef();
-    
-    void endBehavior();
-    
+
+    void rootState_entDef(); // TODO Documentacion
+    void UnDock_entDef();  // TODO Documentacion
+    void NormalOperate_entDef(); // TODO Documentacion
+    void NormalOperateEntDef(); // TODO Documentacion
+
+    void TrackingByCamera_entDef(); // TODO Documentacion
+    void TrackingByCameraEntDef(); // TODO Documentacion
+
+    void PersonInView_entDef(); // TODO Documentacion
+    void PersonOutView_entDef(); // TODO Documentacion
+
+    void DodgeObstacle_entDef(); // TODO Documentacion
+    void CliffAhead_entDef(); // TODO Documentacion
+
+    void CrashAlgorithm_entDef(); // TODO Documentacion
+
+    void endBehavior(); // TODO BORRAR?
+
 protected:
+    
+    ControlRobot control;
 
-    void initStatechart();
+    void initStatechart();  // TODO Documentacion
 
-    void cancelTimeouts();
+    //void cancelTimeouts();
 
     enum UC_Enum {
         OMNonState = 0,
@@ -137,30 +131,30 @@ protected:
         Statechart_End = 1000
     };
 
-    int rootState_subState;
-    
-    int rootState_active;
-    
-    int UnDock_subState;
-    
-    int NormalOperate_subState;
-    
-    int TrackingByCamera_subState;
-    
-    int PersonOutView_subState;
-    
-    int PersonInView_subState;
-    
-    int PersonInView_timeout;
-    
-    int DodgeObstacle_subState;
-    
-    int CrashAlgorithm_subState;
-    
-    int CliffAhead_subState;
-    
-    
-    
+    int rootState_subState; // Estado mas exteriorr: superestado
+
+    int rootState_active;   // Estado activo principal
+
+    int UnDock_subState;    // Subestados del estado "UnDock": "ExitDock" y "UnDock_Rotate180"
+
+    int NormalOperate_subState; // Subestados del estado "NormalOperate": TrackingByCamera, CliffAhead y DodgeObstacle
+
+    int TrackingByCamera_subState; // TODO
+
+    int PersonOutView_subState;  // TODO
+
+    int PersonInView_subState; // TODO
+
+    int PersonInView_timeout; // TODO
+
+    int DodgeObstacle_subState; // TODO
+
+    int CrashAlgorithm_subState; // TODO
+
+    int CliffAhead_subState; // TODO
+
+
+
 };
 
 #endif	/* ROBOTIA_H */

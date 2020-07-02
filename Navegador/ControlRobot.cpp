@@ -35,9 +35,10 @@ using namespace std;
 /**
  * ControlRobot class constructor
  */
-ControlRobot::ControlRobot(Lidar l, OCVCam c) {
+ControlRobot::ControlRobot(Lidar l, OCVCam c, UC u) {
     this->lidar=l;
     this->cam=c;
+    this->uc = u;
     
 }
 
@@ -163,6 +164,8 @@ void ControlRobot::imprimirInfo(void) {
  */
 void ControlRobot::logicaEstados(int x, int y, int area, int frame_width, int frame_height) {
 
+    uc.statechart_process();
+    
     estado_anterior = estado_actual;
     switch (estado_anterior) {
         case READY:

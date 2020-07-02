@@ -20,17 +20,23 @@ int main(int argc, char** argv) {
 
 int init(){
     
+    // Controlar Init state (si se inicia todo bien)
+    
     // Instanciar Objetos globales
     
     //  Instanciar Camara
     //  Instanciar Lidar
+    
+    // Inctanciar Controlrobot y pasarle Camara Lidar
+    
+    // Inctanciar UC y pasarle Controlrobot
+    
     
     // Crear Threads
     
     //  Crear Thread Camara
     //  Crear Thread Lidar
     
-    // Instanciar Navegacion
 
 
 }
