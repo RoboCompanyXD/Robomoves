@@ -28,4 +28,4 @@ public:
     Instruction & operator=(const Instruction &aux);
 };
 
-#endif
+#endif // INSTRUCTION_H

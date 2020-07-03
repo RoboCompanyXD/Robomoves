@@ -8,7 +8,7 @@
  */
 
 #ifndef IROBOTCONNECTION_H
-#define    IROBOTCONNECTION_H
+#define IROBOTCONNECTION_H
 
 #pragma once
 #include <iostream>
@@ -106,4 +106,4 @@ public:
     void setVerboseMode(int flag_debug);
 };
 
-#endif
+#endif // IROBOTCONNECTION_H

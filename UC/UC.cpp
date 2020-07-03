@@ -8,9 +8,12 @@
 #include "UC.h"
 #include <stdexcept>
 
-UC::UC(ControlRobot c) {
+UC::UC() {
+}
 
-    this->control = c;
+UC::UC(ControlRobot * contr) {
+
+    this->control = contr;
 
     initStatechart();
 }
@@ -302,6 +305,7 @@ void UC::statechart_process() {
                         currentPersonInView_subState = Disabled;
                         currentPersonOutView_subState = Disabled;
                         CliffAhead_entDef();
+
                     }
 
                     /**

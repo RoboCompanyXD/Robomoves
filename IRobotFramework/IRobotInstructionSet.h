@@ -226,4 +226,4 @@ public:
     Instruction set_day_time(int day, int hour, int min);
 };
 
-#endif
+#endif // IROBOTINSTRUCTIONSET_H

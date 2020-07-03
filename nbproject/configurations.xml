@@ -15,7 +15,7 @@
         <itemPath>Lidar/YdLidarX4/YdLidarX4.h</itemPath>
         <itemPath>Lidar/nlohmann/json.hpp</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="Navi" projectFiles="true">
+      <logicalFolder name="f3" displayName="Navegador" projectFiles="true">
         <itemPath>Navegador/ControlRobot.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="OCVCam" projectFiles="true">
@@ -48,7 +48,7 @@
         <itemPath>Lidar/Lidar.cpp</itemPath>
         <itemPath>Lidar/YdLidarX4/YdLidarX4.cpp</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="Navi" projectFiles="true">
+      <logicalFolder name="f3" displayName="Navegador" projectFiles="true">
         <itemPath>Navegador/ControlRobot.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="OCVCam" projectFiles="true">
@@ -63,7 +63,6 @@
         <itemPath>UC/UC.cpp</itemPath>
       </logicalFolder>
       <itemPath>main.cpp</itemPath>
-      <itemPath>old_main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -178,8 +177,6 @@
       </item>
       <item path="main.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="old_main.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="tests/CamTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/LidarTest.cpp" ex="false" tool="1" flavor2="0">
@@ -287,8 +284,6 @@
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="main.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="old_main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/CamTest.cpp" ex="false" tool="1" flavor2="0">
       </item>

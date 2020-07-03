@@ -42,10 +42,13 @@ using namespace std;
 /**
  * ControlRobot class constructor
  */
-ControlRobot::ControlRobot(Lidar l, OCVCam c, UC u) {
+ControlRobot::ControlRobot(Lidar l, OCVCam c) {
     this->lidar = l;
     this->cam = c;
-    this->uc = u;
+       
+    // Instanciar maquina de estados
+    
+    this->uc = UC(this);
 
 }
 
@@ -356,4 +359,12 @@ void ControlRobot::computeCamaraWithObstacle() {
  */
 void ControlRobot::gotoDock() {
     robot->coverAndDock();
+}
+
+
+
+void ControlRobot::setMotores_actual(char state){
+    
+    motores_actual = state;
+
 }

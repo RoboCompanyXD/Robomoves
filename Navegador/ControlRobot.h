@@ -1,4 +1,8 @@
 // Control Robot.h
+
+#ifndef CONTROLROBOT_H
+#define	CONTROLROBOT_H
+
 #pragma once
 
 #include "../IRobotFramework/IRobotConnection.h"
@@ -17,10 +21,7 @@ class ControlRobot {
 private:
 
     IRobotConnection *robot;
-    Lidar lidar;
-    OCVCam cam;
-
-    UC uc;
+    
 
     struct Sensores_iCreate {
 
@@ -64,10 +65,12 @@ private:
         bool clean; //LED CLEAN
 
         int charger_available;
+        
         int battery_charge;
         int battery_capacity;
+        int battery_percentage;
     };
-    struct Sensores_iCreate sensores;
+    
 
     struct Actuadores_iCreate {
 
@@ -86,8 +89,16 @@ private:
     char motores_anterior;
 
 public:
+    
+    struct Sensores_iCreate sensores;
+    ControlRobot();
     ControlRobot(Lidar l, OCVCam c);
     ~ControlRobot(void);
+    
+    Lidar lidar;
+    OCVCam cam;
+
+    UC uc;
 
     void inicializacion();
     void finalizacion();
@@ -101,7 +112,12 @@ public:
     void gotoDock();
 
     void drive(int der, int izq);
+    
+    
+    
+    void setMotores_actual(char state);
 
 
 };
 
+#endif // CONTROLROBOT_H

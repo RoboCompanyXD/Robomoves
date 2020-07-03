@@ -8,6 +8,10 @@
 #ifndef UC_H
 #define	UC_H
 
+//#include "../Navegador/ControlRobot.h"
+class ControlRobot; // Forward Declaration of Class ControlRobot
+
+
 extern bool check_btnSpot(); // TODO: documentar
 extern bool check_btnClean();
 extern bool check_btnDock();
@@ -70,24 +74,30 @@ void computeLidarTripPersonOutOfView();
  */
 class UC {
 
+    
+
+public:
+    
     /**
      * Class constructor
      */
-    UC(ControlRobot c);
+    UC();
 
     /**
      * Class destructor
      */
     ~UC();
-
-public:
-
+    
+    UC(ControlRobot * contr);
+    
     /**
      * TODO: documentar metodo
      */
     void statechart_process();
 
 private:
+    
+    ControlRobot * control; // TODO: documentar variable
 
     /**
      * TODO: Documentar
@@ -151,8 +161,6 @@ private:
 
 protected:
 
-    ControlRobot control; // TODO: documentar variable
-
     /**
      * TODO: Documentar
      */
@@ -161,7 +169,7 @@ protected:
     //void cancelTimeouts();
 
     /** State IDs */
-    const enum UC_Enum {
+    enum UC_Enum {
 
         Disabled = 0, // TODO: What does OMN mean?
         UnDock = 1,

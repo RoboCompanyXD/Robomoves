@@ -14,31 +14,37 @@ using namespace std;
  */
 int main(int argc, char** argv) {
     
-    // Instanciar Robot
+    // Inicializar robot
+    
+    if(init()){}
+    
+
 
     return 0;
 }
 
-Robot::init(){
+int init(){
     
     // Controlar Init state (si se inicia todo bien)
 
     // Instanciar Objetos globales
 
     //  Instanciar Camara
-    cam = new OCVCam();
+    cam = OCVCam();
     
     //  Instanciar Lidar
-    lidar = new Lidar();
+    lidar = Lidar();
     
     // Inctanciar Controlrobot y pasarle Camara Lidar
+    
+    con = ControlRobot(lidar,cam);
 
-    // Inctanciar UC y pasarle Controlrobot
-
+    
 
     // Crear Threads
 
     //  Crear Thread Camara
     //  Crear Thread Lidar
 
+    return 0;
 }

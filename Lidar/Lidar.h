@@ -7,6 +7,7 @@
 
 #ifndef LIDAR_H
 #define	LIDAR_H
+
 #include "YdLidarX4/YdLidarX4.h"
 
 /**

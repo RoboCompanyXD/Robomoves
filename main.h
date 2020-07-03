@@ -12,23 +12,20 @@
 
 #include "Lidar/Lidar.h"
 #include "OCVCam/OCVCam.h"
+#include "Navegador/ControlRobot.h"
 
 /**
- * TODO: Documentar clase
+ * TODO: Documentar Main
  */
-class Robot {
 
-public:
-    int init();
+int init();
 
-    Lidar lidar;
-    OCVCam cam;
+Lidar lidar;
+OCVCam cam;
 
-private:
+ControlRobot con;
 
 
-protected:
-};
 
 int main(int argc, char** argv);
 
