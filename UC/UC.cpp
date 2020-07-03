@@ -16,38 +16,38 @@ UC::UC(ControlRobot c) {
 }
 
 void UC::initStatechart() {
-    rootState_subState = OMNonState; // TODO: change to UC_Enum.OMNonState for better readability
-    rootState_active = OMNonState;
-    UnDock_subState = OMNonState;
-    NormalOperate_subState = OMNonState;
-    TrackingByCamera_subState = OMNonState;
-    PersonOutView_subState = OMNonState;
-    PersonInView_subState = OMNonState;
+    currentSuperState = Disabled; // TODO: change to UC_Enum.OMNonState for better readability
+    currentState = Disabled;
+    currentUnDock_subState = Disabled;
+    currentNormalOperate_subState = Disabled;
+    currentTrackingByCamera_subState = Disabled;
+    currentPersonOutView_subState = Disabled;
+    currentPersonInView_subState = Disabled;
     PersonInView_timeout = 0; // BORRAR?
-    DodgeObstacle_subState = OMNonState;
-    CrashAlgorithm_subState = OMNonState;
-    CliffAhead_subState = OMNonState;
+    currentDodgeObstacle_subState = Disabled;
+    currentCrashAlgorithm_subState = Disabled;
+    currentCliffAhead_subState = Disabled;
     rootState_entDef();
 }
 
 void UC::rootState_entDef() {
     {
-        rootState_subState = Idle;
-        rootState_active = Idle;
+        currentSuperState = Idle;
+        currentState = Idle;
     }
 }
 
 void UC::UnDock_entDef() {
-    rootState_subState = UnDock;
+    currentSuperState = UnDock;
     //#[ transition UnDock.0 
     sensoresSumDistancia = 0;
     //#]
-    UnDock_subState = ExitDock;
-    rootState_active = ExitDock;
+    currentUnDock_subState = ExitDock;
+    currentState = ExitDock;
 }
 
 void UC::NormalOperate_entDef() {
-    rootState_subState = NormalOperate;
+    currentSuperState = NormalOperate;
     NormalOperateEntDef();
 }
 
@@ -56,7 +56,7 @@ void UC::NormalOperateEntDef() {
 }
 
 void UC::TrackingByCamera_entDef() {
-    NormalOperate_subState = TrackingByCamera;
+    currentNormalOperate_subState = TrackingByCamera;
     TrackingByCameraEntDef();
 }
 
@@ -70,9 +70,9 @@ void UC::TrackingByCameraEntDef() {
 }
 
 void UC::PersonInView_entDef() {
-    TrackingByCamera_subState = PersonInView;
-    PersonInView_subState = PersonInView_ApproachUser;
-    rootState_active = PersonInView_ApproachUser;
+    currentTrackingByCamera_subState = PersonInView;
+    currentPersonInView_subState = PersonInView_ApproachUser;
+    currentState = PersonInView_ApproachUser;
     //#[ state NormalOperate.TrackingByCamera.PersonInView.PersonInView.PersonInView_ApproachUser.(Entry) 
     computeCameraApproach();
     //#]
@@ -80,39 +80,39 @@ void UC::PersonInView_entDef() {
 }
 
 void UC::PersonOutView_entDef() {
-    TrackingByCamera_subState = PersonOutView;
+    currentTrackingByCamera_subState = PersonOutView;
     //#[ transition NormalOperate.TrackingByCamera.PersonOutView.4 
     sensoresSumAngulo = 0;
     sensoresSumDistancia = 0;
     //#]
-    PersonOutView_subState = PersonOutView_Rotate360;
-    rootState_active = PersonOutView_Rotate360;
+    currentPersonOutView_subState = PersonOutView_Rotate360;
+    currentState = PersonOutView_Rotate360;
 }
 
 void UC::DodgeObstacle_entDef() {
-    NormalOperate_subState = DodgeObstacle;
+    currentNormalOperate_subState = DodgeObstacle;
     //#[ transition 9 
     sensoresSumAngulo = 0;
     sensoresSumDistancia = 0;
     //#]
-    DodgeObstacle_subState = Dodge_MoveBack;
-    rootState_active = Dodge_MoveBack;
+    currentDodgeObstacle_subState = Dodge_MoveBack;
+    currentState = Dodge_MoveBack;
 }
 
 void UC::CliffAhead_entDef() {
-    NormalOperate_subState = CliffAhead;
+    currentNormalOperate_subState = CliffAhead;
     //#[ transition 12 
     sensoresSumAngulo = 0;
     sensoresSumDistancia = 0;
     //#]
-    CliffAhead_subState = CliffAhead_Rotate180;
-    rootState_active = CliffAhead_Rotate180;
+    currentCliffAhead_subState = CliffAhead_Rotate180;
+    currentState = CliffAhead_Rotate180;
 }
 
 void UC::CrashAlgorithm_entDef() {
-    DodgeObstacle_subState = CrashAlgorithm;
-    CrashAlgorithm_subState = CrashAlgorithm_Dodge;
-    rootState_active = CrashAlgorithm_Dodge;
+    currentDodgeObstacle_subState = CrashAlgorithm;
+    currentCrashAlgorithm_subState = CrashAlgorithm_Dodge;
+    currentState = CrashAlgorithm_Dodge;
 }
 
 void UC::statechart_process() {
@@ -125,7 +125,7 @@ void UC::statechart_process() {
      *  - Undock
      *  - Normal Operate
      */
-    switch (rootState_active) {
+    switch (currentState) {
 
         case Idle:
         {
@@ -136,21 +136,25 @@ void UC::statechart_process() {
             // Una vez el robot está en la base de carga se retorna a este estado.
             // En el modo de espera se puede estar cargando o sin cargar
 
-            if (sensoresBateria < 15 || check_btnDock()) {
-                rootState_subState = Dock;
-                rootState_active = Dock;
+            if (sensoresbattery_percentage < 15 || check_btnDock()) {
+                currentSuperState = Dock;
+                currentState = Dock;
                 //#[ state Dock.(Entry) 
                 gotoDock();
                 //#]
+                break; // Salir inmediatamente del sub-estado
             } else if (check_btnClean()) {
-                if (sensoresInDock == true) {
+                if (sensoresIsDocked == true) {
                     UnDock_entDef();
+                    break; // Salir inmediatamente del sub-estado
                 } else {
                     NormalOperate_entDef();
+                    break; // Salir inmediatamente del sub-estado
                 }
             } else if (check_btnSpot()) {
-                rootState_subState = Shutdown;
-                rootState_active = Shutdown;
+                currentSuperState = Shutdown;
+                currentState = Shutdown;
+                break; // Salir inmediatamente del sub-estado
             }
 
             break; // end super-case "Idle"
@@ -162,9 +166,10 @@ void UC::statechart_process() {
             // Description: Dirigirse a la base.
 
             //## transition 29 
-            if (sensoresInDock == true) {
-                rootState_subState = Idle;
-                rootState_active = Idle;
+            if (sensoresIsDocked == true) {
+                currentSuperState = Idle;
+                currentState = Idle;
+                break; // Salir inmediatamente del sub-estado
             }
 
             break; // end super-case "Dock"
@@ -175,7 +180,8 @@ void UC::statechart_process() {
             // State Shutdown
             // Description: Fin de operacion
             // Terminar la ejecucion del algoritmo principal, liberar recursos y salir.
-
+            currentState = Statechart_End;
+            currentSuperState = Statechart_End;
             endBehavior();
 
             break; // end case "Shutdown"
@@ -187,10 +193,16 @@ void UC::statechart_process() {
             // Description: Salir de la base.
             // Salir marcha atras y dar la vuelta para empezar a funcionar.
 
+            /** Si mientras se está haciendo el Un-Dock pulsamos el boton Spot (apagar) */
             if (check_btnSpot()) {
-                UnDock_subState = OMNonState;
-                rootState_subState = Shutdown;
-                rootState_active = Shutdown;
+                
+                // Desactivar UnDock substates
+                
+                currentUnDock_subState = Disabled;
+                currentSuperState = Shutdown;
+                currentState = Shutdown;
+                
+                break; // Salida inmediata del subestado UnDock
             }
 
             /**
@@ -198,7 +210,7 @@ void UC::statechart_process() {
              *  - ExitDock
              *  - UnDock: Rotate 180º
              */
-            switch (UnDock_subState) {
+            switch (currentUnDock_subState) {
                 case ExitDock:
                 {
                     // State UnDock >> ExitDock
@@ -208,8 +220,9 @@ void UC::statechart_process() {
                         //#[ transition UnDock.1 
                         sensoresSumAngulo = 0;
                         //#]
-                        UnDock_subState = UnDock_Rotate180;
-                        rootState_active = UnDock_Rotate180;
+                        currentUnDock_subState = UnDock_Rotate180;
+                        currentState = UnDock_Rotate180;
+                        break; // Salir inmediatamente del sub-estado
                     }
 
                     break; // end case "ExitDock"
@@ -221,13 +234,14 @@ void UC::statechart_process() {
 
                     //## transition UnDock.2 
                     if (sensoresSumAngulo > 180) {
-                        UnDock_subState = OMNonState;
+                        currentUnDock_subState = Disabled;
                         NormalOperate_entDef();
+                        break; // Salir inmediatamente del sub-estado UnDock >> Rotate180º para entrar en NormalOperate
                     }
 
                     break; // end case "UnDock_Rotate180"
                 } // end UnDock_Rotate180
-
+                
                 default:
                     throw std::logic_error("Invalid switch-case of the Robomoves state-machine");
                     break;
@@ -242,22 +256,26 @@ void UC::statechart_process() {
             // Description: Modo de operacion normal.
 
             // TODO: Resumir Qué se hace en los siguientes if-else:
-            if (sensoresBateria < 15 || check_btnDock()) {
+            if (sensoresbattery_percentage < 15 || check_btnDock()) {
                 //NormalOperate_exit();
-                rootState_subState = Dock;
-                rootState_active = Dock;
+                currentSuperState = Dock;
+                currentState = Dock;
                 //#[ state Dock.(Entry) 
                 gotoDock();
                 //#]
+                break; // Salir inmediatamente del sub-estado
             } else if (check_btnClean()) {
                 //NormalOperate_exit();
-                rootState_subState = Idle;
-                rootState_active = Idle;
+                currentSuperState = Idle;
+                currentState = Idle;
+                break; // Salir inmediatamente del sub-estado
             } else if (check_btnSpot()) {
                 //NormalOperate_exit();
-                rootState_subState = Shutdown;
-                rootState_active = Shutdown;
+                currentSuperState = Shutdown;
+                currentState = Shutdown;
+                break; // Salir inmediatamente del sub-estado
             }
+            
 
             /**
              * "Normal Operate" sub-states (second level):
@@ -265,7 +283,7 @@ void UC::statechart_process() {
              *  - Dodge Obstacle
              *  - Cliff Ahead
              */
-            switch (NormalOperate_subState) {
+            switch (currentNormalOperate_subState) {
                     // State TrackingByCamera
                     // Description: Seguimiento mediante la camara.
                 case TrackingByCamera:
@@ -274,14 +292,15 @@ void UC::statechart_process() {
 
                     // TODO: Resumir Qué se hace en los siguientes if-else:
                     if (sensoresBl == true || sensoresBr == true) {
-                        TrackingByCamera_subState = OMNonState;
-                        PersonInView_subState = OMNonState;
-                        PersonOutView_subState = OMNonState;
+                        currentTrackingByCamera_subState = Disabled;
+                        currentPersonInView_subState = Disabled;
+                        currentPersonOutView_subState = Disabled;
                         DodgeObstacle_entDef();
+                        break; // Salir inmediatamente del sub-estado
                     } else if (sensoresCliff == true) {
-                        TrackingByCamera_subState = OMNonState;
-                        PersonInView_subState = OMNonState;
-                        PersonOutView_subState = OMNonState;
+                        currentTrackingByCamera_subState = Disabled;
+                        currentPersonInView_subState = Disabled;
+                        currentPersonOutView_subState = Disabled;
                         CliffAhead_entDef();
                     }
 
@@ -290,7 +309,7 @@ void UC::statechart_process() {
                      *  - Person in view
                      *  - Person out of view
                      */
-                    switch (TrackingByCamera_subState) {
+                    switch (currentTrackingByCamera_subState) {
                         case PersonInView:
                         {
                             // State: NormalOperate >> TrackingByCamera >> PersonInView
@@ -298,8 +317,9 @@ void UC::statechart_process() {
                             // Acercarse todo lo que se pueda sin invadir su espacio.
 
                             if (cameraIsPersonInView == false) {
-                                PersonInView_subState = OMNonState;
+                                currentPersonInView_subState = Disabled;
                                 PersonOutView_entDef();
+                                break; // Salir inmediatamente del sub-estado
                             }
 
                             /**
@@ -307,7 +327,7 @@ void UC::statechart_process() {
                              *  - Approach user
                              *  - Path blocked
                              */
-                            switch (PersonInView_subState) {
+                            switch (currentPersonInView_subState) {
                                 case PersonInView_ApproachUser:
                                 {
                                     // State: NormalOperate >> TrackingByCamera >> PersonInView >> ApproachUser
@@ -320,10 +340,11 @@ void UC::statechart_process() {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
                                         reproducirSonidoBloqueado();
                                         //#]
-                                        PersonInView_subState = PersonInView_PathBlocked;
-                                        rootState_active = PersonInView_PathBlocked;
+                                        currentPersonInView_subState = PersonInView_PathBlocked;
+                                        currentState = PersonInView_PathBlocked;
                                         //#[ state NormalOperate.TrackingByCamera.PersonInView.PersonInView.PersonInView_PathBlocked.(Entry) 
                                         //#]
+                                        break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end case "PersonInView_ApproachUser"
@@ -341,10 +362,11 @@ void UC::statechart_process() {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
                                         reproducirSonidoDesbloqueado();
                                         //#]
-                                        PersonInView_subState = PersonInView_ApproachUser;
-                                        rootState_active = PersonInView_ApproachUser;
+                                        currentPersonInView_subState = PersonInView_ApproachUser;
+                                        currentState = PersonInView_ApproachUser;
                                         //#[ state NormalOperate.TrackingByCamera.PersonInView.PersonInView.PersonInView_PathBlocked.(Entry) 
                                         //#]
+                                        break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end case "PersonInView_PathBlocked"
@@ -370,14 +392,15 @@ void UC::statechart_process() {
                              *  - Go forward
                              *  - Rotate 360º
                              */
-                            switch (PersonOutView_subState) {
+                            switch (currentPersonOutView_subState) {
                                 case PersonOutView_RotateToMove:
                                 {
                                     // State PersonOutView_RotateToMove
 
                                     if (sensoresSumAngulo > computedAngle) {
-                                        PersonOutView_subState = PersonOutView_GoForward;
-                                        rootState_active = PersonOutView_GoForward;
+                                        currentPersonOutView_subState = PersonOutView_GoForward;
+                                        currentState = PersonOutView_GoForward;
+                                        break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end case "PersonOutView_RotateToMove"
@@ -393,8 +416,8 @@ void UC::statechart_process() {
                                     //#[ transition NormalOperate.TrackingByCamera.PersonOutView.0 
                                     sensoresSumAngulo = 0;
                                     //#]
-                                    PersonOutView_subState = PersonOutView_RotateToMove;
-                                    rootState_active = PersonOutView_RotateToMove;
+                                    currentPersonOutView_subState = PersonOutView_RotateToMove;
+                                    currentState = PersonOutView_RotateToMove;
 
                                     break; // end case "PersonOutView_ComputePosition"
                                 } // end PersonOutView_ComputePosition
@@ -408,8 +431,9 @@ void UC::statechart_process() {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonOutView.2 
                                         sensoresSumAngulo = 0;
                                         //#]
-                                        PersonOutView_subState = PersonOutView_Rotate360;
-                                        rootState_active = PersonOutView_Rotate360;
+                                        currentPersonOutView_subState = PersonOutView_Rotate360;
+                                        currentState = PersonOutView_Rotate360;
+                                        break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end case "PersonOutView_GoForward"
@@ -421,8 +445,9 @@ void UC::statechart_process() {
 
                                     // TODO: resumir lo que se hace dentro de este if
                                     if (sensoresSumAngulo > 360) {
-                                        PersonOutView_subState = PersonOutView_ComputePosition;
-                                        rootState_active = PersonOutView_ComputePosition;
+                                        currentPersonOutView_subState = PersonOutView_ComputePosition;
+                                        currentState = PersonOutView_ComputePosition;
+                                        break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end case "PersonOutView_GoForward"
@@ -451,9 +476,10 @@ void UC::statechart_process() {
                     // Rodear el obstaculo y volver a encontrar a la persona.
 
                     if (sensoresCliff == true) {
-                        CrashAlgorithm_subState = OMNonState;
-                        DodgeObstacle_subState = OMNonState;
+                        currentCrashAlgorithm_subState = Disabled;
+                        currentDodgeObstacle_subState = Disabled;
                         CliffAhead_entDef();
+                        break; // Salir inmediatamente del sub-estado
                     }
 
                     /**
@@ -461,7 +487,7 @@ void UC::statechart_process() {
                      *  - Move back
                      *  - Crash algorithm
                      */
-                    switch (DodgeObstacle_subState) { // State Dodge_MoveBack
+                    switch (currentDodgeObstacle_subState) { // State Dodge_MoveBack
                         case Dodge_MoveBack:
                         {
                             // State NormalOperate >> DodgeObstacle >> MoveBack
@@ -469,6 +495,7 @@ void UC::statechart_process() {
                             //## transition 10 
                             if (sensoresSumDistancia<-30) {
                                 CrashAlgorithm_entDef();
+                                break; // Salir inmediatamente del sub-estado
                             }
 
                             break; // end case Dodge_MoveBack
@@ -481,12 +508,13 @@ void UC::statechart_process() {
                             // (El del TFG)
 
                             if (sensoresBl == true || sensoresBr == true) {
-                                CrashAlgorithm_subState = OMNonState;
+                                currentCrashAlgorithm_subState = Disabled;
                                 //#[ transition 11 
                                 sensoresSumDistancia = 0;
                                 //#]
-                                DodgeObstacle_subState = Dodge_MoveBack;
-                                rootState_active = Dodge_MoveBack;
+                                currentDodgeObstacle_subState = Dodge_MoveBack;
+                                currentState = Dodge_MoveBack;
+                                break; // Salir inmediatamente del sub-estado
                             }
 
                             /**
@@ -497,14 +525,15 @@ void UC::statechart_process() {
                              *  - Go Forward Extended
                              *  - Recover Trajectory
                              */
-                            switch (CrashAlgorithm_subState) {
+                            switch (currentCrashAlgorithm_subState) {
                                 case CrashAlgorithm_Dodge:
                                 {
                                     // State NormalOperate >> DodgeObstacle >> CrashAlgorithm >> Dodge
 
                                     if (sensoresSumAngulo > 25) {
-                                        CrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
-                                        rootState_active = CrashAlgorithm_DodgeParallel;
+                                        currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
+                                        currentState = CrashAlgorithm_DodgeParallel;
+                                        break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end case CrashAlgorithm_Dodge
@@ -515,8 +544,9 @@ void UC::statechart_process() {
                                     // State NormalOperate >> DodgeObstacle >> CrashAlgorithm >> DodgeParallel
 
                                     if (sensoresLBumpFront == false) {
-                                        CrashAlgorithm_subState = CrashAlgorithm_GoForward;
-                                        rootState_active = CrashAlgorithm_GoForward;
+                                        currentCrashAlgorithm_subState = CrashAlgorithm_GoForward;
+                                        currentState = CrashAlgorithm_GoForward;
+                                        break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end CrashAlgorithm_DodgeParallel
@@ -530,11 +560,13 @@ void UC::statechart_process() {
                                         //#[ transition NormalOperate.DodgeObstacle.CrashAlgorithm.5 
                                         sensoresSumDistancia = 0;
                                         //#]
-                                        CrashAlgorithm_subState = CrashAlgorithm_GoForwardExtended;
-                                        rootState_active = CrashAlgorithm_GoForwardExtended;
+                                        currentCrashAlgorithm_subState = CrashAlgorithm_GoForwardExtended;
+                                        currentState = CrashAlgorithm_GoForwardExtended;
+                                        break; // Salir inmediatamente del sub-estado
                                     } else if (sensoresLBumpFront == true) {
-                                        CrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
-                                        rootState_active = CrashAlgorithm_DodgeParallel;
+                                        currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
+                                        currentState = CrashAlgorithm_DodgeParallel;
+                                        break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end CrashAlgorithm_GoForward
@@ -545,14 +577,17 @@ void UC::statechart_process() {
                                     // State CrashAlgorithm_GoForwardExtended
 
                                     if (sensoresSumDistancia > 300) {
-                                        CrashAlgorithm_subState = CrashAlgorithm_RecoverTrajectory;
-                                        rootState_active = CrashAlgorithm_RecoverTrajectory;
+                                        currentCrashAlgorithm_subState = CrashAlgorithm_RecoverTrajectory;
+                                        currentState = CrashAlgorithm_RecoverTrajectory;
+                                        break; // Salir inmediatamente del sub-estado
                                     } else if (sensoresLBumpFront == false && sensoresLBumpSide == true) {
-                                        CrashAlgorithm_subState = CrashAlgorithm_GoForward;
-                                        rootState_active = CrashAlgorithm_GoForward;
+                                        currentCrashAlgorithm_subState = CrashAlgorithm_GoForward;
+                                        currentState = CrashAlgorithm_GoForward;
+                                        break; // Salir inmediatamente del sub-estado
                                     } else if (sensoresLBumpFront == true) {
-                                        CrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
-                                        rootState_active = CrashAlgorithm_DodgeParallel;
+                                        currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
+                                        currentState = CrashAlgorithm_DodgeParallel;
+                                        break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end CrashAlgorithm_GoForwardExtended
@@ -562,14 +597,17 @@ void UC::statechart_process() {
                                 {
                                     // State CrashAlgorithm_RecoverTrajectory
                                     if (sensoresSumAngulo < 25) {
-                                        DodgeObstacle_subState = OMNonState;
+                                        currentDodgeObstacle_subState = Disabled;
                                         TrackingByCamera_entDef();
+                                        break; // Salir inmediatamente del sub-estado
                                     } else if (sensoresLBumpFront == true) {
-                                        CrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
-                                        rootState_active = CrashAlgorithm_DodgeParallel;
+                                        currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
+                                        break; // Salir inmediatamente del sub-estado
+                                        currentState = CrashAlgorithm_DodgeParallel;
                                     } else if (sensoresLBumpFront == false && sensoresLBumpSide == true) {
-                                        CrashAlgorithm_subState = CrashAlgorithm_GoForward;
-                                        rootState_active = CrashAlgorithm_GoForward;
+                                        currentCrashAlgorithm_subState = CrashAlgorithm_GoForward;
+                                        currentState = CrashAlgorithm_GoForward;
+                                        break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end case CrashAlgorithm_RecoverTrajectory
@@ -603,13 +641,14 @@ void UC::statechart_process() {
                      *  - Rotate 180º
                      *  - Go Forward
                      */
-                    switch (CliffAhead_subState) {
+                    switch (currentCliffAhead_subState) {
                         case CliffAhead_Rotate180:
                         {
                             // State CliffAhead_Rotate180
                             if (sensoresSumAngulo > 180) {
-                                CliffAhead_subState = CliffAhead_GoForward;
-                                rootState_active = CliffAhead_GoForward;
+                                currentCliffAhead_subState = CliffAhead_GoForward;
+                                currentState = CliffAhead_GoForward;
+                                break; // Salir inmediatamente del sub-estado
                             }
 
                             break; // end CliffAhead_Rotate180
@@ -619,8 +658,9 @@ void UC::statechart_process() {
                         {
                             // State CliffAhead_GoForward
                             if (sensoresSumDistancia > 300) {
-                                CliffAhead_subState = OMNonState;
+                                currentCliffAhead_subState = Disabled;
                                 TrackingByCamera_entDef();
+                                break; // Salir inmediatamente del sub-estado
                             }
 
                             break; // end CliffAhead_GoForward

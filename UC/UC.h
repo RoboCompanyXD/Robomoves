@@ -18,11 +18,11 @@ extern bool cameraIsPersonInView; //## attribute cameraIsPersonInView
 extern int lidarIsObstable; //## attribute lidarIsObstable
 extern int computedAngle; //## attribute computedAngle
 extern int computedDistance; //## attribute computedDistance
-extern int sensoresBateria; //## attribute sensoresBateria
+extern int sensoresbattery_percentage; //## attribute sensoresBateria
 extern bool sensoresBl; //## attribute sensoresBl
 extern bool sensoresBr; //## attribute sensoresBr
 extern bool sensoresCliff; //## attribute sensoresCliff
-extern int sensoresInDock; //## attribute sensoresInDock
+extern int sensoresIsDocked; //## attribute sensoresInDock
 extern bool sensoresLBumpFront; //## attribute sensoresLBumpFront
 extern bool sensoresLBumpSide; //## attribute sensoresLBumpSide
 extern int sensoresSumAngulo; //## attribute sensoresSumAngulo
@@ -45,6 +45,7 @@ void computeCameraApproach();
  */
 void computeCameraWithObstacle();
 
+
 /**
  * Play "blocked" sound
  */
@@ -54,6 +55,7 @@ void reproducirSonidoBloqueado();
  * Play "un-blocked" sound
  */
 void reproducirSonidoDesbloqueado();
+
 
 /**
  * Calcular a donde ir con el lidar
@@ -158,10 +160,10 @@ protected:
 
     //void cancelTimeouts();
 
-    /** TODO: Documentar enum */
-    enum UC_Enum {
+    /** State IDs */
+    const enum UC_Enum {
 
-        OMNonState = 0, // TODO: What does OMN mean?
+        Disabled = 0, // TODO: What does OMN mean?
         UnDock = 1,
         UnDock_Rotate180 = 2,
         ExitDock = 3,
@@ -198,17 +200,20 @@ protected:
         Statechart_End = 1000
     };
 
-    int rootState_subState; // Estado mas exterior: superestado
-    int rootState_active; // Estado activo principal
-    int UnDock_subState; // Subestados del estado "UnDock": "ExitDock" y "UnDock_Rotate180"
-    int NormalOperate_subState; // Subestados del estado "NormalOperate": TrackingByCamera, CliffAhead y DodgeObstacle
-    int TrackingByCamera_subState; // TODO
-    int PersonOutView_subState; // TODO
-    int PersonInView_subState; // TODO
+    /** Define the flags for the state-machine */
+    
+    int currentSuperState; // Estado mas exterior: superestado
+    int currentState; // Estado activo principal
+    int currentUnDock_subState; // Subestados del estado "UnDock": "ExitDock" y "UnDock_Rotate180"
+    int currentNormalOperate_subState; // Subestados del estado "NormalOperate": TrackingByCamera, CliffAhead y DodgeObstacle
+    int currentTrackingByCamera_subState; // TODO
+    int currentPersonOutView_subState; // TODO
+    int currentPersonInView_subState; // TODO
+    int currentDodgeObstacle_subState; // TODO
+    int currentCrashAlgorithm_subState; // TODO
+    int currentCliffAhead_subState; // TODO
+
     int PersonInView_timeout; // TODO
-    int DodgeObstacle_subState; // TODO
-    int CrashAlgorithm_subState; // TODO
-    int CliffAhead_subState; // TODO
 
 }; // end class UC
 
