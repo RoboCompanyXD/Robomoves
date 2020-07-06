@@ -23,17 +23,13 @@ public:
     
     /**
      * Class constructor
-     */
-    //UC();
-
+     */ 
+    RobotStateMachine(ControlRobot * contr);
+    
     /**
      * Class destructor
      */
-    ~RobotStateMachine();
-    
-    RobotStateMachine();
-    
-    RobotStateMachine(ControlRobot * contr);
+    virtual ~RobotStateMachine();
     
     /**
      * TODO: documentar metodo

@@ -9,13 +9,10 @@
 #include "../ControlRobot/ControlRobot.h"
 #include <stdexcept>
 
-//UC::UC() {
-//}
-
-RobotStateMachine::RobotStateMachine() {
+/*RobotStateMachine::RobotStateMachine() {
 
     // TODO: empty constructor? Why?
-}
+}*/
 
 RobotStateMachine::RobotStateMachine(ControlRobot * contr) {
 
