@@ -6,6 +6,7 @@
  */
 
 #include "UC.h"
+#include "../Navegador/ControlRobot.h"
 #include <stdexcept>
 
 UC::UC() {
@@ -217,7 +218,7 @@ void UC::statechart_process() {
                 case ExitDock:
                 {
                     // State UnDock >> ExitDock
-
+                    control->setMotores_actual(BACK);
                     //## transition UnDock.1 
                     if (sensoresSumDistancia<-300) {
                         //#[ transition UnDock.1 
@@ -234,7 +235,7 @@ void UC::statechart_process() {
                 case UnDock_Rotate180:
                 {
                     // State UnDock >> Rotate180
-
+                    control->setMotores_actual(LEFT);
                     //## transition UnDock.2 
                     if (sensoresSumAngulo > 180) {
                         currentUnDock_subState = Disabled;
@@ -337,9 +338,8 @@ void UC::statechart_process() {
                                     // State: NormalOperate >> TrackingByCamera >> PersonInView >> ApproachUser
                                     // Description: Acercarse a la persona
                                     // El frente está libre, el robot se acerca a la persona.
-
                                     //Ejecutar funcion de calculo de aproximacion
-                                    // computeCameraApproach();
+                                    control->computeCamaraApproach();
                                     if (lidarIsObstable == true) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
                                         reproducirSonidoBloqueado();
@@ -361,7 +361,8 @@ void UC::statechart_process() {
                                 case PersonInView_PathBlocked:
                                 {
                                     // Ejecutar funcion de calculo de aproximacion con obstaculo
-                                    //computeCameraWithObstacle();
+                                    
+                                    control->computeCamaraWithObstacle();
                                     if (lidarIsObstable == false) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
                                         reproducirSonidoDesbloqueado();
@@ -400,7 +401,7 @@ void UC::statechart_process() {
                                 case PersonOutView_RotateToMove:
                                 {
                                     // State PersonOutView_RotateToMove
-
+                                    control->setMotores_actual(LEFT);
                                     if (sensoresSumAngulo > computedAngle) {
                                         currentPersonOutView_subState = PersonOutView_GoForward;
                                         currentState = PersonOutView_GoForward;
@@ -429,7 +430,7 @@ void UC::statechart_process() {
                                 case PersonOutView_GoForward:
                                 {
                                     // State PersonOutView_GoForward
-
+                                    control->setMotores_actual(FWD);
                                     // TODO: resumir lo que se hace en este if
                                     if (sensoresSumDistancia > computedDistance) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonOutView.2 
@@ -446,6 +447,7 @@ void UC::statechart_process() {
                                 case PersonOutView_Rotate360:
                                 {
                                     // State PersonOutView_Rotate360
+                                    control->setMotores_actual(LEFT);
 
                                     // TODO: resumir lo que se hace dentro de este if
                                     if (sensoresSumAngulo > 360) {
@@ -495,6 +497,7 @@ void UC::statechart_process() {
                         case Dodge_MoveBack:
                         {
                             // State NormalOperate >> DodgeObstacle >> MoveBack
+                            control->setMotores_actual(BACK);
 
                             //## transition 10 
                             if (sensoresSumDistancia<-30) {

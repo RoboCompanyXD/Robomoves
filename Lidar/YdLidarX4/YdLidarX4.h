@@ -29,7 +29,7 @@
 #include "../nlohmann/json.hpp"
 using json = nlohmann::json;
 
-using namespace std;
+//using namespace std;
 
 #define BUFF_SIZE 2048 // TODO: Para que es esta variable?
 #define PORT 25138 // TODO: Para que es esta variable?
@@ -56,10 +56,10 @@ constexpr struct res {
 
 /** TODO: Documentar*/
 struct dev {
-    string modelnumber;
-    string firmware_version;
-    string hardware_version;
-    string serial_number;
+    std::string modelnumber;
+    std::string firmware_version;
+    std::string hardware_version;
+    std::string serial_number;
 };
 
 /**
@@ -155,7 +155,7 @@ private:
     /**
      * TODO: Documentar
      */
-    string _create_command(int command);
+    std::string _create_command(int command);
 };
 
 #endif /* YDLIDARX4H */

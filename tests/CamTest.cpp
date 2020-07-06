@@ -5,6 +5,8 @@
  * Created on 30-jun-2020, 12:28:16
  */
 
+#ifndef CAM_TEST_CPP
+#define CAM_TEST_CPP
 
 #include <cstdlib>
 #include <stdlib.h>
@@ -63,3 +65,5 @@ int main(int argc, char** argv) {
         cout << "TEST X:" << micam.x << "   Y:" << micam.y << "   area:" << micam.area << endl;
     }
 }
+
+#endif //CAM_TEST_CPP

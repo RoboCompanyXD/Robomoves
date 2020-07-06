@@ -10,7 +10,7 @@
 #ifndef SERIAL_H
 #define	SERIAL_H
 
-#pragma once
+//#pragma once
 #include <cstdlib>
 #include <unistd.h>
 #include <iostream>

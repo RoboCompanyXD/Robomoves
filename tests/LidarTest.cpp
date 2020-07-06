@@ -5,6 +5,10 @@
  * Created on 30-jun-2020, 12:25:59
  */
 
+#ifndef LIDAR_TEST_CPP
+#define LIDAR_TEST_CPP
+
+
 #include <stdlib.h>
 #include <iostream>
 
@@ -14,7 +18,7 @@
  * Simple C++ Test Suite
  */
 
-Lidar mylidar = new Lidar();
+Lidar * mylidar = new Lidar();
 
 int main(int argc, char** argv) {
     std::cout << "%SUITE_STARTING% lidartest" << std::endl;
@@ -31,3 +35,5 @@ int main(int argc, char** argv) {
     return (EXIT_SUCCESS);
 }
 
+
+#endif //LIDAR_TEST_CPP

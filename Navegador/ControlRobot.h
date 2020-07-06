@@ -3,14 +3,16 @@
 #ifndef CONTROLROBOT_H
 #define	CONTROLROBOT_H
 
-#pragma once
+//#pragma once
 
 #include "../IRobotFramework/IRobotConnection.h"
 #include "../Lidar/Lidar.h"
 #include "../OCVCam/OCVCam.h"
 #include <iostream>
 
-#include "../UC/UC.h"
+// #include "../UC/UC.h"
+
+class UC; // Forward declaration
 
 /**
  * TODO: Documentar clase
@@ -98,7 +100,7 @@ public:
     Lidar lidar;
     OCVCam cam;
 
-    UC uc;
+    UC * uc;
 
     void inicializacion();
     void finalizacion();

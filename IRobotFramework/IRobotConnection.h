@@ -10,7 +10,7 @@
 #ifndef IROBOTCONNECTION_H
 #define IROBOTCONNECTION_H
 
-#pragma once
+//#pragma once // https://stackoverflow.com/questions/787533/is-pragma-once-a-safe-include-guard
 #include <iostream>
 #include "IRobotInstructionSet.h"
 #include "Serial.h"
