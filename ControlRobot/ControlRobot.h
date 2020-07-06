@@ -10,7 +10,9 @@
 #include "../OCVCam/OCVCam.h"
 #include <iostream>
 
-//#include "../UC/UC.h"
+//#include "../RobotStateMachine/RobotStateMachine.h"
+
+class RobotStateMachine; // Forward declaration
 
 /**
  * TODO: Documentar clase
@@ -19,7 +21,7 @@
 class ControlRobot {
 public:
 
-    
+
     ControlRobot();
     ControlRobot(Lidar l, OCVCam c);
     ~ControlRobot(void);
@@ -27,7 +29,7 @@ public:
     Lidar lidar;
     OCVCam cam;
 
-    //UC_ControlRobot uc;
+    RobotStateMachine * uc;
 
     void inicializacion();
     void finalizacion();
@@ -36,15 +38,54 @@ public:
     void logicaEstados(int x, int y, int area, int frame_width, int frame_height);
     void moverActuadores();
     void imprimirInfo();
-    void computeCamaraApproach();
-    void computeCamaraWithObstacle();
-    void gotoDock();
+
 
     void drive(int der, int izq);
 
     void setMotores_actual(char state);
 
-    
+
+    /**
+     * TODO: Documentar metodo
+     */
+    void gotoDock();
+
+    /**
+     * TODO: Documentar metodo (mas detallado)
+     * Calcular a donde ir con la camara
+     */
+    void computeCameraApproach();
+
+    /**
+     * TODO: Documentar metodo (mas detallado)
+     * Calcular a donde ir con la camara
+     */
+    void computeCameraWithObstacle();
+
+
+    /**
+     * Play "blocked" sound
+     */
+    void reproducirSonidoBloqueado();
+
+    /**
+     * Play "un-blocked" sound
+     */
+    void reproducirSonidoDesbloqueado();
+
+
+    /**
+     * Calcular a donde ir con el lidar
+     */
+    void computeLidarTripPersonOutOfView();
+
+    //// TODO: ¿por qué no poner los metodos anteriores dentro de la definición de la clase?
+
+    bool check_btnSpot(); // TODO: documentar
+    bool check_btnClean();
+    bool check_btnDock();
+
+
 private:
 
     IRobotConnection *robot;
@@ -53,50 +94,60 @@ private:
         // variables para almacenar informaci�n del
         // sensor de acantilado frontal izquierdo
         unsigned int front_left;
-        bool fl;
+        bool fl;                                               // Sensor Virtual
 
         unsigned int front_right;
-        bool fr;
+        bool fr;                                               // Sensor Virtual
 
         unsigned int left;
-        bool l;
+        bool l;                                                // Sensor Virtual
 
         unsigned int right;
-        bool r;
+        bool r;                                                // Sensor Virtual
 
 
         unsigned int buttons;
-        bool play;
-        bool avance;
+        bool play;                                             // Sensor Virtual
+        bool avance;                                           // Sensor Virtual
 
         unsigned int bumpers;
-        bool bl;
-        bool br;
+        bool bl;                                               // Sensor Virtual
+        bool br;                                               // Sensor Virtual
 
         int angle;
         int distance;
-        int sum_angle, sub_angle;
-        int sum_distance;
+        int sum_angle;                              // Sensor Virtual
+        int sum_distance;                                      // Sensor Virtual
 
-        int chargstate;
         unsigned int lightbumper;
-        unsigned int lbl;
-        unsigned int lbfl;
-        unsigned int lbcl;
-        unsigned int lbcr;
-        unsigned int lbfr;
-        unsigned int lbr;
-
+        unsigned int lbl;                                      // Sensor Virtual
+        unsigned int lbfl;                                     // Sensor Virtual
+        unsigned int lbcl;                                     // Sensor Virtual
+        unsigned int lbcr;                                     // Sensor Virtual
+        unsigned int lbfr;                                     // Sensor Virtual
+        unsigned int lbr;                                      // Sensor Virtual
+        
+        bool lbump_front;
+        bool lbump_side;
+        
         bool clean; //LED CLEAN
 
         int charger_available;
+        bool IsDocked;                                         // Sensor Virtual
 
         int battery_charge;
         int battery_capacity;
-        int battery_percentage;
+        int battery_percentage;                                // Sensor Virtual
+        
+        // Sensores Cliff
+        bool cliff_left;
+        bool cliff_frontleft;
+        bool cliff_frontright;
+        bool cliff_right;
+        bool cliff;                                             // Sensor Virtual
+        
+        
     }; // struct sensores_iCreate
-    
-    struct Sensores_iCreate sensores;
 
     struct Actuadores_iCreate {
         // variables para el comando Drive direct
@@ -113,6 +164,8 @@ private:
     char motores_actual;
     char motores_anterior;
 
+public:
+    struct Sensores_iCreate sensores;
 
 };
 

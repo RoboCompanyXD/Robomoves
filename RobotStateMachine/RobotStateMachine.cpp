@@ -5,20 +5,26 @@
  * Created on 30 de junio de 2020, 10:52
  */
 
-#include "UC.h"
+#include "RobotStateMachine.h"
+#include "../ControlRobot/ControlRobot.h"
 #include <stdexcept>
 
 //UC::UC() {
 //}
 
-UC_ControlRobot::UC_ControlRobot() {
+RobotStateMachine::RobotStateMachine() {
 
-    //this->control = contr;
+    // TODO: empty constructor? Why?
+}
+
+RobotStateMachine::RobotStateMachine(ControlRobot * contr) {
+
+    this->robot = contr;
 
     initStatechart();
 }
 
-void UC_ControlRobot::initStatechart() {
+void RobotStateMachine::initStatechart() {
     currentSuperState = Disabled; // TODO: change to UC_Enum.OMNonState for better readability
     currentState = Disabled;
     currentUnDock_subState = Disabled;
@@ -33,92 +39,92 @@ void UC_ControlRobot::initStatechart() {
     rootState_entDef();
 }
 
-void UC_ControlRobot::rootState_entDef() {
+void RobotStateMachine::rootState_entDef() {
     {
         currentSuperState = Idle;
         currentState = Idle;
     }
 }
 
-void UC_ControlRobot::UnDock_entDef() {
+void RobotStateMachine::UnDock_entDef() {
     currentSuperState = UnDock;
     //#[ transition UnDock.0 
-    sensoresSumDistancia = 0;
+    robot->sensores.sum_distance = 0;
     //#]
     currentUnDock_subState = ExitDock;
     currentState = ExitDock;
 }
 
-void UC_ControlRobot::NormalOperate_entDef() {
+void RobotStateMachine::NormalOperate_entDef() {
     currentSuperState = NormalOperate;
     NormalOperateEntDef();
 }
 
-void UC_ControlRobot::NormalOperateEntDef() {
+void RobotStateMachine::NormalOperateEntDef() {
     TrackingByCamera_entDef();
 }
 
-void UC_ControlRobot::TrackingByCamera_entDef() {
+void RobotStateMachine::TrackingByCamera_entDef() {
     currentNormalOperate_subState = TrackingByCamera;
     TrackingByCameraEntDef();
 }
 
-void UC_ControlRobot::TrackingByCameraEntDef() {
+void RobotStateMachine::TrackingByCameraEntDef() {
     //## transition 14 
-    if (cameraIsPersonInView == true) {
+    if (robot->cam.isPersonInView == true) {
         PersonInView_entDef();
     } else {
         PersonOutView_entDef();
     }
 }
 
-void UC_ControlRobot::PersonInView_entDef() {
+void RobotStateMachine::PersonInView_entDef() {
     currentTrackingByCamera_subState = PersonInView;
     currentPersonInView_subState = PersonInView_ApproachUser;
     currentState = PersonInView_ApproachUser;
     //#[ state NormalOperate.TrackingByCamera.PersonInView.PersonInView.PersonInView_ApproachUser.(Entry) 
-    computeCameraApproach();
+    robot->computeCameraApproach();
     //#]
     //PersonInView_timeout = scheduleTimeout(ComputeStepTime, "ROOT.NormalOperate.TrackingByCamera.PersonInView.ROOT.PersonInView.PersonInView_ApproachUser");
 }
 
-void UC_ControlRobot::PersonOutView_entDef() {
+void RobotStateMachine::PersonOutView_entDef() {
     currentTrackingByCamera_subState = PersonOutView;
     //#[ transition NormalOperate.TrackingByCamera.PersonOutView.4 
-    sensoresSumAngulo = 0;
-    sensoresSumDistancia = 0;
+    robot->sensores.sum_angle = 0;
+    robot->sensores.sum_distance = 0;
     //#]
     currentPersonOutView_subState = PersonOutView_Rotate360;
     currentState = PersonOutView_Rotate360;
 }
 
-void UC_ControlRobot::DodgeObstacle_entDef() {
+void RobotStateMachine::DodgeObstacle_entDef() {
     currentNormalOperate_subState = DodgeObstacle;
     //#[ transition 9 
-    sensoresSumAngulo = 0;
-    sensoresSumDistancia = 0;
+    robot->sensores.sum_angle = 0;
+    robot->sensores.sum_distance = 0;
     //#]
     currentDodgeObstacle_subState = Dodge_MoveBack;
     currentState = Dodge_MoveBack;
 }
 
-void UC_ControlRobot::CliffAhead_entDef() {
+void RobotStateMachine::CliffAhead_entDef() {
     currentNormalOperate_subState = CliffAhead;
     //#[ transition 12 
-    sensoresSumAngulo = 0;
-    sensoresSumDistancia = 0;
+    robot->sensores.sum_angle = 0;
+    robot->sensores.sum_distance = 0;
     //#]
     currentCliffAhead_subState = CliffAhead_Rotate180;
     currentState = CliffAhead_Rotate180;
 }
 
-void UC_ControlRobot::CrashAlgorithm_entDef() {
+void RobotStateMachine::CrashAlgorithm_entDef() {
     currentDodgeObstacle_subState = CrashAlgorithm;
     currentCrashAlgorithm_subState = CrashAlgorithm_Dodge;
     currentState = CrashAlgorithm_Dodge;
 }
 
-void UC_ControlRobot::statechart_process() {
+void RobotStateMachine::statechart_process() {
 
     /** 
      * First level "super-case" machine states: 
@@ -139,22 +145,22 @@ void UC_ControlRobot::statechart_process() {
             // Una vez el robot está en la base de carga se retorna a este estado.
             // En el modo de espera se puede estar cargando o sin cargar
 
-            if (sensoresbattery_percentage < 15 || check_btnDock()) {
+            if (robot->sensores.battery_percentage < 15 || robot->check_btnDock()) {
                 currentSuperState = Dock;
                 currentState = Dock;
                 //#[ state Dock.(Entry) 
-                gotoDock();
+                robot->gotoDock();
                 //#]
                 break; // Salir inmediatamente del sub-estado
-            } else if (check_btnClean()) {
-                if (sensoresIsDocked == true) {
+            } else if (robot->check_btnClean()) {
+                if (robot->sensores.IsDocked == true) {
                     UnDock_entDef();
                     break; // Salir inmediatamente del sub-estado
                 } else {
                     NormalOperate_entDef();
                     break; // Salir inmediatamente del sub-estado
                 }
-            } else if (check_btnSpot()) {
+            } else if (robot->check_btnSpot()) {
                 currentSuperState = Shutdown;
                 currentState = Shutdown;
                 break; // Salir inmediatamente del sub-estado
@@ -169,7 +175,7 @@ void UC_ControlRobot::statechart_process() {
             // Description: Dirigirse a la base.
 
             //## transition 29 
-            if (sensoresIsDocked == true) {
+            if (robot->sensores.IsDocked == true) {
                 currentSuperState = Idle;
                 currentState = Idle;
                 break; // Salir inmediatamente del sub-estado
@@ -197,7 +203,7 @@ void UC_ControlRobot::statechart_process() {
             // Salir marcha atras y dar la vuelta para empezar a funcionar.
 
             /** Si mientras se está haciendo el Un-Dock pulsamos el boton Spot (apagar) */
-            if (check_btnSpot()) {
+            if (robot->check_btnSpot()) {
                 
                 // Desactivar UnDock substates
                 
@@ -219,9 +225,9 @@ void UC_ControlRobot::statechart_process() {
                     // State UnDock >> ExitDock
 
                     //## transition UnDock.1 
-                    if (sensoresSumDistancia<-300) {
+                    if (robot->sensores.sum_distance<-300) {
                         //#[ transition UnDock.1 
-                        sensoresSumAngulo = 0;
+                        robot->sensores.sum_angle = 0;
                         //#]
                         currentUnDock_subState = UnDock_Rotate180;
                         currentState = UnDock_Rotate180;
@@ -236,7 +242,7 @@ void UC_ControlRobot::statechart_process() {
                     // State UnDock >> Rotate180
 
                     //## transition UnDock.2 
-                    if (sensoresSumAngulo > 180) {
+                    if (robot->sensores.sum_angle > 180) {
                         currentUnDock_subState = Disabled;
                         NormalOperate_entDef();
                         break; // Salir inmediatamente del sub-estado UnDock >> Rotate180º para entrar en NormalOperate
@@ -259,20 +265,20 @@ void UC_ControlRobot::statechart_process() {
             // Description: Modo de operacion normal.
 
             // TODO: Resumir Qué se hace en los siguientes if-else:
-            if (sensoresbattery_percentage < 15 || check_btnDock()) {
+            if (robot->sensores.battery_percentage < 15 || robot->check_btnDock()) {
                 //NormalOperate_exit();
                 currentSuperState = Dock;
                 currentState = Dock;
                 //#[ state Dock.(Entry) 
-                gotoDock();
+                robot->gotoDock();
                 //#]
                 break; // Salir inmediatamente del sub-estado
-            } else if (check_btnClean()) {
+            } else if (robot->check_btnClean()) {
                 //NormalOperate_exit();
                 currentSuperState = Idle;
                 currentState = Idle;
                 break; // Salir inmediatamente del sub-estado
-            } else if (check_btnSpot()) {
+            } else if (robot->check_btnSpot()) {
                 //NormalOperate_exit();
                 currentSuperState = Shutdown;
                 currentState = Shutdown;
@@ -294,13 +300,13 @@ void UC_ControlRobot::statechart_process() {
                     // State NormalOperate >> TrackingByCamera
 
                     // TODO: Resumir Qué se hace en los siguientes if-else:
-                    if (sensoresBl == true || sensoresBr == true) {
+                    if (robot->sensores.bl == true || robot->sensores.br == true) {
                         currentTrackingByCamera_subState = Disabled;
                         currentPersonInView_subState = Disabled;
                         currentPersonOutView_subState = Disabled;
                         DodgeObstacle_entDef();
                         break; // Salir inmediatamente del sub-estado
-                    } else if (sensoresCliff == true) {
+                    } else if (robot->sensores.cliff == true) {
                         currentTrackingByCamera_subState = Disabled;
                         currentPersonInView_subState = Disabled;
                         currentPersonOutView_subState = Disabled;
@@ -320,7 +326,7 @@ void UC_ControlRobot::statechart_process() {
                             // Description: La persona está a la vista.
                             // Acercarse todo lo que se pueda sin invadir su espacio.
 
-                            if (cameraIsPersonInView == false) {
+                            if (robot->cam.isPersonInView == false) {
                                 currentPersonInView_subState = Disabled;
                                 PersonOutView_entDef();
                                 break; // Salir inmediatamente del sub-estado
@@ -340,9 +346,9 @@ void UC_ControlRobot::statechart_process() {
 
                                     //Ejecutar funcion de calculo de aproximacion
                                     // computeCameraApproach();
-                                    if (lidarIsObstable == true) {
+                                    if (robot->lidar.IsObstable == true) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
-                                        reproducirSonidoBloqueado();
+                                        robot->reproducirSonidoBloqueado();
                                         //#]
                                         currentPersonInView_subState = PersonInView_PathBlocked;
                                         currentState = PersonInView_PathBlocked;
@@ -362,18 +368,18 @@ void UC_ControlRobot::statechart_process() {
                                 {
                                     // Ejecutar funcion de calculo de aproximacion con obstaculo
                                     //computeCameraWithObstacle();
-                                    if (lidarIsObstable == false) {
+                                    if (robot->lidar.IsObstable == false) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
-                                        reproducirSonidoDesbloqueado();
+                                        robot->reproducirSonidoDesbloqueado();
                                         //#]
                                         currentPersonInView_subState = PersonInView_ApproachUser;
                                         currentState = PersonInView_ApproachUser;
-                                        //#[ state NormalOperate.TrackingByCamera.PersonInView.PersonInView.PersonInView_PathBlocked.(Entry) 
+                                        //#[ state NormalOperate.TrackingByCamera.PersonInView.PersonInView.PersonInView_Pathblocked.(Entry) 
                                         //#]
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
-                                    break; // end case "PersonInView_PathBlocked"
+                                    break; // end case "PersonInView_Pathblocked"
                                 } // end PathLocked
 
                                 default:
@@ -401,7 +407,7 @@ void UC_ControlRobot::statechart_process() {
                                 {
                                     // State PersonOutView_RotateToMove
 
-                                    if (sensoresSumAngulo > computedAngle) {
+                                    if (robot->sensores.sum_angle > robot->lidar.computedAngle) {
                                         currentPersonOutView_subState = PersonOutView_GoForward;
                                         currentState = PersonOutView_GoForward;
                                         break; // Salir inmediatamente del sub-estado
@@ -418,7 +424,7 @@ void UC_ControlRobot::statechart_process() {
 
                                     // Calcular la posicion a la que dirigirse
                                     //#[ transition NormalOperate.TrackingByCamera.PersonOutView.0 
-                                    sensoresSumAngulo = 0;
+                                    robot->sensores.sum_angle = 0;
                                     //#]
                                     currentPersonOutView_subState = PersonOutView_RotateToMove;
                                     currentState = PersonOutView_RotateToMove;
@@ -431,9 +437,9 @@ void UC_ControlRobot::statechart_process() {
                                     // State PersonOutView_GoForward
 
                                     // TODO: resumir lo que se hace en este if
-                                    if (sensoresSumDistancia > computedDistance) {
+                                    if (robot->sensores.sum_distance > robot->lidar.computedDistance) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonOutView.2 
-                                        sensoresSumAngulo = 0;
+                                        robot->sensores.sum_angle = 0;
                                         //#]
                                         currentPersonOutView_subState = PersonOutView_Rotate360;
                                         currentState = PersonOutView_Rotate360;
@@ -448,7 +454,7 @@ void UC_ControlRobot::statechart_process() {
                                     // State PersonOutView_Rotate360
 
                                     // TODO: resumir lo que se hace dentro de este if
-                                    if (sensoresSumAngulo > 360) {
+                                    if (robot->sensores.sum_angle > 360) {
                                         currentPersonOutView_subState = PersonOutView_ComputePosition;
                                         currentState = PersonOutView_ComputePosition;
                                         break; // Salir inmediatamente del sub-estado
@@ -479,7 +485,7 @@ void UC_ControlRobot::statechart_process() {
                     // Description: Se ha colisionado con un obstaculo.
                     // Rodear el obstaculo y volver a encontrar a la persona.
 
-                    if (sensoresCliff == true) {
+                    if (robot->sensores.cliff == true) {
                         currentCrashAlgorithm_subState = Disabled;
                         currentDodgeObstacle_subState = Disabled;
                         CliffAhead_entDef();
@@ -497,7 +503,7 @@ void UC_ControlRobot::statechart_process() {
                             // State NormalOperate >> DodgeObstacle >> MoveBack
 
                             //## transition 10 
-                            if (sensoresSumDistancia<-30) {
+                            if (robot->sensores.sum_distance<-30) {
                                 CrashAlgorithm_entDef();
                                 break; // Salir inmediatamente del sub-estado
                             }
@@ -511,10 +517,10 @@ void UC_ControlRobot::statechart_process() {
                             // Description: Algoritmo de rodeo.
                             // (El del TFG)
 
-                            if (sensoresBl == true || sensoresBr == true) {
+                            if (robot->sensores.bl == true || robot->sensores.br == true) {
                                 currentCrashAlgorithm_subState = Disabled;
                                 //#[ transition 11 
-                                sensoresSumDistancia = 0;
+                                robot->sensores.sum_distance = 0;
                                 //#]
                                 currentDodgeObstacle_subState = Dodge_MoveBack;
                                 currentState = Dodge_MoveBack;
@@ -534,7 +540,7 @@ void UC_ControlRobot::statechart_process() {
                                 {
                                     // State NormalOperate >> DodgeObstacle >> CrashAlgorithm >> Dodge
 
-                                    if (sensoresSumAngulo > 25) {
+                                    if (robot->sensores.sum_angle > 25) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
                                         currentState = CrashAlgorithm_DodgeParallel;
                                         break; // Salir inmediatamente del sub-estado
@@ -547,7 +553,7 @@ void UC_ControlRobot::statechart_process() {
                                 {
                                     // State NormalOperate >> DodgeObstacle >> CrashAlgorithm >> DodgeParallel
 
-                                    if (sensoresLBumpFront == false) {
+                                    if (robot->sensores.lbump_front == false) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_GoForward;
                                         currentState = CrashAlgorithm_GoForward;
                                         break; // Salir inmediatamente del sub-estado
@@ -560,14 +566,14 @@ void UC_ControlRobot::statechart_process() {
                                 {
                                     // State NormalOperate >> DodgeObstacle >> CrashAlgorithm >> GoForward
 
-                                    if (sensoresLBumpSide == false) {
+                                    if (robot->sensores.lbump_side == false) {
                                         //#[ transition NormalOperate.DodgeObstacle.CrashAlgorithm.5 
-                                        sensoresSumDistancia = 0;
+                                        robot->sensores.sum_distance = 0;
                                         //#]
                                         currentCrashAlgorithm_subState = CrashAlgorithm_GoForwardExtended;
                                         currentState = CrashAlgorithm_GoForwardExtended;
                                         break; // Salir inmediatamente del sub-estado
-                                    } else if (sensoresLBumpFront == true) {
+                                    } else if (robot->sensores.lbump_front == true) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
                                         currentState = CrashAlgorithm_DodgeParallel;
                                         break; // Salir inmediatamente del sub-estado
@@ -580,15 +586,15 @@ void UC_ControlRobot::statechart_process() {
                                 {
                                     // State CrashAlgorithm_GoForwardExtended
 
-                                    if (sensoresSumDistancia > 300) {
+                                    if (robot->sensores.sum_distance > 300) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_RecoverTrajectory;
                                         currentState = CrashAlgorithm_RecoverTrajectory;
                                         break; // Salir inmediatamente del sub-estado
-                                    } else if (sensoresLBumpFront == false && sensoresLBumpSide == true) {
+                                    } else if (robot->sensores.lbump_front == false && robot->sensores.lbump_side == true) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_GoForward;
                                         currentState = CrashAlgorithm_GoForward;
                                         break; // Salir inmediatamente del sub-estado
-                                    } else if (sensoresLBumpFront == true) {
+                                    } else if (robot->sensores.lbump_front == true) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
                                         currentState = CrashAlgorithm_DodgeParallel;
                                         break; // Salir inmediatamente del sub-estado
@@ -600,15 +606,15 @@ void UC_ControlRobot::statechart_process() {
                                 case CrashAlgorithm_RecoverTrajectory:
                                 {
                                     // State CrashAlgorithm_RecoverTrajectory
-                                    if (sensoresSumAngulo < 25) {
+                                    if (robot->sensores.sum_angle < 25) {
                                         currentDodgeObstacle_subState = Disabled;
                                         TrackingByCamera_entDef();
                                         break; // Salir inmediatamente del sub-estado
-                                    } else if (sensoresLBumpFront == true) {
+                                    } else if (robot->sensores.lbump_front == true) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
                                         break; // Salir inmediatamente del sub-estado
                                         currentState = CrashAlgorithm_DodgeParallel;
-                                    } else if (sensoresLBumpFront == false && sensoresLBumpSide == true) {
+                                    } else if (robot->sensores.lbump_front == false && robot->sensores.lbump_side == true) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_GoForward;
                                         currentState = CrashAlgorithm_GoForward;
                                         break; // Salir inmediatamente del sub-estado
@@ -649,7 +655,7 @@ void UC_ControlRobot::statechart_process() {
                         case CliffAhead_Rotate180:
                         {
                             // State CliffAhead_Rotate180
-                            if (sensoresSumAngulo > 180) {
+                            if (robot->sensores.sum_angle > 180) {
                                 currentCliffAhead_subState = CliffAhead_GoForward;
                                 currentState = CliffAhead_GoForward;
                                 break; // Salir inmediatamente del sub-estado
@@ -661,7 +667,7 @@ void UC_ControlRobot::statechart_process() {
                         case CliffAhead_GoForward:
                         {
                             // State CliffAhead_GoForward
-                            if (sensoresSumDistancia > 300) {
+                            if (robot->sensores.sum_distance > 300) {
                                 currentCliffAhead_subState = Disabled;
                                 TrackingByCamera_entDef();
                                 break; // Salir inmediatamente del sub-estado
@@ -695,3 +701,7 @@ void UC_ControlRobot::statechart_process() {
     } // end TOP-level switch (rootState_active)
 
 } // end void UC::statechart_process()
+
+void RobotStateMachine::endBehavior(){
+    
+}

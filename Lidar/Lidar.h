@@ -29,6 +29,11 @@ public:
     virtual ~Lidar();
 
     //set_lidar_params();
+    
+    bool IsObstable;
+    
+    int computedAngle;
+    int computedDistance;
 
 private:
 

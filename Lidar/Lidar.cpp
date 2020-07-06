@@ -24,6 +24,8 @@ Lidar::Lidar() {
     this->lidar = YdLidarX4();
 
     this->lidar.Connect();
+    
+    
 
 
 }

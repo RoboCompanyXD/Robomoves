@@ -5,74 +5,17 @@
  * Created on 30 de junio de 2020, 10:52
  */
 
-#ifndef UC_H
-#define	UC_H
+#ifndef RobotStateMachine_H
+#define	RobotStateMachine_H
 
-#include "../ControlRobot/ControlRobot.h"
-//class ControlRobot; // Forward Declaration of Class ControlRobot
-
-
-extern bool check_btnSpot(); // TODO: documentar
-extern bool check_btnClean();
-extern bool check_btnDock();
-
-////// TODO: ¿por qué no incluir estos atributos dentro de la definición de la clase UC?
-
-extern bool cameraIsPersonInView; //## attribute cameraIsPersonInView
-extern int lidarIsObstable; //## attribute lidarIsObstable
-extern int computedAngle; //## attribute computedAngle
-extern int computedDistance; //## attribute computedDistance
-extern int sensoresbattery_percentage; //## attribute sensoresBateria
-extern bool sensoresBl; //## attribute sensoresBl
-extern bool sensoresBr; //## attribute sensoresBr
-extern bool sensoresCliff; //## attribute sensoresCliff
-extern int sensoresIsDocked; //## attribute sensoresInDock
-extern bool sensoresLBumpFront; //## attribute sensoresLBumpFront
-extern bool sensoresLBumpSide; //## attribute sensoresLBumpSide
-extern int sensoresSumAngulo; //## attribute sensoresSumAngulo
-extern int sensoresSumDistancia; //## attribute sensoresSumDistancia
-
-/**
- * TODO: Documentar metodo
- */
-void gotoDock();
-
-/**
- * TODO: Documentar metodo (mas detallado)
- * Calcular a donde ir con la camara
- */
-void computeCameraApproach();
-
-/**
- * TODO: Documentar metodo (mas detallado)
- * Calcular a donde ir con la camara
- */
-void computeCameraWithObstacle();
-
-
-/**
- * Play "blocked" sound
- */
-void reproducirSonidoBloqueado();
-
-/**
- * Play "un-blocked" sound
- */
-void reproducirSonidoDesbloqueado();
-
-
-/**
- * Calcular a donde ir con el lidar
- */
-void computeLidarTripPersonOutOfView();
-
-//// TODO: ¿por qué no poner los metodos anteriores dentro de la definición de la clase?
+//#include "../ControlRobot/ControlRobot.h"
+class ControlRobot; // Forward Declaration of Class ControlRobot
 
 /**
  *
  * TODO: documentar clase
  */
-class UC_ControlRobot {
+class RobotStateMachine {
 
     
 
@@ -86,9 +29,11 @@ public:
     /**
      * Class destructor
      */
-    ~UC_ControlRobot();
+    ~RobotStateMachine();
     
-    UC_ControlRobot();
+    RobotStateMachine();
+    
+    RobotStateMachine(ControlRobot * contr);
     
     /**
      * TODO: documentar metodo
@@ -97,7 +42,7 @@ public:
 
 private:
     
-    //ControlRobot * control; // TODO: documentar variable
+    ControlRobot * robot; // TODO: documentar variable
 
     /**
      * TODO: Documentar
@@ -225,5 +170,5 @@ protected:
 
 }; // end class UC
 
-#endif	/* ROBOTIA_H */
+#endif	/* RobotStateMachine_H */
 

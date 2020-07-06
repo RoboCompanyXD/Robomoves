@@ -6,6 +6,7 @@
  */
 
 #include "ControlRobot.h"
+#include "../RobotStateMachine/RobotStateMachine.h"
 #include <iostream>
 
 #include<bitset>
@@ -39,7 +40,7 @@ using namespace std;
 #define BACK_L 'y'
 #define BACK_R 'z'
 
-ControlRobot::ControlRobot(){
+ControlRobot::ControlRobot() {
 }
 
 /**
@@ -48,10 +49,10 @@ ControlRobot::ControlRobot(){
 ControlRobot::ControlRobot(Lidar l, OCVCam c) {
     this->lidar = l;
     this->cam = c;
-       
+
     // Instanciar maquina de estados
-    
-    //this->uc = UC_ControlRobot();
+
+    this->uc = new RobotStateMachine(this);
 
 }
 
@@ -181,89 +182,89 @@ void ControlRobot::imprimirInfo(void) {
  */
 void ControlRobot::logicaEstados(int x, int y, int area, int frame_width, int frame_height) {
 
-    //uc.statechart_process();
-
-    estado_anterior = estado_actual;
-    switch (estado_anterior) {
-        case READY:
-            motores_actual = STOP;
-            if (sensores.buttons == 0b00000001)estado_actual = WAIT;
-            break;
-        case WAIT:
-            motores_actual = STOP;
-            if (x != 0 && y != 0)estado_actual = MOVCAM;
-            break;
-        case MOVCAM:
-            //motores_actual=STOP;
-            if (sensores.br == 1 || sensores.bl == 1) {
-                estado_actual = RET;
-                sensores.sum_distance = 0;
-                sensores.sum_angle = 0;
-            } else if (x == 0 || y == 0)estado_actual = WAIT;
-            else if (x < (frame_width / 3)) { // WEBCAM detecta a la izqda
-                if (area > 5500000 || (y != 0 && y < (frame_height / 3)))motores_actual = BACK_L; //cerca
-                else if (area != 0 && area < 3500000)motores_actual = FWD_L; //lejos
-                else motores_actual = LEFT;
-            } else if (x > ((frame_width / 3)*2)) { // WEBCAM detecta a la dcha
-                if (area > 5500000 || (y != 0 && y < (frame_height / 3)))motores_actual = BACK_R; //cerca
-                else if (area != 0 && area < 3500000)motores_actual = FWD_R; //lejos
-                else motores_actual = RIGHT;
-            } else { // WEBCAM detecta centrado
-                if (area > 5500000 || (y != 0 && y < (frame_height / 3)))motores_actual = BACK; //cerca
-                else if (area != 0 && area < 3500000)motores_actual = FWD; //lejos
-                else motores_actual = STOP;
-            }
-            break;
-        case RET:
-            motores_actual = BACK;
-            sensores.sub_angle = sensores.sum_angle;
-            if (sensores.sum_distance<-30) estado_actual = GIR;
-            break;
-        case GIR:
-            motores_actual = LEFT; // Añadir sentido segun webcam
-            if (sensores.br == 1 || sensores.bl == 1) {
-                estado_actual = RET;
-                sensores.sum_distance = 0;
-            } else if (sensores.sum_angle - sensores.sub_angle > 25)estado_actual = GIR2;
-            break;
-        case GIR2:
-            motores_actual = LEFT; // Añadir sentido segun webcam
-            if (sensores.br == 1 || sensores.bl == 1) {
-                estado_actual = RET;
-                sensores.sum_distance = 0;
-            } else if ((sensores.lightbumper & 0b00011110) == 0)estado_actual = AV; //4 lightbumps centrales
-            break;
-        case AV:
-            motores_actual = FWD;
-            if (sensores.br == 1 || sensores.bl == 1) {
-                estado_actual = RET;
-                sensores.sum_distance = 0;
-            } else if ((sensores.lightbumper & 0b00011110) != 0)estado_actual = GIR2;
-            else if ((sensores.lightbumper & 0b00100000) == 0) { // lightbump lateral izqdo
-                estado_actual = AVPLUS;
-                sensores.sum_distance = 0;
-            }
-            break;
-        case AVPLUS:
-            motores_actual = FWD;
-            if (sensores.br == 1 || sensores.bl == 1) {
-                estado_actual = RET;
-                sensores.sum_distance = 0;
-            } else if ((sensores.lightbumper & 0b00011110) != 0)estado_actual = GIR2;
-            else if ((sensores.lightbumper & 0b00100000) != 0)estado_actual = AV;
-            else if (sensores.sum_distance > 300) estado_actual = GIRPLUS;
-            break;
-        case GIRPLUS:
-            motores_actual = RIGHT;
-            if (sensores.br == 1 || sensores.bl == 1) {
-                estado_actual = RET;
-                sensores.sum_distance = 0;
-            } else if ((sensores.lightbumper & 0b00011110) != 0)estado_actual = GIR2;
-            else if ((sensores.lightbumper & 0b00100000) != 0)estado_actual = AV;
-            else if ((sensores.sum_angle < 25)&&(sensores.sum_angle>-25))estado_actual = WAIT; // orientacion +- 25 grados de la que tenia al chocar
-            break;
-    } //end switch-case
-
+    this->uc->statechart_process();
+    /*
+        estado_anterior = estado_actual;
+        switch (estado_anterior) {
+            case READY:
+                motores_actual = STOP;
+                if (sensores.buttons == 0b00000001)estado_actual = WAIT;
+                break;
+            case WAIT:
+                motores_actual = STOP;
+                if (x != 0 && y != 0)estado_actual = MOVCAM;
+                break;
+            case MOVCAM:
+                //motores_actual=STOP;
+                if (sensores.br == 1 || sensores.bl == 1) {
+                    estado_actual = RET;
+                    sensores.sum_distance = 0;
+                    sensores.sum_angle = 0;
+                } else if (x == 0 || y == 0)estado_actual = WAIT;
+                else if (x < (frame_width / 3)) { // WEBCAM detecta a la izqda
+                    if (area > 5500000 || (y != 0 && y < (frame_height / 3)))motores_actual = BACK_L; //cerca
+                    else if (area != 0 && area < 3500000)motores_actual = FWD_L; //lejos
+                    else motores_actual = LEFT;
+                } else if (x > ((frame_width / 3)*2)) { // WEBCAM detecta a la dcha
+                    if (area > 5500000 || (y != 0 && y < (frame_height / 3)))motores_actual = BACK_R; //cerca
+                    else if (area != 0 && area < 3500000)motores_actual = FWD_R; //lejos
+                    else motores_actual = RIGHT;
+                } else { // WEBCAM detecta centrado
+                    if (area > 5500000 || (y != 0 && y < (frame_height / 3)))motores_actual = BACK; //cerca
+                    else if (area != 0 && area < 3500000)motores_actual = FWD; //lejos
+                    else motores_actual = STOP;
+                }
+                break;
+            case RET:
+                motores_actual = BACK;
+                sensores.sub_angle = sensores.sum_angle;
+                if (sensores.sum_distance<-30) estado_actual = GIR;
+                break;
+            case GIR:
+                motores_actual = LEFT; // Añadir sentido segun webcam
+                if (sensores.br == 1 || sensores.bl == 1) {
+                    estado_actual = RET;
+                    sensores.sum_distance = 0;
+                } else if (sensores.sum_angle - sensores.sub_angle > 25)estado_actual = GIR2;
+                break;
+            case GIR2:
+                motores_actual = LEFT; // Añadir sentido segun webcam
+                if (sensores.br == 1 || sensores.bl == 1) {
+                    estado_actual = RET;
+                    sensores.sum_distance = 0;
+                } else if ((sensores.lightbumper & 0b00011110) == 0)estado_actual = AV; //4 lightbumps centrales
+                break;
+            case AV:
+                motores_actual = FWD;
+                if (sensores.br == 1 || sensores.bl == 1) {
+                    estado_actual = RET;
+                    sensores.sum_distance = 0;
+                } else if ((sensores.lightbumper & 0b00011110) != 0)estado_actual = GIR2;
+                else if ((sensores.lightbumper & 0b00100000) == 0) { // lightbump lateral izqdo
+                    estado_actual = AVPLUS;
+                    sensores.sum_distance = 0;
+                }
+                break;
+            case AVPLUS:
+                motores_actual = FWD;
+                if (sensores.br == 1 || sensores.bl == 1) {
+                    estado_actual = RET;
+                    sensores.sum_distance = 0;
+                } else if ((sensores.lightbumper & 0b00011110) != 0)estado_actual = GIR2;
+                else if ((sensores.lightbumper & 0b00100000) != 0)estado_actual = AV;
+                else if (sensores.sum_distance > 300) estado_actual = GIRPLUS;
+                break;
+            case GIRPLUS:
+                motores_actual = RIGHT;
+                if (sensores.br == 1 || sensores.bl == 1) {
+                    estado_actual = RET;
+                    sensores.sum_distance = 0;
+                } else if ((sensores.lightbumper & 0b00011110) != 0)estado_actual = GIR2;
+                else if ((sensores.lightbumper & 0b00100000) != 0)estado_actual = AV;
+                else if ((sensores.sum_angle < 25)&&(sensores.sum_angle>-25))estado_actual = WAIT; // orientacion +- 25 grados de la que tenia al chocar
+                break;
+        } //end switch-case
+     */
 } //end void logicaEstados(...))
 
 /**
@@ -322,7 +323,7 @@ void ControlRobot::drive(int der, int izq) {
 /**
  * TODO: documentar
  */
-void ControlRobot::computeCamaraApproach() {
+void ControlRobot::computeCameraApproach() {
     if (cam.x < (cam.frame_width / 3)) { // WEBCAM detecta a la izqda
         if (cam.area > 5500000 || (cam.y != 0 && cam.y < (cam.frame_height / 3)))motores_actual = BACK_L; //cerca
         else if (cam.area != 0 && cam.area < 3500000)motores_actual = FWD_L; //lejos
@@ -341,7 +342,7 @@ void ControlRobot::computeCamaraApproach() {
 /**
  * TODO: documentar
  */
-void ControlRobot::computeCamaraWithObstacle() {
+void ControlRobot::computeCameraWithObstacle() {
     if (cam.x < (cam.frame_width / 3)) { // WEBCAM detecta a la izqda
         if (cam.area > 5500000 || (cam.y != 0 && cam.y < (cam.frame_height / 3)))motores_actual = BACK_L; //cerca
         else if (cam.area != 0 && cam.area < 3500000)motores_actual = LEFT; //lejos
@@ -364,10 +365,52 @@ void ControlRobot::gotoDock() {
     robot->coverAndDock();
 }
 
+void ControlRobot::setMotores_actual(char state) {
 
-
-void ControlRobot::setMotores_actual(char state){
-    
     motores_actual = state;
 
 }
+
+/**
+ * Play "blocked" sound
+ */
+void ControlRobot::reproducirSonidoBloqueado() {
+    
+    
+    
+};
+
+/**
+ * Play "un-blocked" sound
+ */
+void ControlRobot::reproducirSonidoDesbloqueado() {
+};
+
+/**
+ * Calcular a donde ir con el lidar
+ */
+void ControlRobot::computeLidarTripPersonOutOfView() {
+};
+
+//// TODO: ¿por qué no poner los metodos anteriores dentro de la definición de la clase?
+
+bool ControlRobot::check_btnSpot() {
+    
+     // TODO: implementar e documentar
+
+    return false;
+};
+
+bool ControlRobot::check_btnClean() {
+    
+     // TODO: implementar e documentar
+    
+    return false;
+};
+
+bool ControlRobot::check_btnDock() {
+    
+     // TODO: implementar e documentar
+    
+    return false;
+};
