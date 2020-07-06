@@ -30,14 +30,14 @@ int init(){
     // Instanciar Objetos globales
 
     //  Instanciar Camara
-    cam = OCVCam();
+    main_cam = OCVCam();
     
     //  Instanciar Lidar
-    lidar = Lidar();
+    main_lidar = Lidar();
     
     // Inctanciar Controlrobot y pasarle Camara Lidar
     
-    con = ControlRobot(lidar,cam);
+    main_con = ControlRobot(main_lidar, main_cam);
 
     
 

@@ -20,14 +20,14 @@
 
 int init();
 
-Lidar lidar;
-OCVCam cam;
+Lidar main_lidar;
+OCVCam main_cam;
 
-ControlRobot con;
+ControlRobot main_con;
 
 
 
-int main(int argc, char** argv);
+//int main(int argc, char** argv);
 
 
 #endif	/* MAIN_H */
