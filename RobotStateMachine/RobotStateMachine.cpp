@@ -9,18 +9,26 @@
 #include "../ControlRobot/ControlRobot.h"
 #include <stdexcept>
 
-/*RobotStateMachine::RobotStateMachine() {
 
-    // TODO: empty constructor? Why?
-}*/
-
-RobotStateMachine::RobotStateMachine(ControlRobot * contr) {
-
-    this->robot = contr;
-
+/**
+ * RobotStateMachine Class constructor
+ * @param cr Pointer to an instance of this system's robot controller interface.
+ */
+RobotStateMachine::RobotStateMachine(ControlRobot::ControlRobot * cr) {
+    this->robot = cr;
     initStatechart();
 }
 
+/**
+ * RobotStateMachine Class destructor
+ */
+RobotStateMachine::~RobotStateMachine(){
+    
+}
+
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::initStatechart() {
     currentSuperState = Disabled; // TODO: change to UC_Enum.OMNonState for better readability
     currentState = Disabled;
@@ -29,13 +37,16 @@ void RobotStateMachine::initStatechart() {
     currentTrackingByCamera_subState = Disabled;
     currentPersonOutView_subState = Disabled;
     currentPersonInView_subState = Disabled;
-    PersonInView_timeout = 0; // BORRAR?
+    PersonInView_timeout = 0; // TODO: BORRAR?
     currentDodgeObstacle_subState = Disabled;
     currentCrashAlgorithm_subState = Disabled;
     currentCliffAhead_subState = Disabled;
     rootState_entDef();
 }
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::rootState_entDef() {
     {
         currentSuperState = Idle;
@@ -43,6 +54,9 @@ void RobotStateMachine::rootState_entDef() {
     }
 }
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::UnDock_entDef() {
     currentSuperState = UnDock;
     //#[ transition UnDock.0 
@@ -52,20 +66,32 @@ void RobotStateMachine::UnDock_entDef() {
     currentState = ExitDock;
 }
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::NormalOperate_entDef() {
     currentSuperState = NormalOperate;
     NormalOperateEntDef();
 }
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::NormalOperateEntDef() {
     TrackingByCamera_entDef();
 }
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::TrackingByCamera_entDef() {
     currentNormalOperate_subState = TrackingByCamera;
     TrackingByCameraEntDef();
 }
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::TrackingByCameraEntDef() {
     //## transition 14 
     if (robot->cam.isPersonInView == true) {
@@ -75,6 +101,9 @@ void RobotStateMachine::TrackingByCameraEntDef() {
     }
 }
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::PersonInView_entDef() {
     currentTrackingByCamera_subState = PersonInView;
     currentPersonInView_subState = PersonInView_ApproachUser;
@@ -85,6 +114,9 @@ void RobotStateMachine::PersonInView_entDef() {
     //PersonInView_timeout = scheduleTimeout(ComputeStepTime, "ROOT.NormalOperate.TrackingByCamera.PersonInView.ROOT.PersonInView.PersonInView_ApproachUser");
 }
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::PersonOutView_entDef() {
     currentTrackingByCamera_subState = PersonOutView;
     //#[ transition NormalOperate.TrackingByCamera.PersonOutView.4 
@@ -95,6 +127,9 @@ void RobotStateMachine::PersonOutView_entDef() {
     currentState = PersonOutView_Rotate360;
 }
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::DodgeObstacle_entDef() {
     currentNormalOperate_subState = DodgeObstacle;
     //#[ transition 9 
@@ -105,6 +140,9 @@ void RobotStateMachine::DodgeObstacle_entDef() {
     currentState = Dodge_MoveBack;
 }
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::CliffAhead_entDef() {
     currentNormalOperate_subState = CliffAhead;
     //#[ transition 12 
@@ -115,12 +153,18 @@ void RobotStateMachine::CliffAhead_entDef() {
     currentState = CliffAhead_Rotate180;
 }
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::CrashAlgorithm_entDef() {
     currentDodgeObstacle_subState = CrashAlgorithm;
     currentCrashAlgorithm_subState = CrashAlgorithm_Dodge;
     currentState = CrashAlgorithm_Dodge;
 }
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::statechart_process() {
 
     /** 
@@ -343,7 +387,7 @@ void RobotStateMachine::statechart_process() {
 
                                     //Ejecutar funcion de calculo de aproximacion
                                     // computeCameraApproach();
-                                    if (robot->lidar.IsObstable == true) {
+                                    if (robot->lidar.isObstable == true) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
                                         robot->reproducirSonidoBloqueado();
                                         //#]
@@ -365,7 +409,7 @@ void RobotStateMachine::statechart_process() {
                                 {
                                     // Ejecutar funcion de calculo de aproximacion con obstaculo
                                     //computeCameraWithObstacle();
-                                    if (robot->lidar.IsObstable == false) {
+                                    if (robot->lidar.isObstable == false) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
                                         robot->reproducirSonidoDesbloqueado();
                                         //#]
@@ -699,6 +743,9 @@ void RobotStateMachine::statechart_process() {
 
 } // end void UC::statechart_process()
 
+/**
+ * TODO: documentar
+ */
 void RobotStateMachine::endBehavior(){
     
 }

@@ -1,44 +1,48 @@
 /**
- * File:   UC.h
+ * File:   RobotStateMachine.h
  * Author: chris
  *
  * Created on 30 de junio de 2020, 10:52
  */
 
-#ifndef RobotStateMachine_H
-#define	RobotStateMachine_H
+#ifndef ROBOT_STATE_MACHINE_H
+#define	ROBOT_STATE_MACHINE_H
 
 //#include "../ControlRobot/ControlRobot.h"
-class ControlRobot; // Forward Declaration of Class ControlRobot
+
+namespace ControlRobot {
+    class ControlRobot; // Forward Declaration of Class ControlRobot
+}
 
 /**
- *
- * TODO: documentar clase
+ * Class RobotStateMachine
+ * 
+ * This class encapsulates the logic behind the robot's different states through a finite state machine.
+ * 
  */
 class RobotStateMachine {
 
-    
-
 public:
-    
+
     /**
-     * Class constructor
-     */ 
-    RobotStateMachine(ControlRobot * contr);
-    
-    /**
-     * Class destructor
+     * RobotStateMachine Class constructor
+     * @param cr Pointer to an instance of this system's robot controller interface.
      */
-    virtual ~RobotStateMachine();
-    
+    RobotStateMachine(ControlRobot::ControlRobot * cr);
+
+    /**
+     * RobotStateMachine Class destructor
+     */
+    ~RobotStateMachine();
+
     /**
      * TODO: documentar metodo
      */
     void statechart_process();
 
 private:
-    
-    ControlRobot * robot; // TODO: documentar variable
+
+    ControlRobot::ControlRobot * robot; // reference to the controller interface of this system's robot
 
     /**
      * TODO: Documentar
@@ -109,16 +113,16 @@ protected:
 
     //void cancelTimeouts();
 
-    /** State IDs */
+    /** Unique identifiers for all the different states of the state machine */
     enum UC_Enum {
 
-        Disabled = 0, // TODO: What does OMN mean?
-        UnDock = 1,
-        UnDock_Rotate180 = 2,
-        ExitDock = 3,
-        EndUndoParkHelperState = 4,
-        Shutdown = 5,
-        NormalOperate = 6,
+        Disabled = 0, // The robot is disabled. Expected behavior: the robot remains disabled.
+        UnDock = 1, // The `undock` button has been pressed while being docked, and the robot should be stepping back from the dock-station.
+        UnDock_Rotate180 = 2, // The robot has stepped back from the dock-station and should be rotating 180º to face towards the room.
+        ExitDock = 3, // TODO
+        EndUndoParkHelperState = 4, // TODO
+        Shutdown = 5, // TODO
+        NormalOperate = 6, // Super-state
         TrackingByCamera = 7,
         PersonOutView = 8,
         PersonOutView_RotateToMove = 9,
@@ -150,21 +154,21 @@ protected:
     };
 
     /** Define the flags for the state-machine */
-    
-    int currentSuperState; // Estado mas exterior: superestado
-    int currentState; // Estado activo principal
-    int currentUnDock_subState; // Subestados del estado "UnDock": "ExitDock" y "UnDock_Rotate180"
-    int currentNormalOperate_subState; // Subestados del estado "NormalOperate": TrackingByCamera, CliffAhead y DodgeObstacle
-    int currentTrackingByCamera_subState; // TODO
-    int currentPersonOutView_subState; // TODO
-    int currentPersonInView_subState; // TODO
-    int currentDodgeObstacle_subState; // TODO
-    int currentCrashAlgorithm_subState; // TODO
-    int currentCliffAhead_subState; // TODO
+
+    int currentSuperState; // Current top-level super-state [Idle, Dock, Shutdown, Undock, NormalOperate]
+    int currentState; // Current global state (amongst all possible states)
+    int currentUnDock_subState; // Current sub-state within UnDock: [ExitDock, UnDock_Rotate180]
+    int currentNormalOperate_subState; // Current sub-state within NormalOperate: [TrackingByCamera, CliffAhead, DodgeObstacle]
+    int currentTrackingByCamera_subState; // Current sub-state within TrackingByCamera: [ \\TODO ]
+    int currentPersonOutView_subState; // Current sub-state within PersonOutOfView: \\TODO
+    int currentPersonInView_subState; // Current sub-state within PersonInView: \\TODO
+    int currentDodgeObstacle_subState; // Current sub-state within DodgeObstacle: \\TODO
+    int currentCrashAlgorithm_subState; // Current sub-state within CrashAlgorithm: \\TODO
+    int currentCliffAhead_subState; // Current sub-state within CliffAhead: \\TODO
 
     int PersonInView_timeout; // TODO
 
 }; // end class UC
 
-#endif	/* RobotStateMachine_H */
+#endif	/* ROBOT_STATE_MACHINE_H */
 

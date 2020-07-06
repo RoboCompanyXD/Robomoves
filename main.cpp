@@ -18,7 +18,7 @@ using namespace std;
 Lidar lidar;
 OCVCam cam;
 
-ControlRobot con;
+ControlRobot::ControlRobot mRobotController;
 
 /*
  * 
@@ -37,6 +37,9 @@ int main(int argc, char** argv) {
     return 0;
 }
 
+/**
+ * TODO: documentar
+ */
 int init(){
     
     // Controlar Init state (si se inicia todo bien)

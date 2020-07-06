@@ -33,131 +33,140 @@ using namespace std; // https://stackoverflow.com/questions/1452721/why-is-using
 
 //using std::string;
 
+namespace YdLidarX4 {
+
 #define BUFF_SIZE 2048 // TODO: Para que es esta variable?
 #define PORT 25138 // TODO: Para que es esta variable?
 
-/** Lista de comandos posibles para enviar */
-constexpr struct cmd {
-    int CMD_CONNECT = 1000;
-    int CMD_START_SCANNING = 2000;
-    int CMD_GET_DEVICE_INFO = 3000;
-    int CMD_DISCONNECT = 4000;
-    int CMD_RESET = 5000;
-    int CMD_GET_HEALTH_STATUS = 6000;
-    int CMD_GET_SAMPLE_DATA = 7000;
-    int CMD_STOP_SCANNING = 8000;
-} cmd;
+    /** Lista de comandos posibles para enviar */
+    constexpr struct LidarCommands {
 
-/** Lista de respuestas Opt: Se pueden añadir mas respuestas dependiendo del tipo de error*/
-constexpr struct res {
-    int RES_OK = 1001;
-    int RES_FAIL = 1002;
-    int HEALTH_OK = 2001;
-    int HEALTH_BAD = 2002;
-} res;
+        int CMD_CONNECT = 1000;
+        int CMD_START_SCANNING = 2000;
+        int CMD_GET_DEVICE_INFO = 3000;
+        int CMD_DISCONNECT = 4000;
+        int CMD_RESET = 5000;
+        int CMD_GET_HEALTH_STATUS = 6000;
+        int CMD_GET_SAMPLE_DATA = 7000;
+        int CMD_STOP_SCANNING = 8000;
+    } LidarCommands;
 
-/** TODO: Documentar*/
-struct dev {
-    string modelnumber;
-    string firmware_version;
-    string hardware_version;
-    string serial_number;
-};
+    /** Lista de respuestas Opt: Se pueden añadir mas respuestas dependiendo del tipo de error*/
+    constexpr struct LidarResponses {
 
-/**
- * TODO: Documentar clase
- *
- */
-class YdLidarX4 {
+        int RES_OK = 1001;
+        int RES_FAIL = 1002;
+        int HEALTH_OK = 2001;
+        int HEALTH_BAD = 2002;
+    } LidarResponses;
 
-public:
+    /** TODO: Documentar*/
+    struct DeviceInformation {
+
+        string modelnumber;
+        string firmware_version;
+        string hardware_version;
+        string serial_number;
+    };
 
     /**
-     * Default Class constructor
+     * TODO: Documentar clase
      *
-     * TODO: ¿se puede borrar este constructor?
      */
-    YdLidarX4();
+    class YdLidarX4Controller {
 
-    /**
-     * Class constructor
-     *
-     * TODO: ¿en que se diferencia del otro constructor?
-     * TODO: Documentar constructor
-     */
-    YdLidarX4(int chunk_size);
+    public:
 
-    /**
-     * Class destructor
-     */
-    virtual ~YdLidarX4();
+        /**
+         * Default Class constructor
+         *
+         * TODO: ¿se puede borrar este constructor?
+         */
+        YdLidarX4Controller();
+
+        /**
+         * Class constructor
+         *
+         * TODO: ¿en que se diferencia del otro constructor?
+         * TODO: Documentar constructor
+         */
+        YdLidarX4Controller(int chunk_size);
+
+        /**
+         * Class destructor
+         */
+        virtual ~YdLidarX4Controller();
 
 
-    /**
-     * TODO: Documentar
-     */
-    bool Connect();
+        /**
+         * TODO: Documentar
+         */
+        bool Connect();
 
-    /**
-     * TODO: Documentar
-     */
-    bool Disconnect();
+        /**
+         * TODO: Documentar
+         */
+        bool Disconnect();
 
-    /**
-     * TODO: Documentar
-     */
-    bool Reset();
+        /**
+         * TODO: Documentar
+         */
+        bool Reset();
 
-    /**
-     * TODO: Documentar
-     */
-    bool StartScanning();
+        /**
+         * TODO: Documentar
+         */
+        bool StartScanning();
 
-    /**
-     * TODO: Documentar
-     */
-    bool StopScanning();
+        /**
+         * TODO: Documentar
+         */
+        bool StopScanning();
 
-    /**
-     * TODO: Documentar
-     */
-    int* GetSampleData();
+        /**
+         * TODO: Documentar
+         */
+        int* GetSampleData();
 
-    /**
-     * TODO: Documentar
-     */
-    struct dev * GetDeviceInfo();
+        /**
+         * TODO: Documentar
+         */
+        DeviceInformation * GetDeviceInfo();
 
-    /**
-     * TODO: Documentar
-     */
-    int GetHealthStatus();
+        /**
+         * TODO: Documentar
+         */
+        int GetHealthStatus();
 
-private:
-    bool is_connected; // TODO: documentar
-    bool is_scanning; // TODO: Documentar
+    private:
+        bool is_connected; // TODO: documentar
+        bool is_scanning; // TODO: Documentar
 
-    int health; // TODO: Documentar
-    int* sampledata; // TODO: Documentar
+        int health; // TODO: Documentar
+        int* sampledata; // TODO: Documentar
 
-    struct dev deviceinfo; // TODO: Documentar
+        DeviceInformation deviceinfo; // TODO: Documentar
 
-    int sock; // TODO: Documentar
+        int sock; // TODO: Documentar
 
-    /**
-     * TODO: Documentar
-     */
-    bool _send_command(int command);
+        /**
+         * TODO: Documentar
+         * 
+         * TODO: ¿por qué tienen estos metodos "_" (underscore) al principio?
+         */
+        bool _send_command(int command);
 
-    /**
-     * TODO: Documentar
-     */
-    bool _get_response();
+        /**
+         * TODO: Documentar
+         */
+        bool _get_response();
 
-    /**
-     * TODO: Documentar
-     */
-    string _create_command(int command);
-};
+        /**
+         * TODO: Documentar
+         */
+        string _create_command(int command);
+    };
+
+} // namespace YdLidarX4
 
 #endif /* YDLIDARX4H */

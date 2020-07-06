@@ -10,32 +10,31 @@
 
 using namespace std;
 
-/*
- * Class destructor
- */
-Lidar::~Lidar() {
-}
-
 /**
- * Class constructor
+ * Lidar Class constructor
  */
 Lidar::Lidar() {
+    this->myLidar = YdLidarX4::YdLidarX4Controller();
+    this->myLidar.Connect();
+}
 
-    this->lidar = YdLidarX4();
-
-    this->lidar.Connect();
-    
-    
-
-
+/*
+ * Lidar Class destructor
+ */
+Lidar::~Lidar() {
 }
 
 /**
  * TODO: Documentar metodo
  */
 void Lidar::LidarThread() {
+
+    YdLidarX4::DeviceInformation deviceinfo;
+    // TODO: introducir condición de salida
     while (1) {
-        struct dev deviceinfo = *lidar.GetDeviceInfo();
+        // TODO: ¿¿¿qué sentido tiene estar imprimendo continuamente todo esto???
+
+        deviceinfo = *myLidar.GetDeviceInfo();
         std::cout << "\tModel Number: " << deviceinfo.modelnumber << std::endl;
         std::cout << "\tFirmware Version: " << deviceinfo.firmware_version << std::endl;
         std::cout << "\tHardware Version: " << deviceinfo.hardware_version << std::endl;

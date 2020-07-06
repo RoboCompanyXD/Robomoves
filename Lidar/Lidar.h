@@ -12,6 +12,8 @@
 
 /**
  * TODO: Documentar Clase
+ * 
+ * TODO: ¿Por qué no unir este fichero/clase con YdLidarX4???
  */
 class Lidar {
 
@@ -22,30 +24,27 @@ public:
      */
     Lidar();
 
-
     /**
      * Class desctructor
      */
     virtual ~Lidar();
 
     //set_lidar_params();
-    
-    bool IsObstable;
-    
-    int computedAngle;
-    int computedDistance;
+
+    // TODO: ¿Por qué no hacer estas variables private?
+    bool isObstable; // TODO: documentar
+
+    int computedAngle; // TODO: documentar
+    int computedDistance; // TODO: documentar
 
 private:
 
-    YdLidarX4 lidar; // TODO: documentar variable
-
+    YdLidarX4::YdLidarX4Controller myLidar; // TODO: documentar variable
 
     /**
      * TODO: Documentar Metodo
      */
     void LidarThread();
-
-
 
 };
 

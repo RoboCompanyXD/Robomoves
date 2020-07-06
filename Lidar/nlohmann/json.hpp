@@ -3975,13 +3975,13 @@ class input_stream_adapter : public input_adapter_protocol
     // end up as the same value, eg. 0xFFFFFFFF.
     std::char_traits<char>::int_type get_character() override
     {
-        auto res = sb.sbumpc();
+        auto LidarResponses = sb.sbumpc();
         // set eof manually, as we don't use the istream interface.
-        if (res == EOF)
+        if (LidarResponses == EOF)
         {
             is.clear(is.rdstate() | std::ios::eofbit);
         }
-        return res;
+        return LidarResponses;
     }
 
   private:
@@ -4253,10 +4253,10 @@ class input_adapter
         // see https://stackoverflow.com/a/35008842/266378 for more discussion
         const auto is_contiguous = std::accumulate(
                                        first, last, std::pair<bool, int>(true, 0),
-                                       [&first](std::pair<bool, int> res, decltype(*first) val)
+                                       [&first](std::pair<bool, int> LidarResponses, decltype(*first) val)
         {
-            res.first &= (val == *(std::next(std::addressof(*first), res.second++)));
-            return res;
+            LidarResponses.first &= (val == *(std::next(std::addressof(*first), LidarResponses.second++)));
+            return LidarResponses;
         }).first;
         assert(is_contiguous);
 #endif
@@ -8907,16 +8907,16 @@ class parser
 
                     case token_type::value_float:
                     {
-                        const auto res = m_lexer.get_number_float();
+                        const auto LidarResponses = m_lexer.get_number_float();
 
-                        if (JSON_HEDLEY_UNLIKELY(not std::isfinite(res)))
+                        if (JSON_HEDLEY_UNLIKELY(not std::isfinite(LidarResponses)))
                         {
                             return sax->parse_error(m_lexer.get_position(),
                                                     m_lexer.get_token_string(),
                                                     out_of_range::create(406, "number overflow parsing '" + m_lexer.get_token_string() + "'"));
                         }
 
-                        if (JSON_HEDLEY_UNLIKELY(not sax->number_float(res, m_lexer.get_string())))
+                        if (JSON_HEDLEY_UNLIKELY(not sax->number_float(LidarResponses, m_lexer.get_string())))
                         {
                             return false;
                         }
@@ -10299,9 +10299,9 @@ class json_pointer
             return *this;
         }
 
-        json_pointer res = *this;
-        res.pop_back();
-        return res;
+        json_pointer LidarResponses = *this;
+        LidarResponses.pop_back();
+        return LidarResponses;
     }
 
     /*!
@@ -10404,7 +10404,7 @@ class json_pointer
     static int array_index(const std::string& s)
     {
         std::size_t processed_chars = 0;
-        const int res = std::stoi(s, &processed_chars);
+        const int LidarResponses = std::stoi(s, &processed_chars);
 
         // check if the string was completely read
         if (JSON_HEDLEY_UNLIKELY(processed_chars != s.size()))
@@ -10412,7 +10412,7 @@ class json_pointer
             JSON_THROW(detail::out_of_range::create(404, "unresolved reference token '" + s + "'"));
         }
 
-        return res;
+        return LidarResponses;
     }
 
     json_pointer top() const
@@ -19663,13 +19663,13 @@ class basic_json
         }
 
         // add element to array (perfect forwarding)
-        auto res = m_value.object->emplace(std::forward<Args>(args)...);
+        auto LidarResponses = m_value.object->emplace(std::forward<Args>(args)...);
         // create result iterator and set iterator to the result of emplace
         auto it = begin();
-        it.m_it.object_iterator = res.first;
+        it.m_it.object_iterator = LidarResponses.first;
 
         // return pair of iterator and boolean
-        return {it, res.second};
+        return {it, LidarResponses.second};
     }
 
     /// Helper for insertion of an iterator
@@ -21520,8 +21520,8 @@ class basic_json
     {
         basic_json result;
         detail::json_sax_dom_parser<basic_json> sdp(result, allow_exceptions);
-        const bool res = binary_reader(detail::input_adapter(i)).sax_parse(input_format_t::cbor, &sdp, strict);
-        return res ? result : basic_json(value_t::discarded);
+        const bool LidarResponses = binary_reader(detail::input_adapter(i)).sax_parse(input_format_t::cbor, &sdp, strict);
+        return LidarResponses ? result : basic_json(value_t::discarded);
     }
 
     /*!
@@ -21536,8 +21536,8 @@ class basic_json
     {
         basic_json result;
         detail::json_sax_dom_parser<basic_json> sdp(result, allow_exceptions);
-        const bool res = binary_reader(detail::input_adapter(std::forward<A1>(a1), std::forward<A2>(a2))).sax_parse(input_format_t::cbor, &sdp, strict);
-        return res ? result : basic_json(value_t::discarded);
+        const bool LidarResponses = binary_reader(detail::input_adapter(std::forward<A1>(a1), std::forward<A2>(a2))).sax_parse(input_format_t::cbor, &sdp, strict);
+        return LidarResponses ? result : basic_json(value_t::discarded);
     }
 
     /*!
@@ -21629,8 +21629,8 @@ class basic_json
     {
         basic_json result;
         detail::json_sax_dom_parser<basic_json> sdp(result, allow_exceptions);
-        const bool res = binary_reader(detail::input_adapter(i)).sax_parse(input_format_t::msgpack, &sdp, strict);
-        return res ? result : basic_json(value_t::discarded);
+        const bool LidarResponses = binary_reader(detail::input_adapter(i)).sax_parse(input_format_t::msgpack, &sdp, strict);
+        return LidarResponses ? result : basic_json(value_t::discarded);
     }
 
     /*!
@@ -21645,8 +21645,8 @@ class basic_json
     {
         basic_json result;
         detail::json_sax_dom_parser<basic_json> sdp(result, allow_exceptions);
-        const bool res = binary_reader(detail::input_adapter(std::forward<A1>(a1), std::forward<A2>(a2))).sax_parse(input_format_t::msgpack, &sdp, strict);
-        return res ? result : basic_json(value_t::discarded);
+        const bool LidarResponses = binary_reader(detail::input_adapter(std::forward<A1>(a1), std::forward<A2>(a2))).sax_parse(input_format_t::msgpack, &sdp, strict);
+        return LidarResponses ? result : basic_json(value_t::discarded);
     }
 
     /*!
@@ -21717,8 +21717,8 @@ class basic_json
     {
         basic_json result;
         detail::json_sax_dom_parser<basic_json> sdp(result, allow_exceptions);
-        const bool res = binary_reader(detail::input_adapter(i)).sax_parse(input_format_t::ubjson, &sdp, strict);
-        return res ? result : basic_json(value_t::discarded);
+        const bool LidarResponses = binary_reader(detail::input_adapter(i)).sax_parse(input_format_t::ubjson, &sdp, strict);
+        return LidarResponses ? result : basic_json(value_t::discarded);
     }
 
     /*!
@@ -21733,8 +21733,8 @@ class basic_json
     {
         basic_json result;
         detail::json_sax_dom_parser<basic_json> sdp(result, allow_exceptions);
-        const bool res = binary_reader(detail::input_adapter(std::forward<A1>(a1), std::forward<A2>(a2))).sax_parse(input_format_t::ubjson, &sdp, strict);
-        return res ? result : basic_json(value_t::discarded);
+        const bool LidarResponses = binary_reader(detail::input_adapter(std::forward<A1>(a1), std::forward<A2>(a2))).sax_parse(input_format_t::ubjson, &sdp, strict);
+        return LidarResponses ? result : basic_json(value_t::discarded);
     }
 
     /*!
@@ -21804,8 +21804,8 @@ class basic_json
     {
         basic_json result;
         detail::json_sax_dom_parser<basic_json> sdp(result, allow_exceptions);
-        const bool res = binary_reader(detail::input_adapter(i)).sax_parse(input_format_t::bson, &sdp, strict);
-        return res ? result : basic_json(value_t::discarded);
+        const bool LidarResponses = binary_reader(detail::input_adapter(i)).sax_parse(input_format_t::bson, &sdp, strict);
+        return LidarResponses ? result : basic_json(value_t::discarded);
     }
 
     /*!
@@ -21820,8 +21820,8 @@ class basic_json
     {
         basic_json result;
         detail::json_sax_dom_parser<basic_json> sdp(result, allow_exceptions);
-        const bool res = binary_reader(detail::input_adapter(std::forward<A1>(a1), std::forward<A2>(a2))).sax_parse(input_format_t::bson, &sdp, strict);
-        return res ? result : basic_json(value_t::discarded);
+        const bool LidarResponses = binary_reader(detail::input_adapter(std::forward<A1>(a1), std::forward<A2>(a2))).sax_parse(input_format_t::bson, &sdp, strict);
+        return LidarResponses ? result : basic_json(value_t::discarded);
     }
 
 
