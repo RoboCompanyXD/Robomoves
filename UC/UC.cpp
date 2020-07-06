@@ -6,20 +6,19 @@
  */
 
 #include "UC.h"
-#include "../Navegador/ControlRobot.h"
 #include <stdexcept>
 
-UC::UC() {
-}
+//UC::UC() {
+//}
 
-UC::UC(ControlRobot * contr) {
+UC_ControlRobot::UC_ControlRobot() {
 
-    this->control = contr;
+    //this->control = contr;
 
     initStatechart();
 }
 
-void UC::initStatechart() {
+void UC_ControlRobot::initStatechart() {
     currentSuperState = Disabled; // TODO: change to UC_Enum.OMNonState for better readability
     currentState = Disabled;
     currentUnDock_subState = Disabled;
@@ -34,14 +33,14 @@ void UC::initStatechart() {
     rootState_entDef();
 }
 
-void UC::rootState_entDef() {
+void UC_ControlRobot::rootState_entDef() {
     {
         currentSuperState = Idle;
         currentState = Idle;
     }
 }
 
-void UC::UnDock_entDef() {
+void UC_ControlRobot::UnDock_entDef() {
     currentSuperState = UnDock;
     //#[ transition UnDock.0 
     sensoresSumDistancia = 0;
@@ -50,21 +49,21 @@ void UC::UnDock_entDef() {
     currentState = ExitDock;
 }
 
-void UC::NormalOperate_entDef() {
+void UC_ControlRobot::NormalOperate_entDef() {
     currentSuperState = NormalOperate;
     NormalOperateEntDef();
 }
 
-void UC::NormalOperateEntDef() {
+void UC_ControlRobot::NormalOperateEntDef() {
     TrackingByCamera_entDef();
 }
 
-void UC::TrackingByCamera_entDef() {
+void UC_ControlRobot::TrackingByCamera_entDef() {
     currentNormalOperate_subState = TrackingByCamera;
     TrackingByCameraEntDef();
 }
 
-void UC::TrackingByCameraEntDef() {
+void UC_ControlRobot::TrackingByCameraEntDef() {
     //## transition 14 
     if (cameraIsPersonInView == true) {
         PersonInView_entDef();
@@ -73,7 +72,7 @@ void UC::TrackingByCameraEntDef() {
     }
 }
 
-void UC::PersonInView_entDef() {
+void UC_ControlRobot::PersonInView_entDef() {
     currentTrackingByCamera_subState = PersonInView;
     currentPersonInView_subState = PersonInView_ApproachUser;
     currentState = PersonInView_ApproachUser;
@@ -83,7 +82,7 @@ void UC::PersonInView_entDef() {
     //PersonInView_timeout = scheduleTimeout(ComputeStepTime, "ROOT.NormalOperate.TrackingByCamera.PersonInView.ROOT.PersonInView.PersonInView_ApproachUser");
 }
 
-void UC::PersonOutView_entDef() {
+void UC_ControlRobot::PersonOutView_entDef() {
     currentTrackingByCamera_subState = PersonOutView;
     //#[ transition NormalOperate.TrackingByCamera.PersonOutView.4 
     sensoresSumAngulo = 0;
@@ -93,7 +92,7 @@ void UC::PersonOutView_entDef() {
     currentState = PersonOutView_Rotate360;
 }
 
-void UC::DodgeObstacle_entDef() {
+void UC_ControlRobot::DodgeObstacle_entDef() {
     currentNormalOperate_subState = DodgeObstacle;
     //#[ transition 9 
     sensoresSumAngulo = 0;
@@ -103,7 +102,7 @@ void UC::DodgeObstacle_entDef() {
     currentState = Dodge_MoveBack;
 }
 
-void UC::CliffAhead_entDef() {
+void UC_ControlRobot::CliffAhead_entDef() {
     currentNormalOperate_subState = CliffAhead;
     //#[ transition 12 
     sensoresSumAngulo = 0;
@@ -113,13 +112,13 @@ void UC::CliffAhead_entDef() {
     currentState = CliffAhead_Rotate180;
 }
 
-void UC::CrashAlgorithm_entDef() {
+void UC_ControlRobot::CrashAlgorithm_entDef() {
     currentDodgeObstacle_subState = CrashAlgorithm;
     currentCrashAlgorithm_subState = CrashAlgorithm_Dodge;
     currentState = CrashAlgorithm_Dodge;
 }
 
-void UC::statechart_process() {
+void UC_ControlRobot::statechart_process() {
 
     /** 
      * First level "super-case" machine states: 
@@ -218,7 +217,7 @@ void UC::statechart_process() {
                 case ExitDock:
                 {
                     // State UnDock >> ExitDock
-                    control->setMotores_actual(BACK);
+
                     //## transition UnDock.1 
                     if (sensoresSumDistancia<-300) {
                         //#[ transition UnDock.1 
@@ -235,7 +234,7 @@ void UC::statechart_process() {
                 case UnDock_Rotate180:
                 {
                     // State UnDock >> Rotate180
-                    control->setMotores_actual(LEFT);
+
                     //## transition UnDock.2 
                     if (sensoresSumAngulo > 180) {
                         currentUnDock_subState = Disabled;
@@ -338,8 +337,9 @@ void UC::statechart_process() {
                                     // State: NormalOperate >> TrackingByCamera >> PersonInView >> ApproachUser
                                     // Description: Acercarse a la persona
                                     // El frente está libre, el robot se acerca a la persona.
+
                                     //Ejecutar funcion de calculo de aproximacion
-                                    control->computeCamaraApproach();
+                                    // computeCameraApproach();
                                     if (lidarIsObstable == true) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
                                         reproducirSonidoBloqueado();
@@ -361,8 +361,7 @@ void UC::statechart_process() {
                                 case PersonInView_PathBlocked:
                                 {
                                     // Ejecutar funcion de calculo de aproximacion con obstaculo
-                                    
-                                    control->computeCamaraWithObstacle();
+                                    //computeCameraWithObstacle();
                                     if (lidarIsObstable == false) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
                                         reproducirSonidoDesbloqueado();
@@ -401,7 +400,7 @@ void UC::statechart_process() {
                                 case PersonOutView_RotateToMove:
                                 {
                                     // State PersonOutView_RotateToMove
-                                    control->setMotores_actual(LEFT);
+
                                     if (sensoresSumAngulo > computedAngle) {
                                         currentPersonOutView_subState = PersonOutView_GoForward;
                                         currentState = PersonOutView_GoForward;
@@ -430,7 +429,7 @@ void UC::statechart_process() {
                                 case PersonOutView_GoForward:
                                 {
                                     // State PersonOutView_GoForward
-                                    control->setMotores_actual(FWD);
+
                                     // TODO: resumir lo que se hace en este if
                                     if (sensoresSumDistancia > computedDistance) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonOutView.2 
@@ -447,7 +446,6 @@ void UC::statechart_process() {
                                 case PersonOutView_Rotate360:
                                 {
                                     // State PersonOutView_Rotate360
-                                    control->setMotores_actual(LEFT);
 
                                     // TODO: resumir lo que se hace dentro de este if
                                     if (sensoresSumAngulo > 360) {
@@ -497,7 +495,6 @@ void UC::statechart_process() {
                         case Dodge_MoveBack:
                         {
                             // State NormalOperate >> DodgeObstacle >> MoveBack
-                            control->setMotores_actual(BACK);
 
                             //## transition 10 
                             if (sensoresSumDistancia<-30) {

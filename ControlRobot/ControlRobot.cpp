@@ -6,7 +6,6 @@
  */
 
 #include "ControlRobot.h"
-#include "../UC/UC.h"
 #include <iostream>
 
 #include<bitset>
@@ -40,6 +39,9 @@ using namespace std;
 #define BACK_L 'y'
 #define BACK_R 'z'
 
+ControlRobot::ControlRobot(){
+}
+
 /**
  * ControlRobot class constructor
  */
@@ -49,7 +51,7 @@ ControlRobot::ControlRobot(Lidar l, OCVCam c) {
        
     // Instanciar maquina de estados
     
-    this->uc = new UC(this); //https://stackoverflow.com/questions/8270125/c-taking-address-of-temporary-when-pushing-back-a-pointer-to-a-vector-of-point
+    //this->uc = UC_ControlRobot();
 
 }
 
@@ -179,7 +181,7 @@ void ControlRobot::imprimirInfo(void) {
  */
 void ControlRobot::logicaEstados(int x, int y, int area, int frame_width, int frame_height) {
 
-    uc->statechart_process();
+    //uc.statechart_process();
 
     estado_anterior = estado_actual;
     switch (estado_anterior) {

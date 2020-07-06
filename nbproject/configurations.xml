@@ -4,29 +4,32 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f2" displayName="iRobotFramework" projectFiles="true">
+      <logicalFolder name="f3" displayName="ControlRobot" projectFiles="true">
+        <itemPath>ControlRobot/ControlRobot.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="IRobotFramework" projectFiles="true">
         <itemPath>IRobotFramework/IRobotConnection.h</itemPath>
         <itemPath>IRobotFramework/IRobotInstructionSet.h</itemPath>
         <itemPath>IRobotFramework/Instruction.h</itemPath>
         <itemPath>IRobotFramework/Serial.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="Lidar" projectFiles="true">
+        <logicalFolder name="f1" displayName="nlohmann" projectFiles="true">
+          <itemPath>Lidar/nlohmann/json.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="YdLidarX4" projectFiles="true">
+          <itemPath>Lidar/YdLidarX4/YdLidarX4.h</itemPath>
+        </logicalFolder>
         <itemPath>Lidar/Lidar.h</itemPath>
-        <itemPath>Lidar/YdLidarX4/YdLidarX4.h</itemPath>
-        <itemPath>Lidar/nlohmann/json.hpp</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f3" displayName="Navi" projectFiles="true">
-        <itemPath>Navegador/ControlRobot.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="OCVCam" projectFiles="true">
         <itemPath>OCVCam/OCVCam.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f5" displayName="Tools" projectFiles="true">
+      <logicalFolder name="f2" displayName="Tools" projectFiles="true">
         <logicalFolder name="f1" displayName="Timer" projectFiles="true">
-          <itemPath>Tools/Timer/timer.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f6" displayName="UC" projectFiles="true">
+      <logicalFolder name="f5" displayName="UC" projectFiles="true">
         <itemPath>UC/UC.h</itemPath>
       </logicalFolder>
       <itemPath>main.h</itemPath>
@@ -38,51 +41,38 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="f2" displayName="iRobotFramework" projectFiles="true">
+      <logicalFolder name="f3" displayName="ControlRobot" projectFiles="true">
+        <itemPath>ControlRobot/ControlRobot.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f6" displayName="IRobotFramework" projectFiles="true">
         <itemPath>IRobotFramework/IRobotConnection.cpp</itemPath>
         <itemPath>IRobotFramework/IRobotInstructionSet.cpp</itemPath>
         <itemPath>IRobotFramework/Instruction.cpp</itemPath>
         <itemPath>IRobotFramework/Serial.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="Lidar" projectFiles="true">
-        <itemPath>Lidar/Lidar.cpp</itemPath>
-        <itemPath>Lidar/YdLidarX4/YdLidarX4.cpp</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f3" displayName="Navi" projectFiles="true">
-        <itemPath>Navegador/ControlRobot.cpp</itemPath>
+        <logicalFolder name="f1" displayName="YdLidarX4" projectFiles="true">
+          <itemPath>Lidar/Lidar.cpp</itemPath>
+          <itemPath>Lidar/YdLidarX4/YdLidarX4.cpp</itemPath>
+        </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f4" displayName="OCVCam" projectFiles="true">
         <itemPath>OCVCam/OCVCam.cpp</itemPath>
       </logicalFolder>
-      <logicalFolder name="f5" displayName="Tools" projectFiles="true">
+      <logicalFolder name="f2" displayName="Tools" projectFiles="true">
         <logicalFolder name="f1" displayName="Timer" projectFiles="true">
-          <itemPath>Tools/Timer/timer.cpp</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f6" displayName="UC" projectFiles="true">
+      <logicalFolder name="f5" displayName="UC" projectFiles="true">
         <itemPath>UC/UC.cpp</itemPath>
-      </logicalFolder>
-      <itemPath>main.cpp</itemPath>
-      <itemPath>old_main.cpp</itemPath>
-    </logicalFolder>
-    <logicalFolder name="TestFiles"
-                   displayName="Test Files"
-                   projectFiles="false"
-                   kind="TEST_LOGICAL_FOLDER">
-      <logicalFolder name="f1"
-                     displayName="LidarTest"
-                     projectFiles="true"
-                     kind="TEST">
-      </logicalFolder>
-      <logicalFolder name="f2" displayName="OCVTEST" projectFiles="true" kind="TEST">
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
-                   projectFiles="false"
-                   kind="IMPORTANT_FILES_FOLDER">
+                   projectFiles="false">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>main.cpp</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -93,21 +83,16 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
-        <cTool>
-          <standard>10</standard>
-        </cTool>
-        <ccTool>
-          <standard>8</standard>
-          <commandLine>-g -rdynamic</commandLine>
-        </ccTool>
         <linkerTool>
-          <linkerLibItems>
-            <linkerOptionItem>-lwiringPi</linkerOptionItem>
-            <linkerOptionItem>-lbluetooth</linkerOptionItem>
-            <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
-          </linkerLibItems>
+          <linkerKpic>false</linkerKpic>
+          <commandlineTool>g++</commandlineTool>
+          <commandLine>-lwiringPi `pkg-config --libs opencv`</commandLine>
         </linkerTool>
       </compileType>
+      <item path="ControlRobot/ControlRobot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ControlRobot/ControlRobot.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="IRobotFramework/IRobotConnection.cpp"
             ex="false"
             tool="1"
@@ -143,39 +128,10 @@
       </item>
       <item path="Lidar/nlohmann/json.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Navegador/ControlRobot.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Navegador/ControlRobot.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="OCVCam/OCVCam.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OCVCam/OCVCam.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Tools/Timer/timer.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Tools/Timer/timer.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="UC/UC.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="UC/UC.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <folder path="TestFiles/f1">
-        <cTool>
-          <incDir>
-            <pElem>.</pElem>
-            <pElem>.</pElem>
-          </incDir>
-        </cTool>
-        <ccTool>
-          <incDir>
-            <pElem>.</pElem>
-            <pElem>.</pElem>
-          </incDir>
-        </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/f1</output>
-        </linkerTool>
-      </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="main.h" ex="false" tool="3" flavor2="0">
@@ -190,11 +146,9 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
-          <standard>10</standard>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <standard>8</standard>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -203,6 +157,10 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="ControlRobot/ControlRobot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ControlRobot/ControlRobot.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="IRobotFramework/IRobotConnection.cpp"
             ex="false"
             tool="1"
@@ -228,6 +186,8 @@
       </item>
       <item path="IRobotFramework/Serial.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Lidar/Lidar.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="Lidar/Lidar.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Lidar/YdLidarX4/YdLidarX4.cpp" ex="false" tool="1" flavor2="0">
@@ -236,52 +196,14 @@
       </item>
       <item path="Lidar/nlohmann/json.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Navegador/ControlRobot.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="OCVCam/OCVCam.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OCVCam/OCVCam.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Tools/Timer/timer.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Tools/Timer/timer.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="UC/UC.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="UC/UC.h" ex="false" tool="3" flavor2="0">
       </item>
-      <folder path="TestFiles/f1">
-        <cTool>
-          <incDir>
-            <pElem>.</pElem>
-            <pElem>.</pElem>
-          </incDir>
-        </cTool>
-        <ccTool>
-          <incDir>
-            <pElem>.</pElem>
-            <pElem>.</pElem>
-          </incDir>
-        </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/f1</output>
-        </linkerTool>
-      </folder>
-      <folder path="TestFiles/f2">
-        <cTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </cTool>
-        <ccTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/f2</output>
-        </linkerTool>
-      </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="main.h" ex="false" tool="3" flavor2="0">

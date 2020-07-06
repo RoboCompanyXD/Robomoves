@@ -5,9 +5,20 @@
  * Created on 30 de junio de 2020, 12:23
  */
 
-#include "main.h"
+#include <cstdlib>
+
+#include "Lidar/Lidar.h"
+#include "OCVCam/OCVCam.h"
+#include "ControlRobot/ControlRobot.h"
+
+#include <iostream>
 
 using namespace std;
+
+Lidar lidar;
+OCVCam cam;
+
+ControlRobot con;
 
 /*
  * 
@@ -16,7 +27,10 @@ int main(int argc, char** argv) {
     
     // Inicializar robot
     
-    if(init()){}
+    //if(init()){}
+    
+    std::cout << "Hello World!";
+    return 0;
     
 
 
@@ -30,14 +44,14 @@ int init(){
     // Instanciar Objetos globales
 
     //  Instanciar Camara
-    main_cam = OCVCam();
+    //cam = OCVCam();
     
     //  Instanciar Lidar
-    main_lidar = Lidar();
+    //lidar = Lidar();
     
     // Inctanciar Controlrobot y pasarle Camara Lidar
     
-    main_con = ControlRobot(main_lidar, main_cam);
+    //con = ControlRobot(lidar,cam);
 
     
 

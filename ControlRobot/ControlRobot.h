@@ -10,23 +10,46 @@
 #include "../OCVCam/OCVCam.h"
 #include <iostream>
 
-// #include "../UC/UC.h"
-
-class UC; // Forward declaration
+//#include "../UC/UC.h"
 
 /**
  * TODO: Documentar clase
  * - para que sirve?
  */
 class ControlRobot {
+public:
 
+    
+    ControlRobot();
+    ControlRobot(Lidar l, OCVCam c);
+    ~ControlRobot(void);
+
+    Lidar lidar;
+    OCVCam cam;
+
+    //UC_ControlRobot uc;
+
+    void inicializacion();
+    void finalizacion();
+    bool condicionSalida();
+    void leerSensores();
+    void logicaEstados(int x, int y, int area, int frame_width, int frame_height);
+    void moverActuadores();
+    void imprimirInfo();
+    void computeCamaraApproach();
+    void computeCamaraWithObstacle();
+    void gotoDock();
+
+    void drive(int der, int izq);
+
+    void setMotores_actual(char state);
+
+    
 private:
 
     IRobotConnection *robot;
-    
 
     struct Sensores_iCreate {
-
         // variables para almacenar informaci�n del
         // sensor de acantilado frontal izquierdo
         unsigned int front_left;
@@ -67,15 +90,15 @@ private:
         bool clean; //LED CLEAN
 
         int charger_available;
-        
+
         int battery_charge;
         int battery_capacity;
         int battery_percentage;
-    };
+    }; // struct sensores_iCreate
     
+    struct Sensores_iCreate sensores;
 
     struct Actuadores_iCreate {
-
         // variables para el comando Drive direct
         int vel_der;
         int vel_izq;
@@ -89,35 +112,6 @@ private:
     char estado_anterior;
     char motores_actual;
     char motores_anterior;
-
-public:
-    
-    struct Sensores_iCreate sensores;
-    ControlRobot();
-    ControlRobot(Lidar l, OCVCam c);
-    ~ControlRobot(void);
-    
-    Lidar lidar;
-    OCVCam cam;
-
-    UC * uc;
-
-    void inicializacion();
-    void finalizacion();
-    bool condicionSalida();
-    void leerSensores();
-    void logicaEstados(int x, int y, int area, int frame_width, int frame_height);
-    void moverActuadores();
-    void imprimirInfo();
-    void computeCamaraApproach();
-    void computeCamaraWithObstacle();
-    void gotoDock();
-
-    void drive(int der, int izq);
-    
-    
-    
-    void setMotores_actual(char state);
 
 
 };

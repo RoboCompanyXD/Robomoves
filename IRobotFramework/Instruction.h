@@ -8,7 +8,7 @@
 #ifndef INSTRUCTION_H
 #define	INSTRUCTION_H
 
-//#pragma once
+#pragma once
 #include <malloc.h>
 
 /*

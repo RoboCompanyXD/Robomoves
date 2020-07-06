@@ -10,7 +10,7 @@
 #ifndef IROBOTINSTRUCTIONSET_H
 #define IROBOTINSTRUCTIONSET_H
 
-//#pragma once
+#pragma once
 #include "Instruction.h"
 #include <malloc.h>
 

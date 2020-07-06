@@ -8,35 +8,8 @@
 #ifndef UC_H
 #define	UC_H
 
-//velocidades de las ruedas
-#define VELGIR 80
-#define VELCERO 0
-#define VELAV 150
-
-//maquina de estados antigua (a eliminar)
-#define READY 'a'
-#define WAIT 'b'
-#define MOVCAM 'c'
-#define RET 'd'
-#define GIR 'e'
-#define AV 'f'
-#define AVPLUS 'g'
-#define GIRPLUS 'h'
-#define GIR2 'i'
-
-//9 posibles combinaciones de las ruedas
-#define STOP_UC 'r'
-#define FWD 's'
-#define BACK 't'
-#define LEFT 'u'
-#define RIGHT 'v'
-#define FWD_L 'w'
-#define FWD_R 'x'
-#define BACK_L 'y'
-#define BACK_R 'z'
-
-//#include "../Navegador/ControlRobot.h"
-class ControlRobot; // Forward Declaration of Class ControlRobot
+#include "../ControlRobot/ControlRobot.h"
+//class ControlRobot; // Forward Declaration of Class ControlRobot
 
 
 extern bool check_btnSpot(); // TODO: documentar
@@ -99,7 +72,7 @@ void computeLidarTripPersonOutOfView();
  *
  * TODO: documentar clase
  */
-class UC {
+class UC_ControlRobot {
 
     
 
@@ -108,14 +81,14 @@ public:
     /**
      * Class constructor
      */
-    UC();
+    //UC();
 
     /**
      * Class destructor
      */
-    ~UC();
+    ~UC_ControlRobot();
     
-    UC(ControlRobot * contr);
+    UC_ControlRobot();
     
     /**
      * TODO: documentar metodo
@@ -124,7 +97,7 @@ public:
 
 private:
     
-    ControlRobot * control; // TODO: documentar variable
+    //ControlRobot * control; // TODO: documentar variable
 
     /**
      * TODO: Documentar
@@ -252,5 +225,5 @@ protected:
 
 }; // end class UC
 
-#endif	/* UC_H */
+#endif	/* ROBOTIA_H */
 
