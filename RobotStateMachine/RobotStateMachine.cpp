@@ -264,7 +264,7 @@ void RobotStateMachine::statechart_process() {
                 case ExitDock:
                 {
                     // State UnDock >> ExitDock
-
+                    robot->setMotores_actual(motores_BACK);
                     //## transition UnDock.1 
                     if (robot->sensores.sum_distance<-300) {
                         //#[ transition UnDock.1 
@@ -281,7 +281,7 @@ void RobotStateMachine::statechart_process() {
                 case UnDock_Rotate180:
                 {
                     // State UnDock >> Rotate180
-
+                    robot->setMotores_actual(motores_LEFT);
                     //## transition UnDock.2 
                     if (robot->sensores.sum_angle > 180) {
                         currentUnDock_subState = Disabled;
@@ -386,7 +386,7 @@ void RobotStateMachine::statechart_process() {
                                     // El frente está libre, el robot se acerca a la persona.
 
                                     //Ejecutar funcion de calculo de aproximacion
-                                    // computeCameraApproach();
+                                    robot->computeCameraApproach(); 
                                     if (robot->lidar.isObstable == true) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
                                         robot->reproducirSonidoBloqueado();
@@ -408,7 +408,7 @@ void RobotStateMachine::statechart_process() {
                                 case PersonInView_PathBlocked:
                                 {
                                     // Ejecutar funcion de calculo de aproximacion con obstaculo
-                                    //computeCameraWithObstacle();
+                                    robot->computeCameraWithObstacle();
                                     if (robot->lidar.isObstable == false) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
                                         robot->reproducirSonidoDesbloqueado();
@@ -447,7 +447,7 @@ void RobotStateMachine::statechart_process() {
                                 case PersonOutView_RotateToMove:
                                 {
                                     // State PersonOutView_RotateToMove
-
+                                    robot->setMotores_actual(motores_LEFT);
                                     if (robot->sensores.sum_angle > robot->lidar.computedAngle) {
                                         currentPersonOutView_subState = PersonOutView_GoForward;
                                         currentState = PersonOutView_GoForward;
@@ -477,7 +477,7 @@ void RobotStateMachine::statechart_process() {
                                 case PersonOutView_GoForward:
                                 {
                                     // State PersonOutView_GoForward
-
+                                    robot->setMotores_actual(motores_FWD);
                                     // TODO: resumir lo que se hace en este if
                                     if (robot->sensores.sum_distance > robot->lidar.computedDistance) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonOutView.2 
@@ -494,7 +494,7 @@ void RobotStateMachine::statechart_process() {
                                 case PersonOutView_Rotate360:
                                 {
                                     // State PersonOutView_Rotate360
-
+                                    robot->setMotores_actual(motores_LEFT);
                                     // TODO: resumir lo que se hace dentro de este if
                                     if (robot->sensores.sum_angle > 360) {
                                         currentPersonOutView_subState = PersonOutView_ComputePosition;
@@ -543,7 +543,7 @@ void RobotStateMachine::statechart_process() {
                         case Dodge_MoveBack:
                         {
                             // State NormalOperate >> DodgeObstacle >> MoveBack
-
+                            robot->setMotores_actual(motores_BACK);
                             //## transition 10 
                             if (robot->sensores.sum_distance<-30) {
                                 CrashAlgorithm_entDef();
@@ -581,7 +581,7 @@ void RobotStateMachine::statechart_process() {
                                 case CrashAlgorithm_Dodge:
                                 {
                                     // State NormalOperate >> DodgeObstacle >> CrashAlgorithm >> Dodge
-
+                                    robot->setMotores_actual(motores_LEFT);
                                     if (robot->sensores.sum_angle > 25) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
                                         currentState = CrashAlgorithm_DodgeParallel;
@@ -594,7 +594,7 @@ void RobotStateMachine::statechart_process() {
                                 case CrashAlgorithm_DodgeParallel:
                                 {
                                     // State NormalOperate >> DodgeObstacle >> CrashAlgorithm >> DodgeParallel
-
+                                    robot->setMotores_actual(motores_LEFT);
                                     if (robot->sensores.lbump_front == false) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_GoForward;
                                         currentState = CrashAlgorithm_GoForward;
@@ -607,7 +607,7 @@ void RobotStateMachine::statechart_process() {
                                 case CrashAlgorithm_GoForward:
                                 {
                                     // State NormalOperate >> DodgeObstacle >> CrashAlgorithm >> GoForward
-
+                                    robot->setMotores_actual(motores_FWD);
                                     if (robot->sensores.lbump_side == false) {
                                         //#[ transition NormalOperate.DodgeObstacle.CrashAlgorithm.5 
                                         robot->sensores.sum_distance = 0;
@@ -627,7 +627,7 @@ void RobotStateMachine::statechart_process() {
                                 case CrashAlgorithm_GoForwardExtended:
                                 {
                                     // State CrashAlgorithm_GoForwardExtended
-
+                                    robot->setMotores_actual(motores_FWD);
                                     if (robot->sensores.sum_distance > 300) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_RecoverTrajectory;
                                         currentState = CrashAlgorithm_RecoverTrajectory;
@@ -648,7 +648,8 @@ void RobotStateMachine::statechart_process() {
                                 case CrashAlgorithm_RecoverTrajectory:
                                 {
                                     // State CrashAlgorithm_RecoverTrajectory
-                                    if (robot->sensores.sum_angle < 25) {
+                                    robot->setMotores_actual(motores_RIGHT);
+                                    if (robot->sensores.sum_angle < 25 && robot->sensores.sum_angle > -25) {
                                         currentDodgeObstacle_subState = Disabled;
                                         TrackingByCamera_entDef();
                                         break; // Salir inmediatamente del sub-estado

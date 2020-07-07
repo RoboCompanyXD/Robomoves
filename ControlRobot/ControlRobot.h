@@ -202,9 +202,15 @@ namespace ControlRobot {
 
 
             unsigned int buttons;
-            bool play; // Sensor Virtual
-            bool avance; // Sensor Virtual
-
+            bool button_dock; // Sensor Virtual
+            bool button_clean; // Sensor Virtual
+            bool button_spot; // Sensor Virtual
+            bool button_day; // Sensor Virtual
+            bool button_hour; // Sensor Virtual
+            bool button_minute; // Sensor Virtual
+            bool button_schedule; // Sensor Virtual
+            bool button_clock; // Sensor Virtual
+            
             unsigned int bumpers;
             bool bl; // Sensor Virtual
             bool br; // Sensor Virtual
@@ -222,10 +228,10 @@ namespace ControlRobot {
             unsigned int lbfr; // Sensor Virtual
             unsigned int lbr; // Sensor Virtual
 
-            bool lbump_front;
-            bool lbump_side;
+            bool lbump_front; // Sensor Virtual
+            bool lbump_side; // Sensor Virtual
 
-            bool clean; //LED CLEAN
+            bool led_clean; //LED CLEAN
 
             int charger_available;
             bool IsDocked; // Sensor Virtual
@@ -259,6 +265,10 @@ namespace ControlRobot {
         char estado_anterior;
         char motores_actual;
         char motores_anterior;
+        
+        bool dock_anterior;
+        bool clean_anterior;
+        bool spot_anterior;
 
     public:
         Sensores_iCreate sensores;

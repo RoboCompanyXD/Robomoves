@@ -170,5 +170,15 @@ protected:
 
 }; // end class UC
 
+#define motores_STOP 'r'
+#define motores_FWD 's'
+#define motores_BACK 't'
+#define motores_LEFT 'u'
+#define motores_RIGHT 'v'
+#define motores_FWD_L 'w'
+#define motores_FWD_R 'x'
+#define motores_BACK_L 'y'
+#define motores_BACK_R 'z'
+
 #endif	/* ROBOT_STATE_MACHINE_H */
 

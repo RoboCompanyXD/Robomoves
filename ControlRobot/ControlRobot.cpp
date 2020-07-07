@@ -111,7 +111,22 @@ namespace ControlRobot {
         // Comando 132 modo full
         robot->full();
         delay(500); // Esperamos medio segundo a que cambie de modo
-
+        
+        //grabamos SonidoBloqueado
+        char SonidoBloqueado[4];
+        SonidoBloqueado[0] = 62;
+        SonidoBloqueado[1] = 5;
+        SonidoBloqueado[2] = 77;
+        SonidoBloqueado[3] = 5;
+        robot->song(1,4,SonidoBloqueado);
+        
+        //grabamos SonidoDesBloqueado
+        char SonidoDesBloqueado[4];
+        SonidoDesBloqueado[0] = 62;
+        SonidoDesBloqueado[1] = 5;
+        SonidoDesBloqueado[2] = 47;
+        SonidoDesBloqueado[3] = 5;
+        robot->song(1,4,SonidoDesBloqueado);
 
         estado_actual = READY;
         estado_anterior = READY;
@@ -158,7 +173,7 @@ namespace ControlRobot {
     void ControlRobot::leerSensores() {
 
         data = robot->queryList(lsensores, nsensores);
-
+        
         sensores.buttons = data[0];
         sensores.bumpers = data[1];
         sensores.lightbumper = data[2];
@@ -180,6 +195,14 @@ namespace ControlRobot {
 
         sensores.sum_distance += sensores.distance;
         sensores.sum_angle += sensores.angle;
+        
+        clean_anterior = sensores.button_clean;
+        if (sensores.buttons & 0b00000001 != 0) sensores.button_clean = true;
+        spot_anterior = sensores.button_spot;
+        if (sensores.buttons & 0b00000010 != 0) sensores.button_spot = true;
+        dock_anterior = sensores.button_dock;
+        if (sensores.buttons & 0b00000100 != 0) sensores.button_dock = true;
+        
     }
 
     /**
@@ -396,30 +419,30 @@ namespace ControlRobot {
      * Play "blocked" sound
      */
     void ControlRobot::reproducirSonidoBloqueado() {
-        // TODO
+        robot->playSong(1);
     };
 
     /**
      * Play "un-blocked" sound
      */
     void ControlRobot::reproducirSonidoDesbloqueado() {
-        // TODO
+        robot->playSong(2);   
     };
 
     //// TODO: ¿por qué no poner los metodos anteriores dentro de la definición de la clase?
 
     bool ControlRobot::check_btnSpot() {
-        // TODO: implementar e documentar
+        if (sensores.button_spot == 0 && spot_anterior == 1) return true;
         return false;
     };
 
     bool ControlRobot::check_btnClean() {
-        // TODO: implementar e documentar
+        if (sensores.button_clean == 0 && clean_anterior == 1) return true;
         return false;
     };
 
     bool ControlRobot::check_btnDock() {
-        // TODO: implementar e documentar
+        if (sensores.button_dock == 0 && dock_anterior == 1) return true;
         return false;
     };
 
