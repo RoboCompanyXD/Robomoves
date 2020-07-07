@@ -102,18 +102,18 @@ int OCVCam::AnalyzeCam() {
 
         erode(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(2, 2))); //Erosionar
 
-        mu = moments(mask); // Calculo momentos y posicion
-        if (mu.m00 > 30000) {
-            mc = Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
-            x = int(mc.x);
-            y = int(mc.y);
-            area = int(mu.m00);
-        } else {
-            mc = Point2f(0, 0);
-            x = 0;
-            y = 0;
-            area = 0;
-        }
+//        mu = moments(mask); // Calculo momentos y posicion
+//        if (mu.m00 > 30000) {
+//            mc = Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
+//            x = int(mc.x);
+//            y = int(mc.y);
+//            area = int(mu.m00);
+//        } else {
+//            mc = Point2f(0, 0);
+//            x = 0;
+//            y = 0;
+//            area = 0;
+//        }
 
         cvtColor(frame, frame_gray, COLOR_BGR2GRAY); // cambio a grises
         resize(frame_gray, frame_gray, Size(), 0.25, 0.25, INTER_LINEAR);
@@ -145,6 +145,20 @@ int OCVCam::AnalyzeCam() {
         /** Interseccion de deteccion por color y reconocimiento */
 
         bitwise_and(mask, mask_grey, final_mask); //interseccion de deteccion por color y reconocimiento
+        
+        
+        mu = moments(final_mask); // Calculo momentos y posicion
+        if (mu.m00 > 30000) {
+            mc = Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
+            x = int(mc.x);
+            y = int(mc.y);
+            area = int(mu.m00);
+        } else {
+            mc = Point2f(0, 0);
+            x = 0;
+            y = 0;
+            area = 0;
+        }
 
         //        imshow( "Mask", mask_grey );
         //        if( waitKey(10) == 27 )
