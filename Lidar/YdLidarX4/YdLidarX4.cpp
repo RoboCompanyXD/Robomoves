@@ -118,6 +118,9 @@ namespace YdLidarX4 {
             // Create an array and allocate memory to store 360 integer values
             int* newsample;
             newsample = (int*) malloc(360 * sizeof (int));
+            
+            // Free old sample for avoiding memory leak
+            free(sampledata);
 
             // Overwrite sampledata with empty array
             sampledata = newsample;

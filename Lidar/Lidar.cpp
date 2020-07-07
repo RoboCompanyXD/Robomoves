@@ -41,3 +41,10 @@ void Lidar::LidarThread() {
         std::cout << "\tSerial Number: " << deviceinfo.serial_number << std::endl;
     }
 }
+
+    /**
+     * Calcular a donde ir con el lidar
+     */
+    void Lidar::computeLidarTripPersonOutOfView() {
+        // TODO
+    };

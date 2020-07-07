@@ -466,6 +466,7 @@ void RobotStateMachine::statechart_process() {
                                     // Calcular la posicion a la que dirigirse
                                     //#[ transition NormalOperate.TrackingByCamera.PersonOutView.0 
                                     robot->sensores.sum_angle = 0;
+                                    robot->lidar.computeLidarTripPersonOutOfView();
                                     //#]
                                     currentPersonOutView_subState = PersonOutView_RotateToMove;
                                     currentState = PersonOutView_RotateToMove;

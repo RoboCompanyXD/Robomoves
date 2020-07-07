@@ -36,6 +36,8 @@ public:
 
     int computedAngle; // TODO: documentar
     int computedDistance; // TODO: documentar
+    
+    void computeLidarTripPersonOutOfView();
 
 private:
 
@@ -45,6 +47,8 @@ private:
      * TODO: Documentar Metodo
      */
     void LidarThread();
+    
+    
 
 };
 

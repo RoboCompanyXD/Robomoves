@@ -406,13 +406,6 @@ namespace ControlRobot {
         // TODO
     };
 
-    /**
-     * Calcular a donde ir con el lidar
-     */
-    void ControlRobot::computeLidarTripPersonOutOfView() {
-        // TODO
-    };
-
     //// TODO: ¿por qué no poner los metodos anteriores dentro de la definición de la clase?
 
     bool ControlRobot::check_btnSpot() {
