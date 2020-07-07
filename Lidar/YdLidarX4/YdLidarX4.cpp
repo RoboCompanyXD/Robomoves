@@ -119,9 +119,6 @@ namespace YdLidarX4 {
             int* newsample;
             newsample = (int*) malloc(360 * sizeof (int));
             
-            // Free old sample for avoiding memory leak
-            free(sampledata);
-
             // Overwrite sampledata with empty array
             sampledata = newsample;
 
