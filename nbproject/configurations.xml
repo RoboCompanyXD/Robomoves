@@ -91,7 +91,7 @@
         <linkerTool>
           <linkerKpic>false</linkerKpic>
           <commandlineTool>g++</commandlineTool>
-          <commandLine>-lwiringPi `pkg-config --libs opencv`</commandLine>
+          <commandLine>-lwiringPi `pkg-config --libs opencv` -pthread</commandLine>
         </linkerTool>
       </compileType>
       <item path="ControlRobot/ControlRobot.cpp" ex="false" tool="1" flavor2="0">
