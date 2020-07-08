@@ -238,7 +238,7 @@ namespace ControlRobot {
 
             int battery_charge;
             int battery_capacity;
-            int battery_percentage; // Sensor Virtual
+            int battery_level; // Sensor Virtual
 
             // Sensores Cliff
             bool cliff_left;

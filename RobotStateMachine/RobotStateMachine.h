@@ -116,13 +116,13 @@ protected:
     /** Unique identifiers for all the different states of the state machine */
     enum UC_Enum {
 
-        Disabled = 0, // The robot is disabled. Expected behavior: the robot remains disabled.
-        UnDock = 1, // The `undock` button has been pressed while being docked, and the robot should be stepping back from the dock-station.
+        DISABLED = 0, // The robot is disabled. Expected behavior: the robot remains disabled.
+        UN_DOCKING = 1, // The `undock` button has been pressed while being docked, and the robot should be stepping back from the dock-station.
         UnDock_Rotate180 = 2, // The robot has stepped back from the dock-station and should be rotating 180º to face towards the room.
         ExitDock = 3, // TODO
         EndUndoParkHelperState = 4, // TODO
-        Shutdown = 5, // TODO
-        NormalOperate = 6, // Super-state
+        SHUTDOWN = 5, // TODO
+        NORMAL_ROAMING = 6, // Super-state
         TrackingByCamera = 7,
         PersonOutView = 8,
         PersonOutView_RotateToMove = 9,
@@ -148,8 +148,8 @@ protected:
         CliffAhead_GoForward = 29,
         Initializing = 30,
         InitFailed = 31,
-        Idle = 32,
-        Dock = 33,
+        IDLE = 32,
+        DOCKING = 33,
         Statechart_End = 1000
     };
 
