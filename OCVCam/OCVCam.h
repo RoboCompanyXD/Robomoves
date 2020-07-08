@@ -52,6 +52,8 @@ public:
      * TODO: Documentar clase
      */
     int AnalyzeCam();
+    
+    void exitCamThread();
 
     int x; // TODO: Documentar
     int y; // TODO: Documentar
@@ -59,6 +61,10 @@ public:
     int frame_width; // TODO: Documentar
     int frame_height; // TODO: Documentar
     bool isPersonInView; // TODO: Documentar
+    
+private:
+    
+    bool runCamThread;
 
 };
 

@@ -10,9 +10,6 @@
 #include "Lidar.h"
 #include "YdLidarX4/YdLidarX4.h"
 
-#define NSECTORS 8      // Numero de sectores en los que se dividirán los 360 grados
-#define OBSTACLEMINDISTANCE 50
-
 using namespace std;
 
 /**
@@ -20,32 +17,40 @@ using namespace std;
  */
 Lidar::Lidar() {
     this->myLidar = YdLidarX4::YdLidarX4Controller();
-    this->myLidar.Connect();
+    myLidar.Connect();
 
     // Calcular sectores
-    int anglestep = 360 / NSECTORS;
+    anglestep = 360 / NUM_SECTORS;
 
     // Alinear primer sector centrado en la parte frontal
     int firstsector = anglestep / 2;
 
     // Preparar array de indices de angulos y guardar el primero
-    sectorstartangles = (int*) malloc(NSECTORS * sizeof (int)); // [0:NSECTORS-1]
-    sectorendangles = (int*) malloc(NSECTORS * sizeof (int)); // [0:NSECTORS-1]
+    sectorstartangles = (int*) malloc(NUM_SECTORS * sizeof (int)); // [0:NSECTORS-1]
+    sectorendangles = (int*) malloc(NUM_SECTORS * sizeof (int)); // [0:NSECTORS-1]
     sectorstartangles[0] = firstsector;
     sectorendangles[1] = firstsector;
 
     // Calcular indices y almacenarlos
     int i = 1;
-    for (i = 1; i < NSECTORS; i++) {
+    for (i = 1; i < NUM_SECTORS; i++) {
         sectorstartangles[i] = sectorstartangles[i - 1] + anglestep;
-        sectorendangles[(i + 1) % NSECTORS] = sectorstartangles[i];
+        sectorendangles[(i + 1) % NUM_SECTORS] = sectorstartangles[i];
     }
 
-    sectorendangles[0] = sectorstartangles[NSECTORS - 1];
+    sectorendangles[0] = sectorstartangles[NUM_SECTORS - 1];
 
     // Reservar espacio para ultima lectura
 
     lastSample = (int*) malloc(360 * sizeof (int));
+    
+    // Poner el lidar en modo espera
+        
+    lidarstate = LidarStates::Idle;
+    
+    // Poner condicion de salida para el thread
+    
+    runLidarThread = true;
 
 }
 
@@ -61,48 +66,48 @@ Lidar::~Lidar() {
 void Lidar::LidarThread() {
 
     // TODO: introducir condición de salida
-    while (1) {
+    while (runLidarThread) {
 
         // Si el lidar da un error reiniciarlo
 
         int health;
 
-        while ((health = this->myLidar.GetHealthStatus()) == YdLidarX4::LidarResponses.HEALTH_BAD) {
+        while ((health = myLidar.GetHealthStatus()) == YdLidarX4::LidarResponses.HEALTH_BAD) {
             std::cout << "Mirando Health" << std::endl;
             std::cout << "\tEl Health del lidar es: HEALTH_BAD" << std::endl;
             std::cout << "" << std::endl;
-            this->myLidar.Reset();
+            myLidar.Reset();
         }
         sleep(0);
 
         switch (lidarstate) {
 
-            case Idle:
-
+            case LidarStates::Idle:
+            {
                 // Esperar - No hacer nada
                 sleep(10);
-
                 break;
+            }
 
-            case GoToIdle:
-
+            case LidarStates::GoToIdle:
+            {
                 // Detener modo escaneo y parar motor
 
-                myLidar->StopScanning();
+                myLidar.StopScanning();
                 lidarstate = Idle;
 
                 break;
-
-            case Scanning:
-
+            }
+            case LidarStates::Scanning:
+            {
                 // Capturar 3 muestras
 
                 int *muestra1, *muestra2, *muestra3;
-                muestra1 = myLidar->GetSampleData();
+                muestra1 = myLidar.GetSampleData();
                 sleep(10);
-                muestra2 = myLidar->GetSampleData();
+                muestra2 = myLidar.GetSampleData();
                 sleep(10);
-                muestra3 = myLidar->GetSampleData();
+                muestra3 = myLidar.GetSampleData();
 
                 // TODO: Procear: Ajustar muestras para centrarlas
 
@@ -123,8 +128,7 @@ void Lidar::LidarThread() {
                     if (muestra1[i] != INT_MAX && muestra2[i] != INT_MAX && muestra3[i] != INT_MAX) {
                         lastSample[i] = muestra1[i] != INT_MAX + muestra2[i] != INT_MAX + muestra3[i] != INT_MAX;
                         lastSample[i] /= 3;
-                    }
-                    else lastSample[i] = INT_MAX;
+                    } else lastSample[i] = INT_MAX;
 
                 }
 
@@ -132,47 +136,50 @@ void Lidar::LidarThread() {
                 free(muestra1);
                 free(muestra2);
                 free(muestra3);
-                
+
                 // Comprobar si la delantera esta libre
 
-                int nobstacles = 0;
+                int numObstacles = 0;
 
                 for (i = 315; i < 405; i++) {
 
                     if (lastSample[i % 360] <= OBSTACLEMINDISTANCE && lastSample[(i + 1) % 360] <= OBSTACLEMINDISTANCE) {
-                        nobstacles++;
+                        numObstacles++;
                     }
                 }
 
-                if (nobstacles > 0) isFrontLibre = false;
+                if (numObstacles > 0) isFrontLibre = false;
                 else isFrontLibre = true;
-                
+
                 // Comprobar si la trasera esta libre
 
-                int nobstacles = 0;
+                numObstacles = 0;
 
                 for (i = 135; i < 225; i++) {
 
                     if (lastSample[i % 360] <= OBSTACLEMINDISTANCE && lastSample[(i + 1) % 360] <= OBSTACLEMINDISTANCE) {
-                        nobstacles++;
+                        numObstacles++;
                     }
                 }
 
-                if (nobstacles > 0) isBackLibre = false;
-                else isBackLibre = true;
+                if (numObstacles > 0) {
+                    isBackLibre = false;
+                } else {
+                    isBackLibre = true;
+                }
 
-                break;
-                
                 isObstable = (!isBackLibre || !isFrontLibre);
 
-            case GoToScanning:
-                
-                myLidar->StartScanning();
+                break;
+            }
+            case LidarStates::GoToScanning:
+            {
+                myLidar.StartScanning();
                 lidarstate = Scanning;
 
                 break;
-
-        }
+            }
+        } // switch (lidarstate)
 
         // Esperar un tiempo: 0 sacar y meter de ejecucion
         sleep(0);
@@ -184,38 +191,62 @@ void Lidar::LidarThread() {
  * Calcular a donde ir con el lidar
  */
 void Lidar::computeLidarTripPersonOutOfView() {
-    
+
     // Calcular por secores la distancia mas larga
-    
-    int * mediassectores = (int*) malloc(NSECTORS * sizeof (int));
-    
+
+    int * mediassectores = (int*) malloc(NUM_SECTORS * sizeof (int));
+
     // Para todos los sectores entre sus angulos...
-    
+
     int i;
-    for(i=0;i<NSECTORS;i++){
-        
+    for (i = 0; i < NUM_SECTORS; i++) {
+
         // Mirar todos los angulos en la ultima lectura y calcular distancias medias
-        
+
         int j;
-        for(j=sectorstartangles[i];j<sectorendangles[i];j++){
-            
-            if(lastSample[j])mediassectores+= lastSample[j];
-            mediassectores/=(sectorendangles[i]-sectorstartangles[i]);
-            
+        for (j = sectorstartangles[i]; j < sectorendangles[i]; j++) {
+
+            if (lastSample[j])mediassectores += lastSample[j];
+            mediassectores[i] /= (sectorendangles[i] - sectorstartangles[i]);
+
         }
         
     }
     
+    // Calcular computedangle y computeddistance
+   
+    int sectorindex = indexofSmallestElement(mediassectores, NUM_SECTORS);
     
-    // TODO
+    computedAngle = sectorstartangles[sectorindex] + anglestep/2;
+    
+    computedDistance = lastSample[computedAngle] - OBSTACLEMINDISTANCE;
+   
 };
 
-void Lidar::setLidarIdle(){
+void Lidar::setLidarIdle() {
 
     this->lidarstate = Idle;
 }
 
-void Lidar::setLidarScanning(){
+void Lidar::setLidarScanning() {
 
     this->lidarstate = Scanning;
+}
+
+int Lidar::indexofSmallestElement(int * arr, int size)
+{
+    int index = 0;
+
+    for(int i = 1; i < size; i++)
+    {
+        if(arr[i] < arr[index])
+            index = i;              
+    }
+
+    return index;
+}
+
+void Lidar::exitLidarThread(){
+
+    runLidarThread = false;
 }

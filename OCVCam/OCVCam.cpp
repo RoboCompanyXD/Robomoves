@@ -14,12 +14,16 @@ using namespace cv;
  * Class constructor
  */
 OCVCam::OCVCam() {
+    
+    runCamThread = true;
+    
 }
 
 /**
  * Class destructor
  */
 OCVCam::~OCVCam() {
+    runCamThread = false;
 }
 
 //int x, xp, y, yp, area, frame_width, frame_height, foto = 0; // TODO explicar qué es cada variable por separado
@@ -92,7 +96,7 @@ int OCVCam::AnalyzeCam() {
     CascadeClassifier body_classifier;
     body_classifier = CascadeClassifier("/home/pi/pedestrian-detection/haarcascade_upperbody.xml");
 
-    while (1) {
+    while (runCamThread) {
         cap >> frame;
 
         /** Detección del color */
@@ -191,3 +195,8 @@ int OCVCam::AnalyzeCam() {
     } //end loop(1)
     return 0;
 } //end int OCVCam(void)
+
+void OCVCam::exitCamThread(){
+
+    runCamThread = false;
+}
