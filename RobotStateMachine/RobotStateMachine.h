@@ -114,43 +114,38 @@ protected:
     //void cancelTimeouts();
 
     /** Unique identifiers for all the different states of the state machine */
-    enum UC_Enum {
+    enum stateMachineStates {
 
-        DISABLED = 0, // The robot is disabled. Expected behavior: the robot remains disabled.
-        UN_DOCKING = 1, // The `undock` button has been pressed while being docked, and the robot should be stepping back from the dock-station.
-        UnDock_Rotate180 = 2, // The robot has stepped back from the dock-station and should be rotating 180º to face towards the room.
-        ExitDock = 3, // TODO
-        EndUndoParkHelperState = 4, // TODO
-        SHUTDOWN = 5, // TODO
-        NORMAL_ROAMING = 6, // Super-state
-        TrackingByCamera = 7,
-        PersonOutView = 8,
-        PersonOutView_RotateToMove = 9,
-        PersonOutView_Rotate360 = 10,
-        PersonOutView_GoForward = 11,
-        PersonOutView_ComputePosition = 12,
-        PersonInView = 13,
-        PersonInView_PathBlocked = 14,
-        PersonInView_ApproachUser = 15,
-        ComputeStepBlocked = 16,
-        ComputeStepApproach = 17,
-        DodgeObstacle = 18,
-        Dodge_MoveBack = 19,
-        CrashAlgorithm = 20,
-        CrashAlorithmEndHelperState = 21,
-        CrashAlgorithm_RecoverTrajectory = 22,
-        CrashAlgorithm_GoForwardExtended = 23,
-        CrashAlgorithm_GoForward = 24,
-        CrashAlgorithm_DodgeParallel = 25,
-        CrashAlgorithm_Dodge = 26,
-        CliffAhead = 27,
-        CliffAhead_Rotate180 = 28,
-        CliffAhead_GoForward = 29,
-        Initializing = 30,
-        InitFailed = 31,
-        IDLE = 32,
-        DOCKING = 33,
-        Statechart_End = 1000
+        DISABLED = 0,
+        IDLE = 1, 
+        SHUTDOWN,
+        DOCKING,
+        UN_DOCKING,
+        /**/TurnAwayFromDock,
+        /**/ExitDock,
+        ROAMING,
+        /**/TrackingByCamera,
+        /*****/SearchingUser,
+        /********/SearchingUser_TurnToEmptyHallway,
+        /********/SearchingUser_Look360Around,
+        /********/SearchingUser_TraverseEmptyHallway,
+        /********/SearchingUser_FindEmptyHallway,
+        /*****/FollowingUser,
+        /********/FollowingUser_GettingCloser,
+        /********/FollowingUser_ObstacleInBetween,
+        /***/DodgingObstacle,
+        /*****/MovingBackFromObstacle,
+        /*****/CrashAlgorithm,
+        /********/CrashAlorithmEndHelperState,
+        /********/CrashAlgorithm_RecoverTrajectory,
+        /********/CrashAlgorithm_GoForwardExtended,
+        /********/CrashAlgorithm_GoForward,
+        /********/CrashAlgorithm_DodgeParallel,
+        /********/CrashAlgorithm_Dodge,
+        /***/AvoidingCliff,
+        /*****/TurnAwayFromCliff,
+        /*****/LeaveCliffBehind,
+        END_STATE_MACHINE // TODO CRITICAL: REMOVE???
     };
 
     /** Define the flags for the state-machine */

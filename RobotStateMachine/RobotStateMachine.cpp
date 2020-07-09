@@ -71,7 +71,7 @@ void RobotStateMachine::UnDock_entDef() {
  * TODO: documentar
  */
 void RobotStateMachine::NormalOperate_entDef() {
-    currentSuperState = NORMAL_ROAMING;
+    currentSuperState = ROAMING;
     NormalOperateEntDef();
 }
 
@@ -110,9 +110,9 @@ void RobotStateMachine::TrackingByCameraEntDef() {
  * TODO: documentar
  */
 void RobotStateMachine::PersonInView_entDef() {
-    currentTrackingByCamera_subState = PersonInView;
-    currentPersonInView_subState = PersonInView_ApproachUser;
-    currentState = PersonInView_ApproachUser;
+    currentTrackingByCamera_subState = FollowingUser;
+    currentPersonInView_subState = FollowingUser_GettingCloser;
+    currentState = FollowingUser_GettingCloser;
     //#[ state NormalOperate.TrackingByCamera.PersonInView.PersonInView.PersonInView_ApproachUser.(Entry) 
     robot->computeCameraApproach();
     //#]
@@ -124,13 +124,13 @@ void RobotStateMachine::PersonInView_entDef() {
  * TODO: documentar
  */
 void RobotStateMachine::PersonOutView_entDef() {
-    currentTrackingByCamera_subState = PersonOutView;
+    currentTrackingByCamera_subState = SearchingUser;
     //#[ transition NormalOperate.TrackingByCamera.PersonOutView.4 
     robot->sensores.sum_angle = 0;
     robot->sensores.sum_distance = 0;
     //#]
-    currentPersonOutView_subState = PersonOutView_Rotate360;
-    currentState = PersonOutView_Rotate360;
+    currentPersonOutView_subState = SearchingUser_Look360Around;
+    currentState = SearchingUser_Look360Around;
 }
 
 /**
@@ -138,13 +138,13 @@ void RobotStateMachine::PersonOutView_entDef() {
  * TODO: documentar
  */
 void RobotStateMachine::DodgeObstacle_entDef() {
-    currentNormalOperate_subState = DodgeObstacle;
+    currentNormalOperate_subState = DodgingObstacle;
     //#[ transition 9 
     robot->sensores.sum_angle = 0;
     robot->sensores.sum_distance = 0;
     //#]
-    currentDodgeObstacle_subState = Dodge_MoveBack;
-    currentState = Dodge_MoveBack;
+    currentDodgeObstacle_subState = MovingBackFromObstacle;
+    currentState = MovingBackFromObstacle;
 }
 
 /**
@@ -152,13 +152,13 @@ void RobotStateMachine::DodgeObstacle_entDef() {
  * TODO: documentar
  */
 void RobotStateMachine::CliffAhead_entDef() {
-    currentNormalOperate_subState = CliffAhead;
+    currentNormalOperate_subState = AvoidingCliff;
     //#[ transition 12 
     robot->sensores.sum_angle = 0;
     robot->sensores.sum_distance = 0;
     //#]
-    currentCliffAhead_subState = CliffAhead_Rotate180;
-    currentState = CliffAhead_Rotate180;
+    currentCliffAhead_subState = TurnAwayFromCliff;
+    currentState = TurnAwayFromCliff;
 }
 
 /**
@@ -197,14 +197,15 @@ void RobotStateMachine::statechart_process() {
              * IDLE super-state
              * Description: The robot is motionless (motors are off), but sensor data is still being checked.
              * Enter-conditions:
-             *  - While in Initializing     >> Successful system initialization
+             *  - When powering ON robot    >> by default
              *  - While in NORMAL_ROAMING   >> 'Clean' button is pressed
              *  - While in DOCKING          >> the robot has finished docking in the charge-bay
              * Exit-conditions:
              *  - 'Spot' button is pressed  >> go to SHUTDOWN
              *  - 'Dock' button is pressed  >> go to DOCKING
-             *  - 'Clean' button is pressed >> if inDock == true  >> go to NORMAL_ROAMING 
+             *  - Battery-level below 15%   >> go to DOCKING
              *  - 'Clean' button is pressed >> if inDock == false >> go to UN_DOCKING
+             *  - 'Clean' button is pressed >> if inDock == true  >> go to NORMAL_ROAMING 
              */
 
             if (robot->sensores.battery_level < 15 || robot->check_btnDock()) {
@@ -219,7 +220,7 @@ void RobotStateMachine::statechart_process() {
                     UnDock_entDef();
                     break; // Salir inmediatamente del sub-estado
                 } else {
-                    // TODO: CRITICAL Why do we enter into NormalOperate by default here???
+                    // TODO: CRITICAL Why do we enter into NORMAL_ROAMING by default here???
                     //       If battery > 15 && !DockButton && !CleanButton then entDef NormalOperate
                     NormalOperate_entDef();
                     break; // Salir inmediatamente del sub-estado
@@ -263,15 +264,14 @@ void RobotStateMachine::statechart_process() {
              *  SHUTDOWN super-state
              * Description: Fin de operacion. Terminar la ejecucion del algoritmo principal, liberar recursos y salir.
              * Enter-conditions:
-             *  - While in Initializing   >> 'Spot' button is pressed
              *  - While in IDLE           >> 'Spot' button is pressed
              *  - While in NORMAL_ROAMING >> 'Spot' button is pressed
              *  - While in UN_DOCKING     >> 'Spot' button is pressed
              * Exit-conditions:
              *  - All systems shut down.
              */
-            currentState = Statechart_End;
-            currentSuperState = Statechart_End;
+            currentState = END_STATE_MACHINE;
+            currentSuperState = END_STATE_MACHINE;
             endBehavior();
 
             break; // exit case SHUTDOWN
@@ -292,14 +292,11 @@ void RobotStateMachine::statechart_process() {
              *  - Successful un-docking    >> go to NORMAL_ROAMING
              */
 
+            /** Check exit-condition: if 'Spot' button is pressed >> go to SHUTDOWN */
             if (robot->check_btnSpot()) {
-
-                // Desactivar UnDock sub-states
-
                 currentUnDock_subState = DISABLED;
                 currentSuperState = SHUTDOWN;
                 currentState = SHUTDOWN;
-
                 break; // Exit the UN_DOCKING super-state immediately, without computing UnDock's sub-states
             }
 
@@ -320,21 +317,21 @@ void RobotStateMachine::statechart_process() {
                      *  - sensoresSumDistancia < -300 is detected >> go to UN_DOCKING->UnDock_Rotate180
                      */
 
+                    /** In this state: set wheels to travel backwards */
                     robot->setMotores_actual(motores_BACK);
-                    //## transition UnDock.1 
+                    
+                    /** Check exit condition: after moving (backwards) 30cm >> go to Rotate180 */
                     if (robot->sensores.sum_distance < -300) {
-                        //#[ transition UnDock.1 
                         robot->sensores.sum_angle = 0;
-                        //#]
-                        currentUnDock_subState = UnDock_Rotate180;
-                        currentState = UnDock_Rotate180;
-                        break; // Salir inmediatamente del sub-estado
+                        currentUnDock_subState = TurnAwayFromDock;
+                        currentState = TurnAwayFromDock;
+                        break; // Exit the ExitDock sub-state immediately
                     }
 
                     break; // end case "ExitDock"
                 } // end ExitDock
 
-                case UnDock_Rotate180:
+                case TurnAwayFromDock:
                 {
                     /**
                      * UN_DOCKING->UnDock_Rotate180 sub-state
@@ -345,15 +342,17 @@ void RobotStateMachine::statechart_process() {
                      *  - sensoresSumAngulo > 180º is detected >> go to NORMAL_ROAMING
                      */
 
+                    /** In this state: turn around 180º*/
                     robot->setMotores_actual(motores_LEFT);
-                    //## transition UnDock.2 
+                    
+                    /** Check exit condition: after turning 180º >> go to NORMAL_ROAMING */
                     if (robot->sensores.sum_angle > 180) {
                         currentUnDock_subState = DISABLED;
                         NormalOperate_entDef(); // go to NORMAL_ROAMING
-                        break; // Salir inmediatamente del sub-estado UnDock >> Rotate180º para entrar en NormalOperate
+                        break; // exit immediately from UnDock_Rotate180
                     }
 
-                    break; // end case "UnDock_Rotate180"
+                    break; // exit case "UnDock_Rotate180"
                 } // end UnDock_Rotate180
 
                 default:
@@ -364,7 +363,7 @@ void RobotStateMachine::statechart_process() {
             break; // exit super-state UN_DOCKING
         } // end case UN_DOCKING
 
-        case NORMAL_ROAMING:
+        case ROAMING:
         {
             /**
              * NORMAL_ROAMING super-state
@@ -377,31 +376,30 @@ void RobotStateMachine::statechart_process() {
              *  - While in UN_DOCKING >> Successful un-docking
              *  - While in IDLE       >> 'Clean' button is pressed && inDock == false
              * Exit-conditions:
-             *  - 'Spot' button is pressed >> go to SHUTDOWN
-             *  - 'Dock' button is pressed >> go to DOCKING
+             *  - 'Spot' button is pressed  >> go to SHUTDOWN
+             *  - 'Dock' button is pressed  >> go to DOCKING
+             *  - Battery-level below 15%   >> go to DOCKING
+             *  - 'Clean' button is pressed >> go to IDE
              */
 
-            // TODO: Resumir Qué se hace en los siguientes if-else:
+            /** Check exit conditions: if battery-level < 15% OR 'Dock' button is pressed >> go to DOCKING */
             if (robot->sensores.battery_level < 15 || robot->check_btnDock()) {
                 //NormalOperate_exit();
                 currentSuperState = DOCKING;
                 currentState = DOCKING;
-                //#[ state Dock.(Entry) 
                 robot->gotoDock();
-                //#]
-                break; // Salir inmediatamente del sub-estado
+                break; // exit from NORMAL_ROAMING immediately
             } else if (robot->check_btnClean()) {
                 //NormalOperate_exit();
                 currentSuperState = IDLE;
                 currentState = IDLE;
-                break; // Salir inmediatamente del sub-estado
+                break; // exit from NORMAL_ROAMING immediately
             } else if (robot->check_btnSpot()) {
                 //NormalOperate_exit();
                 currentSuperState = SHUTDOWN;
                 currentState = SHUTDOWN;
-                break; // Salir inmediatamente del sub-estado
+                break; // exit from NORMAL_ROAMING immediately
             }
-
 
             /**
              * NORMAL_ROAMING sub-states (second level):
@@ -450,7 +448,7 @@ void RobotStateMachine::statechart_process() {
                      *  - NORMAL_ROAMING->TrackingByCamera->PersonOutView
                      */
                     switch (currentTrackingByCamera_subState) {
-                        case PersonInView:
+                        case FollowingUser:
                         {
                             /**
                              * NORMAL_ROAMING->TrackingByCamera->PersonInView sub-sub-state
@@ -480,7 +478,7 @@ void RobotStateMachine::statechart_process() {
                              *  - NORMAL_ROAMING->TrackingByCamera->PersonInView->PathBlocked
                              */
                             switch (currentPersonInView_subState) {
-                                case PersonInView_ApproachUser:
+                                case FollowingUser_GettingCloser:
                                 {
                                     /**
                                      * NORMAL_ROAMING->TrackingByCamera->PersonInView->ApproachUser sub-sub-sub-state
@@ -489,7 +487,7 @@ void RobotStateMachine::statechart_process() {
                                      *  - When entering NORMAL_ROAMING->TrackingByCamera->PersonInView         >> by default
                                      *  - While in NORMAL_ROAMING->TrackingByCamera->PersonInView->PathBlocked >> lidarIsObstacle == false is detected
                                      * Exit-conditions:
-                                     *  - Handled by NORMAL_ROAMING->TrackingByCamera sub-state
+                                     *  - Higher exit-conditions of NORMAL_ROAMING->TrackingByCamera
                                      */
 
                                     robot->computeCameraApproach();
@@ -497,8 +495,8 @@ void RobotStateMachine::statechart_process() {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
                                         robot->reproducirSonidoBloqueado();
                                         //#]
-                                        currentPersonInView_subState = PersonInView_PathBlocked;
-                                        currentState = PersonInView_PathBlocked;
+                                        currentPersonInView_subState = FollowingUser_ObstacleInBetween;
+                                        currentState = FollowingUser_ObstacleInBetween;
                                         //#[ state NormalOperate.TrackingByCamera.PersonInView.PersonInView.PersonInView_PathBlocked.(Entry) 
                                         //#]
                                         break; // Salir inmediatamente del sub-estado
@@ -511,16 +509,26 @@ void RobotStateMachine::statechart_process() {
                                     // Description: Obstaculo en el camino
                                     // El obstaculo puede ser una persona o un onstaculo real
                                     // Puedo rotar si la persona se mueve y retroceder
-                                case PersonInView_PathBlocked:
+                                case FollowingUser_ObstacleInBetween:
                                 {
+                                    /**
+                                     * NORMAL_ROAMING->TrackingByCamera->PersonInView->PathBlocked sub-sub-sub-state
+                                     * Description: approach the user (get as close to the user as possible taking into account that there's an obstacle ahead)
+                                     * Enter-conditions:
+                                     *  - While in NORMAL_ROAMING->TrackingByCamera->PersonInView->ApproachUser >> lidarIsObstacle == true is detected
+                                     * Exit-conditions:
+                                     *  - lidarIsObstacle == false is detected >> go to NORMAL_ROAMING->TrackingByCamera->PersonInView->ApproachUser
+                                     *  - Higher exit-conditions of NORMAL_ROAMING->TrackingByCamera
+                                     */
+
                                     // Ejecutar funcion de calculo de aproximacion con obstaculo
                                     robot->computeCameraWithObstacle();
                                     if (robot->lidar.isObstable == false) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonInView.1 
                                         robot->reproducirSonidoDesbloqueado();
                                         //#]
-                                        currentPersonInView_subState = PersonInView_ApproachUser;
-                                        currentState = PersonInView_ApproachUser;
+                                        currentPersonInView_subState = FollowingUser_GettingCloser;
+                                        currentState = FollowingUser_GettingCloser;
                                         //#[ state NormalOperate.TrackingByCamera.PersonInView.PersonInView.PersonInView_Pathblocked.(Entry) 
                                         //#]
                                         break; // Salir inmediatamente del sub-estado
@@ -536,75 +544,106 @@ void RobotStateMachine::statechart_process() {
                             break; // end case "PersonInView"
                         } // end "PersonInView"
 
-                        case PersonOutView:
+                        case SearchingUser:
                         {
-                            // State PersonOutView
-                            // Description: La persona no está a la vista.
-                            // Ejecutar algoritmo de búsqueda.
-
                             /**
-                             * "Person out of view" sub-sub-sub-states (fourth level):
-                             *  - Rotate to move
-                             *  - Compute position
-                             *  - Go forward
-                             *  - Rotate 360º
+                             * NORMAL_ROAMING->TrackingByCamera->PersonOutView sub-sub-state
+                             * Description: the user is NOT within the RGB camera's line-of-view, so the robot is searching for the user
+                             * Sub-states:
+                             *  - Rotate360
+                             *  - ComputePostition
+                             *  - RotateToMove
+                             *  - GoForward
+                             * Enter-conditions:
+                             *  - When first entering NORMAL_ROAMING->TrackingByCamera    >> cameraIsPersonInView == false is detected
+                             *  - While in NORMAL_ROAMING->TrackingByCamera->PersonInView >> cameraIsPersonInView == false is detected
+                             * Exit-conditions:
+                             *  - cameraIsPersonInView == true is detected >> go to NORMAL_ROAMING->TrackingByCamera->PersonInView
                              */
+
                             switch (currentPersonOutView_subState) {
-                                case PersonOutView_RotateToMove:
+                                case SearchingUser_TurnToEmptyHallway:
                                 {
-                                    // State PersonOutView_RotateToMove
+                                    /**
+                                     * NORMAL_ROAMING->TrackingByCamera->PersonOutView->RotateToMove sub-sub-sub-state
+                                     * Description: TODO
+                                     * Enter-conditions:
+                                     *  - While in NORMAL_ROAMING->TrackingByCamera->PersonOutView->ComputePosition >> finished computing
+                                     * Exit-conditions:
+                                     *  - sensoresSumAngulo > computedAngle is detected >> go to NORMAL_ROAMING->TrackingByCamera->PersonOutView->GoForward
+                                     */
+
                                     robot->setMotores_actual(motores_LEFT);
                                     if (robot->sensores.sum_angle > robot->lidar.computedAngle) {
-                                        currentPersonOutView_subState = PersonOutView_GoForward;
-                                        currentState = PersonOutView_GoForward;
+                                        currentPersonOutView_subState = SearchingUser_TraverseEmptyHallway;
+                                        currentState = SearchingUser_TraverseEmptyHallway;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end case "PersonOutView_RotateToMove"
                                 } // end PersonOutView_RotateToMove
 
-                                case PersonOutView_ComputePosition:
+                                case SearchingUser_FindEmptyHallway:
                                 {
-                                    // State PersonOutView_ComputePosition
-                                    // Description: Computar posicion a la que dirigirse.
-                                    // Encontrar sector con mayor media de distancia.
+                                    /**
+                                     * NORMAL_ROAMING->TrackingByCamera->PersonOutView->RotateToMove sub-sub-sub-state
+                                     * Description: compute which direction the robot has to turn to (e.g.: find the lidar sector with highest average distance)
+                                     * Enter-conditions:
+                                     *  - While in NORMAL_ROAMING->TrackingByCamera->PersonOutView->Rotate360 >> finished a full 360º turn
+                                     * Exit-conditions:
+                                     *  - [[ TODO CRITICAL ]]  >> go to NORMAL_ROAMING->TrackingByCamera->PersonOutView->RotateToMove
+                                     */
 
-                                    // Calcular la posicion a la que dirigirse
-                                    //#[ transition NormalOperate.TrackingByCamera.PersonOutView.0 
                                     robot->sensores.sum_angle = 0;
                                     robot->lidar.computeLidarTripPersonOutOfView();
                                     //#]
-                                    currentPersonOutView_subState = PersonOutView_RotateToMove;
-                                    currentState = PersonOutView_RotateToMove;
+                                    currentPersonOutView_subState = SearchingUser_TurnToEmptyHallway;
+                                    currentState = SearchingUser_TurnToEmptyHallway;
 
                                     break; // end case "PersonOutView_ComputePosition"
                                 } // end PersonOutView_ComputePosition
 
-                                case PersonOutView_GoForward:
+                                case SearchingUser_TraverseEmptyHallway:
                                 {
-                                    // State PersonOutView_GoForward
+                                    /**
+                                     * NORMAL_ROAMING->TrackingByCamera->PersonOutView->GoForward sub-sub-sub-state
+                                     * Description: TODO
+                                     * Enter-conditions:
+                                     *  - While in NORMAL_ROAMING->TrackingByCamera->PersonOutView->RotateToMove >> finished turning
+                                     * Exit-conditions:
+                                     *  - Finished traveling computed distance >> go to NORMAL_ROAMING->TrackingByCamera->PersonOutView->Rotate360
+                                     */
+
                                     robot->setMotores_actual(motores_FWD);
                                     // TODO: resumir lo que se hace en este if
                                     if (robot->sensores.sum_distance > robot->lidar.computedDistance) {
                                         //#[ transition NormalOperate.TrackingByCamera.PersonOutView.2 
                                         robot->sensores.sum_angle = 0;
                                         //#]
-                                        currentPersonOutView_subState = PersonOutView_Rotate360;
-                                        currentState = PersonOutView_Rotate360;
+                                        currentPersonOutView_subState = SearchingUser_Look360Around;
+                                        currentState = SearchingUser_Look360Around;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end case "PersonOutView_GoForward"
                                 } // end PersonOutView_GoForward
 
-                                case PersonOutView_Rotate360:
+                                case SearchingUser_Look360Around:
                                 {
-                                    // State PersonOutView_Rotate360
+                                    /**
+                                     * NORMAL_ROAMING->TrackingByCamera->PersonOutView->Rotate360 sub-sub-sub-state
+                                     * Description: TODO
+                                     * Enter-conditions:
+                                     *  - When entering NORMAL_ROAMING->TrackingByCamera->PersonOutView >> by default
+                                     *  - While in NORMAL_ROAMING->TrackingByCamera->PersonOutView->GoForward >> finished traveling computed distance
+                                     * Exit-conditions:
+                                     *  - Finished rotating 360º >> go to NORMAL_ROAMING->TrackingByCamera->PersonOutView->ComputePosition
+                                     */
+
                                     robot->setMotores_actual(motores_LEFT);
-                                    // TODO: resumir lo que se hace dentro de este if
                                     if (robot->sensores.sum_angle > 360) {
-                                        currentPersonOutView_subState = PersonOutView_ComputePosition;
-                                        currentState = PersonOutView_ComputePosition;
+                                        currentPersonOutView_subState = SearchingUser_FindEmptyHallway;
+                                        currentState = SearchingUser_FindEmptyHallway;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
@@ -627,11 +666,20 @@ void RobotStateMachine::statechart_process() {
                     break; // end case "TrackingByCamera"
                 } // end TrackingByCamera
 
-                case DodgeObstacle:
+                case DodgingObstacle:
                 {
-                    // State NormalOperate >> DodgeObstacle
-                    // Description: Se ha colisionado con un obstaculo.
-                    // Rodear el obstaculo y volver a encontrar a la persona.
+                    /**
+                     * NORMAL_ROAMING->DodgeObstacle sub-state
+                     * Description: An obstacle (which has been detected by the bumpers) is being dodged
+                     * Sub-states:
+                     *  - NORMAL_ROAMING->DodgeObstacle->MoveBack
+                     *  - NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm
+                     * Enter-conditions:
+                     *  - While in NORMAL_ROAMING->TrackingByCamera >> a bumper sensor is triggered
+                     * Exit-conditions:
+                     *  - subroutine 'CrashAlgorithm' finished dodging obstacle >> go to NORMAL_ROAMING->TrackingByCamera
+                     *  - sensoresCliff == true is detected >> go to NORMAL_ROAMING->CliffAhead
+                     */
 
                     if (robot->sensores.cliff == true) {
                         currentCrashAlgorithm_subState = DISABLED;
@@ -641,14 +689,23 @@ void RobotStateMachine::statechart_process() {
                     }
 
                     /**
-                     * "Dodge Obstacle" sub-sub-states (third level):
+                     * NORMAL_ROAMING->DodgeObstacle sub-sub-states (third level):
                      *  - Move back
                      *  - Crash algorithm
                      */
                     switch (currentDodgeObstacle_subState) { // State Dodge_MoveBack
-                        case Dodge_MoveBack:
+                        case MovingBackFromObstacle:
                         {
-                            // State NormalOperate >> DodgeObstacle >> MoveBack
+                            /**
+                             * NORMAL_ROAMING->DodgeObstacle->MoveBack sub-sub-state
+                             * Description: back away from the bumped obstacle
+                             * Enter-conditions:
+                             *  - When entering NORMAL_ROAMING->DodgeObstacle >> by default
+                             *  - While in NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm >> a bumper sensor is triggered
+                             * Exit-conditions:
+                             *  - traveled 30cm backing away from obstacle >> go to NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm
+                             */
+
                             robot->setMotores_actual(motores_BACK);
                             //## transition 10 
                             if (robot->sensores.sum_distance < -30) {
@@ -661,32 +718,51 @@ void RobotStateMachine::statechart_process() {
 
                         case CrashAlgorithm:
                         {
-                            // State NormalOperate >> DodgeObstacle >> CrashAlgorithm
-                            // Description: Algoritmo de rodeo.
-                            // (El del TFG)
+                            /**
+                             * NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm sub-sub-state
+                             * Description: the robot is trying to dodge an obstacle (algoritmo del TFG)
+                             * Sub-states:
+                             *  - NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm->Dodge
+                             *  - NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm->DodgeParallel
+                             *  - NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm->GoForward
+                             *  - NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm->GoForwardExtended
+                             *  - NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm->RecoverTrajectory
+                             * Enter-conditions:
+                             *  - While in NORMAL_ROAMING->DodgeObstacle->MoveBack >> finished backing away from obstacle
+                             * Exit-conditions:
+                             *  - while sub-state RecoverTrajectory >> finished recovering trajectory
+                             */
 
                             if (robot->sensores.bl == true || robot->sensores.br == true) {
                                 currentCrashAlgorithm_subState = DISABLED;
                                 //#[ transition 11 
                                 robot->sensores.sum_distance = 0;
                                 //#]
-                                currentDodgeObstacle_subState = Dodge_MoveBack;
-                                currentState = Dodge_MoveBack;
+                                currentDodgeObstacle_subState = MovingBackFromObstacle;
+                                currentState = MovingBackFromObstacle;
                                 break; // Salir inmediatamente del sub-estado
                             }
 
                             /**
                              * "Crash Algorithm" sub-sub-sub-states (fourth level):
                              *  - Dodge
-                             *  - Dodge Parallel
-                             *  - Go Forward
-                             *  - Go Forward Extended
-                             *  - Recover Trajectory
+                             *  - DodgeParallel
+                             *  - GoForward
+                             *  - GoForwardExtended
+                             *  - RecoverTrajectory
                              */
                             switch (currentCrashAlgorithm_subState) {
                                 case CrashAlgorithm_Dodge:
                                 {
-                                    // State NormalOperate >> DodgeObstacle >> CrashAlgorithm >> Dodge
+                                    /**
+                                     * NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm sub-sub-state
+                                     * Description: the robot is rotating 25º to attempt a non-colliding direction
+                                     * Enter-conditions:
+                                     *  - When entering NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm >> by default
+                                     * Exit-conditions:
+                                     *  - finished turning 25º
+                                     */
+
                                     robot->setMotores_actual(motores_LEFT);
                                     if (robot->sensores.sum_angle > 25) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
@@ -699,7 +775,16 @@ void RobotStateMachine::statechart_process() {
 
                                 case CrashAlgorithm_DodgeParallel:
                                 {
-                                    // State NormalOperate >> DodgeObstacle >> CrashAlgorithm >> DodgeParallel
+                                    /**
+                                     * NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm->DodgeParallel sub-sub-sub-state
+                                     * Description: TODO
+                                     * Enter-conditions:
+                                     *  - While in NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm->Dodge >> finished turning 25º
+                                     *  - While in NORMAL_ROAMING->DodgeObstacle->CrashAlgorithm->GoForward >> finished turning 25º
+                                     * Exit-conditions:
+                                     *  - finished turning 25º
+                                     */
+
                                     robot->setMotores_actual(motores_LEFT);
                                     if (robot->sensores.lbump_front == false) {
                                         currentCrashAlgorithm_subState = CrashAlgorithm_GoForward;
@@ -789,7 +874,7 @@ void RobotStateMachine::statechart_process() {
                     break; // end case DodgeObstacle
                 }// end DodgeObstacle
 
-                case CliffAhead:
+                case AvoidingCliff:
                 {
                     // State CliffAhead
                     // Description: Barranco detectado.
@@ -801,19 +886,19 @@ void RobotStateMachine::statechart_process() {
                      *  - Go Forward
                      */
                     switch (currentCliffAhead_subState) {
-                        case CliffAhead_Rotate180:
+                        case TurnAwayFromCliff:
                         {
                             // State CliffAhead_Rotate180
                             if (robot->sensores.sum_angle > 180) {
-                                currentCliffAhead_subState = CliffAhead_GoForward;
-                                currentState = CliffAhead_GoForward;
+                                currentCliffAhead_subState = LeaveCliffBehind;
+                                currentState = LeaveCliffBehind;
                                 break; // Salir inmediatamente del sub-estado
                             }
 
                             break; // end CliffAhead_Rotate180
                         } // end CliffAhead_Rotate180
 
-                        case CliffAhead_GoForward:
+                        case LeaveCliffBehind:
                         {
                             // State CliffAhead_GoForward
                             if (robot->sensores.sum_distance > 300) {
