@@ -64,8 +64,7 @@
     </logicalFolder>
     <logicalFolder name="f1"
                    displayName="YdLidarX4PythonInterface"
-                   projectFiles="true"
-                   kind="ROOT">
+                   projectFiles="true">
       <itemPath>YdLidarX4PythonInterface/colors.py</itemPath>
       <itemPath>YdLidarX4PythonInterface/lidarator.py</itemPath>
     </logicalFolder>
@@ -91,7 +90,7 @@
         <linkerTool>
           <linkerKpic>false</linkerKpic>
           <commandlineTool>g++</commandlineTool>
-          <commandLine>-lwiringPi `pkg-config --libs opencv` -pthread</commandLine>
+          <commandLine>-lwiringPi `pkg-config --libs opencv` -pthread -I/usr/include/python3.7 -lpython3.7m</commandLine>
         </linkerTool>
       </compileType>
       <item path="ControlRobot/ControlRobot.cpp" ex="false" tool="1" flavor2="0">
@@ -146,8 +145,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="YdLidarX4 Interface/colors.py" ex="false" tool="3" flavor2="0">
       </item>
       <item path="YdLidarX4PythonInterface/colors.py" ex="false" tool="3" flavor2="0">
       </item>
@@ -231,8 +228,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="YdLidarX4 Interface/colors.py" ex="false" tool="3" flavor2="0">
       </item>
       <item path="YdLidarX4PythonInterface/colors.py" ex="false" tool="3" flavor2="0">
       </item>

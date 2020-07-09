@@ -14,8 +14,8 @@
 #include <iostream>
 #include <thread> 
 #include <stdio.h>
-#include <conio.h>
-#include <Python.h>
+#include <python3.7/Python.h> 
+
 
 using namespace std;
 
@@ -25,11 +25,15 @@ using namespace std;
     ControlRobot::ControlRobot mRobotController;
 
 // Variables globales de los threads
-
+    
+    thread LidarServerThread;
     thread LidarTread;
     thread CamThread;
 
+    int init();
+    void startLidarServer();
 
+    
 /*
  * 
  */
@@ -40,6 +44,8 @@ int main(int argc, char** argv) {
     startLidarServer();
     
     // Inicializar robot
+    
+    std::cout << "Iniciando..." << std::endl;
     
     if(init()){}
     
@@ -101,17 +107,29 @@ void exit_end(){
     lidar.exitLidarThread();
     cam.exitCamThread();
     
+    sleep(1);
+    
+    
+}
+
+void LidarServerThreadFunc(){
+    
+    char filename[] = "YdLidarX4PythonInterface/lidarator.py"; 
+	FILE* fp; 
+ 
+	Py_Initialize(); 
+ 
+	fp = _Py_fopen(filename, "r"); 
+	PyRun_SimpleFile(fp, filename); 
+ 
+	Py_Finalize(); 
+
 }
 
 void startLidarServer(){
     
-    char filename[] = "YdLidarX4PythonInterface/lidarator.py";
-	FILE* fp;
-
-	Py_Initialize();
-
-	fp = _Py_fopen(filename, "r");
-	PyRun_SimpleFile(fp, filename);
-
-	Py_Finalize();
+    // Crear thread y ejecutar programa de python
+    
+    //LidarServerThread = thread(LidarServerThreadFunc);
 }
+

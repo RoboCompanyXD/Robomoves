@@ -16,8 +16,13 @@ using namespace std;
  * Lidar Class constructor
  */
 Lidar::Lidar() {
+    
+    std::cout << "Creando objeto lidar" << std::endl;
+    
     this->myLidar = YdLidarX4::YdLidarX4Controller();
     myLidar.Connect();
+    
+    std::cout << "Conexion completa" << std::endl;
 
     // Calcular sectores
     anglestep = 360 / NUM_SECTORS;
