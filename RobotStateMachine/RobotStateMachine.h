@@ -161,9 +161,7 @@ protected:
     int currentCrashAlgorithm_subState; // Current sub-state within CrashAlgorithm: \\TODO
     int currentAvoidingCliff_subState; // Current sub-state within CliffAhead: \\TODO
 
-    int PersonInView_timeout; // TODO
-
-}; // end class UC
+}; // end class RobotStateMachine
 
 #define motores_STOP 'r'
 #define motores_FWD 's'

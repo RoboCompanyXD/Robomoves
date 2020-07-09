@@ -60,7 +60,7 @@ public:
     int area; // TODO: Documentar
     int frame_width; // TODO: Documentar
     int frame_height; // TODO: Documentar
-    bool isPersonInView; // TODO: Documentar
+    bool isUserInView; // TODO: Documentar
     
 private:
     

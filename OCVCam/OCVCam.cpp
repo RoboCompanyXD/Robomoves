@@ -130,11 +130,11 @@ int OCVCam::AnalyzeCam() {
 
         if (frames_nodetect > 9) {
             mask_grey = Mat::zeros(Size(frame_width, frame_height), CV_8UC1);
-            isPersonInView = false;
+            isUserInView = false;
         }
         if (bodies.size() > 0) {
             frames_nodetect = 0;
-            isPersonInView = true;
+            isUserInView = true;
             cout << "Vector size: " << bodies.size() << endl;
             for (int i = 0; i < bodies.size(); i++) {
                 //cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
