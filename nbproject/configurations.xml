@@ -63,7 +63,7 @@
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="f1"
-                   displayName="YdLidarX4 PythonInterface"
+                   displayName="YdLidarX4PythonInterface"
                    projectFiles="true"
                    kind="ROOT">
       <itemPath>YdLidarX4PythonInterface/colors.py</itemPath>

@@ -57,12 +57,12 @@ private:
     /**
      * TODO: Documentar
      */
-    void NormalOperate_entDef();
+    void roaming_entDef();
 
     /**
      * TODO: Documentar
      */
-    void NormalOperateEntDef();
+    void RoamingEntDef();
 
     /**
      * TODO: Documentar
@@ -77,22 +77,22 @@ private:
     /**
      * TODO: Documentar
      */
-    void PersonInView_entDef();
+    void followingUser_entDef();
 
     /**
      * TODO: Documentar
      */
-    void PersonOutView_entDef();
+    void searchingUser_entDef();
 
     /**
      * TODO: Documentar
      */
-    void DodgeObstacle_entDef();
+    void dodgingObstacle_entDef();
 
     /**
      * TODO: Documentar
      */
-    void CliffAhead_entDef();
+    void avoidingCliff_entDef();
 
     /**
      * TODO: Documentar
@@ -152,14 +152,14 @@ protected:
 
     int currentSuperState; // Current top-level super-state [Idle, Dock, Shutdown, Undock, NormalOperate]
     int currentState; // Current global state (amongst all possible states)
-    int currentUnDock_subState; // Current sub-state within UnDock: [ExitDock, UnDock_Rotate180]
-    int currentNormalOperate_subState; // Current sub-state within NormalOperate: [TrackingByCamera, CliffAhead, DodgeObstacle]
+    int currentUnDocking_subState; // Current sub-state within UnDock: [ExitDock, UnDock_Rotate180]
+    int currentRoaming_subState; // Current sub-state within NormalOperate: [TrackingByCamera, CliffAhead, DodgeObstacle]
     int currentTrackingByCamera_subState; // Current sub-state within TrackingByCamera: [ \\TODO ]
-    int currentPersonOutView_subState; // Current sub-state within PersonOutOfView: \\TODO
-    int currentPersonInView_subState; // Current sub-state within PersonInView: \\TODO
-    int currentDodgeObstacle_subState; // Current sub-state within DodgeObstacle: \\TODO
+    int currentSearchingUser_subState; // Current sub-state within PersonOutOfView: \\TODO
+    int currentFollowingUser_subState; // Current sub-state within PersonInView: \\TODO
+    int currentDodgingObstacle_subState; // Current sub-state within DodgeObstacle: \\TODO
     int currentCrashAlgorithm_subState; // Current sub-state within CrashAlgorithm: \\TODO
-    int currentCliffAhead_subState; // Current sub-state within CliffAhead: \\TODO
+    int currentAvoidingCliff_subState; // Current sub-state within CliffAhead: \\TODO
 
     int PersonInView_timeout; // TODO
 
