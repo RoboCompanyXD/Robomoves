@@ -13,6 +13,9 @@
 
 #include <iostream>
 #include <thread> 
+#include <stdio.h>
+#include <conio.h>
+#include <Python.h>
 
 using namespace std;
 
@@ -32,9 +35,13 @@ using namespace std;
  */
 int main(int argc, char** argv) {
     
+    // Lanzar servidor del YlidarX4
+    
+    startLidarServer();
+    
     // Inicializar robot
     
-    //if(init()){}
+    if(init()){}
     
     std::cout << "Hello World!";
     return 0;
@@ -60,8 +67,6 @@ void LidarThreadFunc(Lidar * lidarptr){
 int init(){
     
     // Controlar Init state (si se inicia todo bien)
-    
-    // Lanzar la interface del YdLidarX4
 
     // Instanciar Objetos globales
 
@@ -98,3 +103,15 @@ void exit_end(){
     
 }
 
+void startLidarServer(){
+    
+    char filename[] = "YdLidarX4PythonInterface/lidarator.py";
+	FILE* fp;
+
+	Py_Initialize();
+
+	fp = _Py_fopen(filename, "r");
+	PyRun_SimpleFile(fp, filename);
+
+	Py_Finalize();
+}

@@ -63,11 +63,11 @@
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="f1"
-                   displayName="YdLidarX4 Python Interface"
+                   displayName="YdLidarX4 PythonInterface"
                    projectFiles="true"
                    kind="ROOT">
-      <itemPath>YdLidarX4 Interface/colors.py</itemPath>
-      <itemPath>YdLidarX4 Interface/lidarator.py</itemPath>
+      <itemPath>YdLidarX4PythonInterface/colors.py</itemPath>
+      <itemPath>YdLidarX4PythonInterface/lidarator.py</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -149,7 +149,12 @@
       </item>
       <item path="YdLidarX4 Interface/colors.py" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="YdLidarX4 Interface/lidarator.py" ex="false" tool="3" flavor2="0">
+      <item path="YdLidarX4PythonInterface/colors.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="YdLidarX4PythonInterface/lidarator.py"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -229,7 +234,12 @@
       </item>
       <item path="YdLidarX4 Interface/colors.py" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="YdLidarX4 Interface/lidarator.py" ex="false" tool="3" flavor2="0">
+      <item path="YdLidarX4PythonInterface/colors.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="YdLidarX4PythonInterface/lidarator.py"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
