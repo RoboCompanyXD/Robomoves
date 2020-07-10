@@ -221,12 +221,12 @@ namespace ControlRobot {
             int sum_distance; // Sensor Virtual
 
             unsigned int lightbumper;
-            unsigned int lbl; // Sensor Virtual
-            unsigned int lbfl; // Sensor Virtual
-            unsigned int lbcl; // Sensor Virtual
-            unsigned int lbcr; // Sensor Virtual
-            unsigned int lbfr; // Sensor Virtual
-            unsigned int lbr; // Sensor Virtual
+            unsigned int lbl; 
+            unsigned int lbfl; 
+            unsigned int lbcl; 
+            unsigned int lbcr; 
+            unsigned int lbfr; 
+            unsigned int lbr; 
 
             bool lbump_front; // Sensor Virtual
             bool lbump_side; // Sensor Virtual

@@ -156,7 +156,15 @@ namespace ControlRobot {
         iRobotSensors::LIGHTBUMPFRONTRIGHT,
         iRobotSensors::LIGHTBUMPRIGHT,
         iRobotSensors::DISTANCE,
-        iRobotSensors::ANGLE
+        iRobotSensors::ANGLE,
+        iRobotSensors::CLIFFLEFT,
+        iRobotSensors::CLIFFFRONTLEFT,
+        iRobotSensors::CLIFFFRONTRIGHT,
+        iRobotSensors::CLIFFRIGHT,
+        iRobotSensors::CHARGINGSOURCES,
+        iRobotSensors::CHARGE,
+        iRobotSensors::CAPACITY
+        
     };
 
     /** TODO: Documentar variable*/char lsensores2[] = {
@@ -183,12 +191,20 @@ namespace ControlRobot {
         sensores.lbcr = data[6];
         sensores.lbfr = data[7];
         sensores.lbr = data[8];
-
+        
         if (data[9] > 32767)sensores.distance = data[9] - 65536;
         else sensores.distance = data[9];
 
         if (data[10] > 32767)sensores.angle = data[10] - 65536;
         else sensores.angle = data[10];
+        
+        sensores.cliff_left = data[11];
+        sensores.cliff_frontleft = data[12];
+        sensores.cliff_frontright = data[13];
+        sensores.cliff_right = data[14];
+        sensores.charger_available = data[15];
+        sensores.battery_charge = data[16];
+        sensores.battery_capacity = data[17];
 
         sensores.br = sensores.bumpers & 0b00000001;
         sensores.bl = sensores.bumpers & 0b00000010;
@@ -198,10 +214,24 @@ namespace ControlRobot {
         
         clean_anterior = sensores.button_clean;
         if (sensores.buttons & 0b00000001 != 0) sensores.button_clean = true;
+        else sensores.button_clean = false;
         spot_anterior = sensores.button_spot;
         if (sensores.buttons & 0b00000010 != 0) sensores.button_spot = true;
+        else sensores.button_spot = false;
         dock_anterior = sensores.button_dock;
         if (sensores.buttons & 0b00000100 != 0) sensores.button_dock = true;
+        else sensores.button_dock = false;
+        
+        if ((sensores.lightbumper & 0b00011110) != 0) sensores.lbump_front = true;
+        else sensores.lbump_front = false; //4 lightbumps centrales
+        if ((sensores.lightbumper & 0b00100000) != 0) sensores.lbump_side = true;
+        else sensores.lbump_side = false; // lightbump lateral dcho
+        
+        if (sensores.charger_available & 0b00000010 != 0) sensores.IsDocked = true;
+        else sensores.IsDocked = false;
+        
+        sensores.cliff = sensores.cliff_frontleft || sensores.cliff_frontright || sensores.cliff_left || sensores.cliff_right;
+             
         
     }
 
