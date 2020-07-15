@@ -33,6 +33,10 @@ fi
 
 sudo apt-get install -y build-essential cmake pkg-config
 
+# Instalar opencv developer tools
+
+sudo apt-get install -y  libopencv-dev
+
 # Instalar paquetes de E/S de imagen
 
 sudo apt-get install -y qt5-default libvtk6-dev
