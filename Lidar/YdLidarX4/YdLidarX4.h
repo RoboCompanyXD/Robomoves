@@ -1,6 +1,11 @@
 /**
  * File:   YdLidarX4.h
  * Author: chris
+ * 
+ * This class is a direct re-implementation in C++ of PyLidar3's YdLidarX4 class.
+ *   From: https://github.com/lakshmanmallidi/PyLidar3
+ *         PyLidar3 is a Python package to get data from Lidar devices from 
+ *         various manufacturers.
  *
  * Created on 10 de enero de 2020, 12:33
  */
@@ -40,7 +45,6 @@ namespace YdLidarX4 {
 
     /** Lista de comandos posibles para enviar */
     constexpr struct LidarCommands {
-
         int CMD_CONNECT = 1000;
         int CMD_START_SCANNING = 2000;
         int CMD_GET_DEVICE_INFO = 3000;
@@ -53,7 +57,6 @@ namespace YdLidarX4 {
 
     /** Lista de respuestas Opt: Se pueden añadir mas respuestas dependiendo del tipo de error*/
     constexpr struct LidarResponses {
-
         int RES_OK = 1001;
         int RES_FAIL = 1002;
         int HEALTH_OK = 2001;
@@ -62,7 +65,6 @@ namespace YdLidarX4 {
 
     /** TODO: Documentar*/
     struct DeviceInformation {
-
         string modelnumber;
         string firmware_version;
         string hardware_version;
@@ -71,10 +73,13 @@ namespace YdLidarX4 {
 
     /**
      * TODO: Documentar clase
-     *
+     * 
+     * This class is a direct re-implementation in C++ of PyLidar3's YdLidarX4 class.
+     *   From: https://github.com/lakshmanmallidi/PyLidar3
+     *         PyLidar3 is a Python package to get data from Lidar devices from 
+     *         various manufacturers.
      */
     class YdLidarX4Controller {
-
     public:
 
         /**
@@ -85,21 +90,19 @@ namespace YdLidarX4 {
         YdLidarX4Controller();
 
         /**
-         * Class constructor
-         *
-         * TODO: ¿en que se diferencia del otro constructor?
-         * TODO: Documentar constructor
-         */
-        YdLidarX4Controller(int chunk_size);
-
-        /**
          * Class destructor
          */
         virtual ~YdLidarX4Controller();
 
+        /**
+         * Connect to the LIDAR server
+         * @return 
+         */
+        bool ConnectToServer();
 
         /**
          * TODO: Documentar
+         * TODO: qué conexión se hace en este metodo?
          */
         bool Connect();
 

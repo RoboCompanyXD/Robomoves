@@ -94,7 +94,7 @@ void RobotStateMachine::TrackingByCamera_entDef() {
  * TODO: documentar
  */
 void RobotStateMachine::TrackingByCameraEntDef() {
-    if (robot->cam.isUserInView == true) {
+    if (robot->cam->isUserInView == true) {
         followingUser_entDef();
     } else {
         searchingUser_entDef();
@@ -452,7 +452,7 @@ void RobotStateMachine::statechart_process() {
                             // Description: La persona está a la vista.
                             // Acercarse todo lo que se pueda sin invadir su espacio.
 
-                            if (robot->cam.isUserInView == false) {
+                            if (robot->cam->isUserInView == false) {
                                 currentFollowingUser_subState = DISABLED;
                                 searchingUser_entDef();
                                 break; // Salir inmediatamente del sub-estado
@@ -477,7 +477,7 @@ void RobotStateMachine::statechart_process() {
                                      */
 
                                     robot->computeCameraApproach();
-                                    if (robot->lidar.isObstable == true) {
+                                    if (robot->lidar->isObstacle == true) {
                                         robot->reproducirSonidoBloqueado();
                                         currentFollowingUser_subState = FollowingUser_ObstacleInBetween;
                                         currentState = FollowingUser_ObstacleInBetween;
@@ -505,7 +505,7 @@ void RobotStateMachine::statechart_process() {
 
                                     // Ejecutar funcion de calculo de aproximacion con obstaculo
                                     robot->computeCameraWithObstacle();
-                                    if (robot->lidar.isObstable == false) { 
+                                    if (robot->lidar->isObstacle == false) { 
                                         robot->reproducirSonidoDesbloqueado();
                                         currentFollowingUser_subState = FollowingUser_GettingCloser;
                                         currentState = FollowingUser_GettingCloser;
@@ -552,7 +552,7 @@ void RobotStateMachine::statechart_process() {
                                      */
 
                                     robot->setMotores_actual(motores_LEFT);
-                                    if (robot->sensores.sum_angle > robot->lidar.computedAngle) {
+                                    if (robot->sensores.sum_angle > robot->lidar->computedAngle) {
                                         currentSearchingUser_subState = SearchingUser_TraverseEmptyHallway;
                                         currentState = SearchingUser_TraverseEmptyHallway;
                                         break; // Salir inmediatamente del sub-estado
@@ -573,7 +573,7 @@ void RobotStateMachine::statechart_process() {
                                      */
 
                                     robot->sensores.sum_angle = 0;
-                                    robot->lidar.computeLidarTripPersonOutOfView();
+                                    robot->lidar->computeLidarTripPersonOutOfView();
                                     
                                     currentSearchingUser_subState = SearchingUser_TurnToEmptyHallway;
                                     currentState = SearchingUser_TurnToEmptyHallway;
@@ -594,7 +594,7 @@ void RobotStateMachine::statechart_process() {
 
                                     robot->setMotores_actual(motores_FWD);
                                     // TODO: resumir lo que se hace en este if
-                                    if (robot->sensores.sum_distance > robot->lidar.computedDistance) {
+                                    if (robot->sensores.sum_distance > robot->lidar->computedDistance) {
                                         robot->sensores.sum_angle = 0;
                                         
                                         currentSearchingUser_subState = SearchingUser_Look360Around;

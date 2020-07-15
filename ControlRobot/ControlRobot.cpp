@@ -56,7 +56,7 @@ namespace ControlRobot {
      * @param l
      * @param c
      */
-    ControlRobot::ControlRobot(Lidar l, OCVCam c) {
+    ControlRobot::ControlRobot(Lidar * l, OCVCam * c) {
         this->lidar = l;
         this->cam = c;
 
@@ -393,17 +393,17 @@ namespace ControlRobot {
      * TODO: documentar
      */
     void ControlRobot::computeCameraApproach() {
-        if (cam.x < (cam.frame_width / 3)) { // WEBCAM detecta a la izqda
-            if (cam.area > 5500000 || (cam.y != 0 && cam.y < (cam.frame_height / 3)))motores_actual = BACK_L; //cerca
-            else if (cam.area != 0 && cam.area < 3500000)motores_actual = FWD_L; //lejos
+        if (cam->x < (cam->frame_width / 3)) { // WEBCAM detecta a la izqda
+            if (cam->area > 5500000 || (cam->y != 0 && cam->y < (cam->frame_height / 3)))motores_actual = BACK_L; //cerca
+            else if (cam->area != 0 && cam->area < 3500000)motores_actual = FWD_L; //lejos
             else motores_actual = LEFT;
-        } else if (cam.x > ((cam.frame_width / 3)*2)) { // WEBCAM detecta a la dcha
-            if (cam.area > 5500000 || (cam.y != 0 && cam.y < (cam.frame_height / 3)))motores_actual = BACK_R; //cerca
-            else if (cam.area != 0 && cam.area < 3500000)motores_actual = FWD_R; //lejos
+        } else if (cam->x > ((cam->frame_width / 3)*2)) { // WEBCAM detecta a la dcha
+            if (cam->area > 5500000 || (cam->y != 0 && cam->y < (cam->frame_height / 3)))motores_actual = BACK_R; //cerca
+            else if (cam->area != 0 && cam->area < 3500000)motores_actual = FWD_R; //lejos
             else motores_actual = RIGHT;
         } else { // WEBCAM detecta centrado
-            if (cam.area > 5500000 || (cam.y != 0 && cam.y < (cam.frame_height / 3)))motores_actual = BACK; //cerca
-            else if (cam.area != 0 && cam.area < 3500000)motores_actual = FWD; //lejos
+            if (cam->area > 5500000 || (cam->y != 0 && cam->y < (cam->frame_height / 3)))motores_actual = BACK; //cerca
+            else if (cam->area != 0 && cam->area < 3500000)motores_actual = FWD; //lejos
             else motores_actual = STOP;
         }
     }
@@ -412,17 +412,17 @@ namespace ControlRobot {
      * TODO: documentar
      */
     void ControlRobot::computeCameraWithObstacle() {
-        if (cam.x < (cam.frame_width / 3)) { // WEBCAM detecta a la izqda
-            if (cam.area > 5500000 || (cam.y != 0 && cam.y < (cam.frame_height / 3)))motores_actual = BACK_L; //cerca
-            else if (cam.area != 0 && cam.area < 3500000)motores_actual = LEFT; //lejos
+        if (cam->x < (cam->frame_width / 3)) { // WEBCAM detecta a la izqda
+            if (cam->area > 5500000 || (cam->y != 0 && cam->y < (cam->frame_height / 3)))motores_actual = BACK_L; //cerca
+            else if (cam->area != 0 && cam->area < 3500000)motores_actual = LEFT; //lejos
             else motores_actual = LEFT;
-        } else if (cam.x > ((cam.frame_width / 3)*2)) { // WEBCAM detecta a la dcha
-            if (cam.area > 5500000 || (cam.y != 0 && cam.y < (cam.frame_height / 3)))motores_actual = BACK_R; //cerca
-            else if (cam.area != 0 && cam.area < 3500000)motores_actual = RIGHT; //lejos
+        } else if (cam->x > ((cam->frame_width / 3)*2)) { // WEBCAM detecta a la dcha
+            if (cam->area > 5500000 || (cam->y != 0 && cam->y < (cam->frame_height / 3)))motores_actual = BACK_R; //cerca
+            else if (cam->area != 0 && cam->area < 3500000)motores_actual = RIGHT; //lejos
             else motores_actual = RIGHT;
         } else { // WEBCAM detecta centrado
-            if (cam.area > 5500000 || (cam.y != 0 && cam.y < (cam.frame_height / 3)))motores_actual = BACK; //cerca
-            else if (cam.area != 0 && cam.area < 3500000)motores_actual = WAIT; //lejos
+            if (cam->area > 5500000 || (cam->y != 0 && cam->y < (cam->frame_height / 3)))motores_actual = BACK; //cerca
+            else if (cam->area != 0 && cam->area < 3500000)motores_actual = WAIT; //lejos
             else motores_actual = STOP;
         }
     }

@@ -35,7 +35,7 @@ public:
     //set_lidar_params();
 
     // TODO: ¿Por qué no hacer estas variables private?
-    bool isObstable; // TODO: documentar
+    bool isObstacle; // TODO: documentar
 
     bool isFrontLibre;
     bool isBackLibre;
@@ -52,14 +52,14 @@ public:
 
 private:
 
-    YdLidarX4::YdLidarX4Controller myLidar; // TODO: documentar variable
+    YdLidarX4::YdLidarX4Controller myX4Lidar; // TODO: documentar variable
 
     /**
      * TODO: Documentar Metodo
      */
 
 
-    int anglestep;
+    int anglestep = -1;
     int * sectorstartangles; // Array con los indices de donde empieza cada sector
     int * sectorendangles; // Array con los indices de donde acaba cada sector
 
@@ -70,14 +70,13 @@ private:
         GoToIdle = 1,
         Scanning = 2,
         GoToScanning = 3
-
     };
 
     int * lastSample;
     
     int indexofSmallestElement(int * arr, int size);
     
-    bool runLidarThread;
+    bool runLidarThread = false;
 
 
 };

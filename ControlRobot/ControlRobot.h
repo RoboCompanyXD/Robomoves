@@ -45,7 +45,7 @@ namespace ControlRobot {
          * @param l Lidar instance
          * @param c Camera instance
          */
-        ControlRobot(Lidar l, OCVCam c);
+        ControlRobot(Lidar * l, OCVCam * c);
 
         /**
          * Class ControlRobot destructor
@@ -53,8 +53,8 @@ namespace ControlRobot {
         ~ControlRobot(void);
 
         // TODO: ¿Por qué no hacer private estas variables?
-        Lidar lidar; // TODO documentar
-        OCVCam cam; // TODO documentar
+        Lidar * lidar; // TODO documentar
+        OCVCam * cam; // TODO documentar
 
         RobotStateMachine * stateMachine; // TODO: refactor to Smart Pointer
 

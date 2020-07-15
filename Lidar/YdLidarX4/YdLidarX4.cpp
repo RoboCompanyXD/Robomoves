@@ -3,6 +3,8 @@
  * Author: Christian Martín
  */
 
+#include <netinet/in.h>
+
 #include "YdLidarX4.h"
 
 using namespace std;
@@ -21,7 +23,13 @@ namespace YdLidarX4 {
      * - Abre la conexion con el servidor
      */
     YdLidarX4Controller::YdLidarX4Controller() {
+    }
 
+    /**
+     * 
+     * @return 
+     */
+    bool YdLidarX4Controller::ConnectToServer() {
         // Preparar socket
         struct hostent* he;
         struct sockaddr_in addr;
@@ -39,10 +47,13 @@ namespace YdLidarX4 {
         bzero(&(addr.sin_zero), 8);
 
         // Conectar a servidor
-        if (connect(sock, (struct sockaddr*) &addr, sizeof (struct sockaddr)) == -1) {
+        std::cout << "Connecting to LIDAR server: " << addr.sin_addr.s_addr << std::endl;
+        int sock_response = -1;
+        if (sock_response = connect(sock, (struct sockaddr*) &addr, sizeof (struct sockaddr)) == -1) {
             perror("connect");
             exit(1);
         }
+        std::cout << "Socket connection response: " << sock_response << std::endl;
 
         // Declarar fields del objeto
         is_connected = false;
@@ -55,6 +66,8 @@ namespace YdLidarX4 {
         deviceinfo.hardware_version = string();
         deviceinfo.modelnumber = string();
         deviceinfo.serial_number = string();
+
+        return true; // TODO: actually check if connection was successful
     }
 
     /**
@@ -79,10 +92,15 @@ namespace YdLidarX4 {
      */
     bool YdLidarX4Controller::_send_command(int command) {
         string command_str = _create_command(command);
-        if (send(sock, command_str.c_str(), command_str.length(), 0) == -1) {
+        std::cout << "Sending command to YdLidar socket" << command_str << std::endl;
+        int sock_response = 0;
+        if (sock_response = send(sock, command_str.c_str(), command_str.length(), 0) == -1) {
+            std::cout << "Error sending command " << command_str.c_str() << std::endl;
+            std::cout << "Socket response: " << sock_response << std::endl;
             perror("send");
             return false;
         }
+        std::cout << "Socket returned: " << sock_response << std::endl;
         return true;
     }
 
@@ -118,7 +136,7 @@ namespace YdLidarX4 {
             // Create an array and allocate memory to store 360 integer values
             int* newsample;
             newsample = (int*) malloc(360 * sizeof (int));
-            
+
             // Overwrite sampledata with empty array
             sampledata = newsample;
 
@@ -143,8 +161,9 @@ namespace YdLidarX4 {
      * Conectar al Lidar:
      * - Envia un comando de conexión y obtiene la respuesta
      */
-    bool YdLidarX4Controller::Connect(void) {
+    bool YdLidarX4Controller::Connect() {
         // TODO: de dónde sale '_send_command' ? >> Especificar librería
+        std::cout << "YdLidarX4Controller::Connect" << std::endl;
         if (!_send_command(LidarCommands.CMD_CONNECT)) {
             return false;
         }
@@ -159,7 +178,7 @@ namespace YdLidarX4 {
      * Iniciar escaneo:
      * Envía comando para iniciar escaneo y obtiene la respuesta
      */
-    bool YdLidarX4Controller::StartScanning(void) {
+    bool YdLidarX4Controller::StartScanning() {
         if (is_connected) {
             if (!_send_command(LidarCommands.CMD_START_SCANNING)) {
                 return false;
@@ -180,7 +199,7 @@ namespace YdLidarX4 {
      * Returns: un apuntador al struct dev
      * TODO: de que tipo es el struc dev? Donde está definido dev?
      */
-    DeviceInformation* YdLidarX4Controller::GetDeviceInfo(void) {
+    DeviceInformation* YdLidarX4Controller::GetDeviceInfo() {
         if (is_connected) {
             if (!_send_command(LidarCommands.CMD_GET_DEVICE_INFO)) {
                 return 0;
@@ -202,7 +221,7 @@ namespace YdLidarX4 {
      * Desconectar:
      * Envia un comando para desconectar y finalizar la conexion
      */
-    bool YdLidarX4Controller::Disconnect(void) {
+    bool YdLidarX4Controller::Disconnect() {
         if (is_connected) {
             if (!_send_command(LidarCommands.CMD_DISCONNECT)) {
                 return false;
@@ -223,7 +242,7 @@ namespace YdLidarX4 {
      * Reiniciar:
      * Reinicia el dispositivo pero no reinicia la conexion
      */
-    bool YdLidarX4Controller::Reset(void) {
+    bool YdLidarX4Controller::Reset() {
         if (!_send_command(LidarCommands.CMD_RESET)) {
             return false;
         }
@@ -239,7 +258,7 @@ namespace YdLidarX4 {
      * Obtener estado:
      * Obtiene y devuelve el estado actual del dispositivo
      */
-    int YdLidarX4Controller::GetHealthStatus(void) {
+    int YdLidarX4Controller::GetHealthStatus() {
         if (is_connected) {
             if (!_send_command(LidarCommands.CMD_GET_HEALTH_STATUS)) {
                 return 0;

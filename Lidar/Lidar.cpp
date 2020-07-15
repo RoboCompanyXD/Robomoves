@@ -16,12 +16,18 @@ using namespace std;
  * Lidar Class constructor
  */
 Lidar::Lidar() {
-    
-    std::cout << "Creando objeto lidar" << std::endl;
-    
-    this->myLidar = YdLidarX4::YdLidarX4Controller();
-    myLidar.Connect();
-    
+
+    // NO ES NECESARIO CREARLO SI YA SE HA INSTANCIADO EN EL HEADER
+    std::cout << "Creando objeto lidar..." << std::endl;
+    myX4Lidar = YdLidarX4::YdLidarX4Controller();
+
+    myX4Lidar.ConnectToServer();
+
+    std::cout << "Objeto lidar creado, conectando..." << std::endl;
+    if (!myX4Lidar.Connect()){
+        myX4Lidar.Reset();
+    }
+
     std::cout << "Conexion completa" << std::endl;
 
     // Calcular sectores
@@ -48,13 +54,13 @@ Lidar::Lidar() {
     // Reservar espacio para ultima lectura
 
     lastSample = (int*) malloc(360 * sizeof (int));
-    
+
     // Poner el lidar en modo espera
-        
+
     lidarstate = LidarStates::Idle;
-    
+
     // Poner condicion de salida para el thread
-    
+
     runLidarThread = true;
 
 }
@@ -70,18 +76,17 @@ Lidar::~Lidar() {
  */
 void Lidar::LidarThread() {
 
-    // TODO: introducir condición de salida
     while (runLidarThread) {
 
         // Si el lidar da un error reiniciarlo
 
         int health;
 
-        while ((health = myLidar.GetHealthStatus()) == YdLidarX4::LidarResponses.HEALTH_BAD) {
+        while ((health = myX4Lidar.GetHealthStatus()) == YdLidarX4::LidarResponses.HEALTH_BAD) {
             std::cout << "Mirando Health" << std::endl;
             std::cout << "\tEl Health del lidar es: HEALTH_BAD" << std::endl;
             std::cout << "" << std::endl;
-            myLidar.Reset();
+            myX4Lidar.Reset();
         }
         sleep(0);
 
@@ -98,7 +103,7 @@ void Lidar::LidarThread() {
             {
                 // Detener modo escaneo y parar motor
 
-                myLidar.StopScanning();
+                myX4Lidar.StopScanning();
                 lidarstate = Idle;
 
                 break;
@@ -108,11 +113,11 @@ void Lidar::LidarThread() {
                 // Capturar 3 muestras
 
                 int *muestra1, *muestra2, *muestra3;
-                muestra1 = myLidar.GetSampleData();
+                muestra1 = myX4Lidar.GetSampleData();
                 sleep(10);
-                muestra2 = myLidar.GetSampleData();
+                muestra2 = myX4Lidar.GetSampleData();
                 sleep(10);
-                muestra3 = myLidar.GetSampleData();
+                muestra3 = myX4Lidar.GetSampleData();
 
                 // TODO: Procear: Ajustar muestras para centrarlas
 
@@ -173,13 +178,13 @@ void Lidar::LidarThread() {
                     isBackLibre = true;
                 }
 
-                isObstable = (!isBackLibre || !isFrontLibre);
+                isObstacle = (!isBackLibre || !isFrontLibre);
 
                 break;
             }
             case LidarStates::GoToScanning:
             {
-                myLidar.StartScanning();
+                myX4Lidar.StartScanning();
                 lidarstate = Scanning;
 
                 break;
@@ -215,17 +220,17 @@ void Lidar::computeLidarTripPersonOutOfView() {
             mediassectores[i] /= (sectorendangles[i] - sectorstartangles[i]);
 
         }
-        
+
     }
-    
+
     // Calcular computedangle y computeddistance
-   
+
     int sectorindex = indexofSmallestElement(mediassectores, NUM_SECTORS);
-    
-    computedAngle = sectorstartangles[sectorindex] + anglestep/2;
-    
+
+    computedAngle = sectorstartangles[sectorindex] + anglestep / 2;
+
     computedDistance = lastSample[computedAngle] - OBSTACLEMINDISTANCE;
-   
+
 };
 
 void Lidar::setLidarIdle() {
@@ -238,20 +243,18 @@ void Lidar::setLidarScanning() {
     this->lidarstate = Scanning;
 }
 
-int Lidar::indexofSmallestElement(int * arr, int size)
-{
+int Lidar::indexofSmallestElement(int * arr, int size) {
     int index = 0;
 
-    for(int i = 1; i < size; i++)
-    {
-        if(arr[i] < arr[index])
-            index = i;              
+    for (int i = 1; i < size; i++) {
+        if (arr[i] < arr[index])
+            index = i;
     }
 
     return index;
 }
 
-void Lidar::exitLidarThread(){
+void Lidar::exitLidarThread() {
 
     runLidarThread = false;
 }
