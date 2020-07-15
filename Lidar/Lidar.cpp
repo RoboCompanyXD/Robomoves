@@ -24,7 +24,7 @@ Lidar::Lidar() {
     myX4Lidar.ConnectToServer();
 
     std::cout << "Objeto lidar creado, conectando..." << std::endl;
-    if (!myX4Lidar.Connect()){
+    if (!myX4Lidar.Connect()) {
         myX4Lidar.Reset();
     }
 
@@ -87,6 +87,7 @@ void Lidar::LidarThread() {
             std::cout << "\tEl Health del lidar es: HEALTH_BAD" << std::endl;
             std::cout << "" << std::endl;
             myX4Lidar.Reset();
+            // TODO: llamar a goIdle?? O a goToScanning?
         }
         sleep(0);
 
@@ -104,7 +105,7 @@ void Lidar::LidarThread() {
                 // Detener modo escaneo y parar motor
 
                 myX4Lidar.StopScanning();
-                lidarstate = Idle;
+                lidarstate = LidarStates::Idle;
 
                 break;
             }
@@ -185,7 +186,7 @@ void Lidar::LidarThread() {
             case LidarStates::GoToScanning:
             {
                 myX4Lidar.StartScanning();
-                lidarstate = Scanning;
+                lidarstate = LidarStates::Scanning;
 
                 break;
             }
@@ -201,46 +202,34 @@ void Lidar::LidarThread() {
  * Calcular a donde ir con el lidar
  */
 void Lidar::computeLidarTripPersonOutOfView() {
-
     // Calcular por secores la distancia mas larga
-
     int * mediassectores = (int*) malloc(NUM_SECTORS * sizeof (int));
 
     // Para todos los sectores entre sus angulos...
-
+    // Mirar todos los angulos en la ultima lectura y calcular distancias medias
     int i;
     for (i = 0; i < NUM_SECTORS; i++) {
-
-        // Mirar todos los angulos en la ultima lectura y calcular distancias medias
-
         int j;
         for (j = sectorstartangles[i]; j < sectorendangles[i]; j++) {
-
             if (lastSample[j])mediassectores += lastSample[j];
             mediassectores[i] /= (sectorendangles[i] - sectorstartangles[i]);
-
         }
-
     }
 
     // Calcular computedangle y computeddistance
-
     int sectorindex = indexofSmallestElement(mediassectores, NUM_SECTORS);
-
     computedAngle = sectorstartangles[sectorindex] + anglestep / 2;
-
     computedDistance = lastSample[computedAngle] - OBSTACLEMINDISTANCE;
-
 };
 
 void Lidar::setLidarIdle() {
 
-    this->lidarstate = Idle;
+    this->lidarstate = LidarStates::Idle;
 }
 
 void Lidar::setLidarScanning() {
 
-    this->lidarstate = Scanning;
+    this->lidarstate = LidarStates::GoToScanning;
 }
 
 int Lidar::indexofSmallestElement(int * arr, int size) {

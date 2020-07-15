@@ -86,7 +86,11 @@
       <compileType>
         <cTool>
           <stripSymbols>true</stripSymbols>
+          <standard>10</standard>
         </cTool>
+        <ccTool>
+          <standard>8</standard>
+        </ccTool>
         <linkerTool>
           <linkerKpic>false</linkerKpic>
           <commandlineTool>g++</commandlineTool>

@@ -43,43 +43,56 @@ public:
     int computedAngle; // TODO: documentar
     int computedDistance; // TODO: documentar
 
+    /**
+     * TODO: documentar
+     */
     void setLidarScanning();
+    
+    /**
+     * TODO: documentar
+     */
     void setLidarIdle();
-
+    
+    /**
+     * TODO: documentar
+     */
     void computeLidarTripPersonOutOfView();
+        
+    /**
+     * TODO: documentar
+     */
     void LidarThread();
+        
+    /**
+     * TODO: documentar
+     */
     void exitLidarThread();
 
 private:
 
     YdLidarX4::YdLidarX4Controller myX4Lidar; // TODO: documentar variable
 
-    /**
-     * TODO: Documentar Metodo
-     */
-
-
     int anglestep = -1;
     int * sectorstartangles; // Array con los indices de donde empieza cada sector
     int * sectorendangles; // Array con los indices de donde acaba cada sector
 
-    int lidarstate;
 
-    enum LidarStates {
+    enum class LidarStates {
         Idle = 0,
         GoToIdle = 1,
         Scanning = 2,
         GoToScanning = 3
     };
+    
+    LidarStates lidarstate; // TODO
 
     int * lastSample;
     
-    int indexofSmallestElement(int * arr, int size);
+    int indexofSmallestElement(int * arr, int size); // TODO: documentar
     
     bool runLidarThread = false;
 
-
-};
+}; //end class Lidar
 
 #endif	/* LIDAR_H */
 

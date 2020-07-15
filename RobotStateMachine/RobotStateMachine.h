@@ -114,7 +114,7 @@ protected:
     //void cancelTimeouts();
 
     /** Unique identifiers for all the different states of the state machine */
-    enum stateMachineStates {
+    enum class RobotStates {
 
         DISABLED = 0,
         IDLE = 1, 
@@ -150,16 +150,16 @@ protected:
 
     /** Define the flags for the state-machine */
 
-    int currentSuperState; // Current top-level super-state [Idle, Dock, Shutdown, Undock, NormalOperate]
-    int currentState; // Current global state (amongst all possible states)
-    int currentUnDocking_subState; // Current sub-state within UnDock: [ExitDock, UnDock_Rotate180]
-    int currentRoaming_subState; // Current sub-state within NormalOperate: [TrackingByCamera, CliffAhead, DodgeObstacle]
-    int currentTrackingByCamera_subState; // Current sub-state within TrackingByCamera: [ \\TODO ]
-    int currentSearchingUser_subState; // Current sub-state within PersonOutOfView: \\TODO
-    int currentFollowingUser_subState; // Current sub-state within PersonInView: \\TODO
-    int currentDodgingObstacle_subState; // Current sub-state within DodgeObstacle: \\TODO
-    int currentCrashAlgorithm_subState; // Current sub-state within CrashAlgorithm: \\TODO
-    int currentAvoidingCliff_subState; // Current sub-state within CliffAhead: \\TODO
+    RobotStates currentSuperState; // Current top-level super-state [Idle, Dock, Shutdown, Undock, NormalOperate]
+    RobotStates currentState; // Current global state (amongst all possible states)
+    RobotStates currentUnDocking_subState; // Current sub-state within UnDock: [ExitDock, UnDock_Rotate180]
+    RobotStates currentRoaming_subState; // Current sub-state within NormalOperate: [TrackingByCamera, CliffAhead, DodgeObstacle]
+    RobotStates currentTrackingByCamera_subState; // Current sub-state within TrackingByCamera: [ \\TODO ]
+    RobotStates currentSearchingUser_subState; // Current sub-state within PersonOutOfView: \\TODO
+    RobotStates currentFollowingUser_subState; // Current sub-state within PersonInView: \\TODO
+    RobotStates currentDodgingObstacle_subState; // Current sub-state within DodgeObstacle: \\TODO
+    RobotStates currentCrashAlgorithm_subState; // Current sub-state within CrashAlgorithm: \\TODO
+    RobotStates currentAvoidingCliff_subState; // Current sub-state within CliffAhead: \\TODO
 
 }; // end class RobotStateMachine
 

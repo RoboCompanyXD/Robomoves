@@ -30,16 +30,16 @@ RobotStateMachine::~RobotStateMachine() {
  * TODO: documentar
  */
 void RobotStateMachine::initStatechart() {
-    currentSuperState = DISABLED; // TODO: change to UC_Enum.OMNonState for better readability
-    currentState = DISABLED;
-    currentUnDocking_subState = DISABLED;
-    currentRoaming_subState = DISABLED;
-    currentTrackingByCamera_subState = DISABLED;
-    currentSearchingUser_subState = DISABLED;
-    currentFollowingUser_subState = DISABLED;
-    currentDodgingObstacle_subState = DISABLED;
-    currentCrashAlgorithm_subState = DISABLED;
-    currentAvoidingCliff_subState = DISABLED;
+    currentSuperState = RobotStates::DISABLED; // TODO: change to UC_Enum.OMNonState for better readability
+    currentState = RobotStates::DISABLED;
+    currentUnDocking_subState = RobotStates::DISABLED;
+    currentRoaming_subState = RobotStates::DISABLED;
+    currentTrackingByCamera_subState = RobotStates::DISABLED;
+    currentSearchingUser_subState = RobotStates::DISABLED;
+    currentFollowingUser_subState = RobotStates::DISABLED;
+    currentDodgingObstacle_subState = RobotStates::DISABLED;
+    currentCrashAlgorithm_subState = RobotStates::DISABLED;
+    currentAvoidingCliff_subState = RobotStates::DISABLED;
     rootState_entDef();
 }
 
@@ -48,8 +48,8 @@ void RobotStateMachine::initStatechart() {
  * TODO: documentar
  */
 void RobotStateMachine::rootState_entDef() {
-    currentSuperState = IDLE;
-    currentState = IDLE;
+    currentSuperState = RobotStates::IDLE;
+    currentState = RobotStates::IDLE;
 }
 
 /**
@@ -57,10 +57,10 @@ void RobotStateMachine::rootState_entDef() {
  * TODO: documentar
  */
 void RobotStateMachine::UnDock_entDef() {
-    currentSuperState = UN_DOCKING;
+    currentSuperState = RobotStates::UN_DOCKING;
     robot->sensores.sum_distance = 0;
-    currentUnDocking_subState = ExitDock;
-    currentState = ExitDock;
+    currentUnDocking_subState = RobotStates::ExitDock;
+    currentState = RobotStates::ExitDock;
 }
 
 /**
@@ -68,7 +68,7 @@ void RobotStateMachine::UnDock_entDef() {
  * TODO: documentar
  */
 void RobotStateMachine::roaming_entDef() {
-    currentSuperState = ROAMING;
+    currentSuperState = RobotStates::ROAMING;
     RoamingEntDef();
 }
 
@@ -85,7 +85,7 @@ void RobotStateMachine::RoamingEntDef() {
  * TODO: documentar
  */
 void RobotStateMachine::TrackingByCamera_entDef() {
-    currentRoaming_subState = TrackingByCamera;
+    currentRoaming_subState = RobotStates::TrackingByCamera;
     TrackingByCameraEntDef();
 }
 
@@ -106,9 +106,9 @@ void RobotStateMachine::TrackingByCameraEntDef() {
  * TODO: documentar
  */
 void RobotStateMachine::followingUser_entDef() {
-    currentTrackingByCamera_subState = FollowingUser;
-    currentFollowingUser_subState = FollowingUser_GettingCloser;
-    currentState = FollowingUser_GettingCloser;
+    currentTrackingByCamera_subState = RobotStates::FollowingUser;
+    currentFollowingUser_subState = RobotStates::FollowingUser_GettingCloser;
+    currentState = RobotStates::FollowingUser_GettingCloser;
     robot->computeCameraApproach();
 }
 
@@ -117,11 +117,11 @@ void RobotStateMachine::followingUser_entDef() {
  * TODO: documentar
  */
 void RobotStateMachine::searchingUser_entDef() {
-    currentTrackingByCamera_subState = SearchingUser;
+    currentTrackingByCamera_subState = RobotStates::SearchingUser;
     robot->sensores.sum_angle = 0;
     robot->sensores.sum_distance = 0;
-    currentSearchingUser_subState = SearchingUser_Look360Around;
-    currentState = SearchingUser_Look360Around;
+    currentSearchingUser_subState = RobotStates::SearchingUser_Look360Around;
+    currentState = RobotStates::SearchingUser_Look360Around;
 }
 
 /**
@@ -129,11 +129,11 @@ void RobotStateMachine::searchingUser_entDef() {
  * TODO: documentar
  */
 void RobotStateMachine::dodgingObstacle_entDef() {
-    currentRoaming_subState = DodgingObstacle;
+    currentRoaming_subState = RobotStates::DodgingObstacle;
     robot->sensores.sum_angle = 0;
     robot->sensores.sum_distance = 0;
-    currentDodgingObstacle_subState = MovingBackFromObstacle;
-    currentState = MovingBackFromObstacle;
+    currentDodgingObstacle_subState = RobotStates::MovingBackFromObstacle;
+    currentState = RobotStates::MovingBackFromObstacle;
 }
 
 /**
@@ -141,11 +141,11 @@ void RobotStateMachine::dodgingObstacle_entDef() {
  * TODO: documentar
  */
 void RobotStateMachine::avoidingCliff_entDef() {
-    currentRoaming_subState = AvoidingCliff;
+    currentRoaming_subState = RobotStates::AvoidingCliff;
     robot->sensores.sum_angle = 0;
     robot->sensores.sum_distance = 0;
-    currentAvoidingCliff_subState = TurnAwayFromCliff;
-    currentState = TurnAwayFromCliff;
+    currentAvoidingCliff_subState = RobotStates::TurnAwayFromCliff;
+    currentState = RobotStates::TurnAwayFromCliff;
 }
 
 /**
@@ -153,9 +153,9 @@ void RobotStateMachine::avoidingCliff_entDef() {
  * TODO: documentar
  */
 void RobotStateMachine::CrashAlgorithm_entDef() {
-    currentDodgingObstacle_subState = CrashAlgorithm;
-    currentCrashAlgorithm_subState = CrashAlgorithm_Dodge;
-    currentState = CrashAlgorithm_Dodge;
+    currentDodgingObstacle_subState = RobotStates::CrashAlgorithm;
+    currentCrashAlgorithm_subState = RobotStates::CrashAlgorithm_Dodge;
+    currentState = RobotStates::CrashAlgorithm_Dodge;
 }
 
 /**
@@ -178,7 +178,7 @@ void RobotStateMachine::statechart_process() {
      */
     switch (currentState) {
 
-        case IDLE:
+        case RobotStates::IDLE:
         {
             /**
              * IDLE super-state
@@ -196,8 +196,8 @@ void RobotStateMachine::statechart_process() {
              */
 
             if (robot->sensores.battery_level < 15 || robot->check_btnDock()) {
-                currentSuperState = DOCKING;
-                currentState = DOCKING;
+                currentSuperState = RobotStates::DOCKING;
+                currentState = RobotStates::DOCKING;
                 robot->gotoDock();
                 break; // exit from Idle super-state
             } else if (robot->check_btnClean()) {
@@ -211,15 +211,15 @@ void RobotStateMachine::statechart_process() {
                     break; // Salir inmediatamente del sub-estado
                 }
             } else if (robot->check_btnSpot()) {
-                currentSuperState = SHUTDOWN;
-                currentState = SHUTDOWN;
+                currentSuperState = RobotStates::SHUTDOWN;
+                currentState = RobotStates::SHUTDOWN;
                 break; // Salir inmediatamente del sub-estado
             }
 
             break; // exit super-case IDLE
         } //end case IDLE
 
-        case DOCKING:
+        case RobotStates::DOCKING:
         {
             /**
              * DOCKING super-state
@@ -232,8 +232,8 @@ void RobotStateMachine::statechart_process() {
              *  - inDock == true is detected      >> go to IDLE
              */
             if (robot->sensores.IsDocked == true) {
-                currentSuperState = IDLE;
-                currentState = IDLE;
+                currentSuperState = RobotStates::IDLE;
+                currentState = RobotStates::IDLE;
                 break; // Salir inmediatamente del sub-estado DOCKING
             }
 
@@ -243,7 +243,7 @@ void RobotStateMachine::statechart_process() {
             break; // exit super-case DOCKING
         } // end case DOCKING
 
-        case SHUTDOWN:
+        case RobotStates::SHUTDOWN:
         {
             /**
              *  SHUTDOWN super-state
@@ -255,14 +255,14 @@ void RobotStateMachine::statechart_process() {
              * Exit-conditions:
              *  - All systems shut down.
              */
-            currentState = END_STATE_MACHINE;
-            currentSuperState = END_STATE_MACHINE;
+            currentState = RobotStates::END_STATE_MACHINE;
+            currentSuperState = RobotStates::END_STATE_MACHINE;
             endBehavior();
 
             break; // exit case SHUTDOWN
         } // end case SHUTDOWN
 
-        case UN_DOCKING:
+        case RobotStates::UN_DOCKING:
         {
             /**
              * UN_DOCKING super-state
@@ -279,9 +279,9 @@ void RobotStateMachine::statechart_process() {
 
             /** Check exit-condition: if 'Spot' button is pressed >> go to SHUTDOWN */
             if (robot->check_btnSpot()) {
-                currentUnDocking_subState = DISABLED;
-                currentSuperState = SHUTDOWN;
-                currentState = SHUTDOWN;
+                currentUnDocking_subState = RobotStates::DISABLED;
+                currentSuperState = RobotStates::SHUTDOWN;
+                currentState = RobotStates::SHUTDOWN;
                 break; // Exit the UN_DOCKING super-state immediately, without computing UN_DOCKING's sub-states
             }
 
@@ -291,7 +291,7 @@ void RobotStateMachine::statechart_process() {
              *  - UN_DOCKING->TurnAwayFromDock
              */
             switch (currentUnDocking_subState) {
-                case ExitDock:
+                case RobotStates::ExitDock:
                 {
                     /**
                      * UN_DOCKING->ExitDock sub-state
@@ -308,15 +308,15 @@ void RobotStateMachine::statechart_process() {
                     /** Check exit condition: after moving (backwards) 30cm >> go to Rotate180 */
                     if (robot->sensores.sum_distance < -300) {
                         robot->sensores.sum_angle = 0;
-                        currentUnDocking_subState = TurnAwayFromDock;
-                        currentState = TurnAwayFromDock;
+                        currentUnDocking_subState = RobotStates::TurnAwayFromDock;
+                        currentState = RobotStates::TurnAwayFromDock;
                         break; // Exit the ExitDock sub-state immediately
                     }
 
                     break; // end case "ExitDock"
                 } // end ExitDock
 
-                case TurnAwayFromDock:
+                case RobotStates::TurnAwayFromDock:
                 {
                     /**
                      * UN_DOCKING->TurnAwayFromDock sub-state
@@ -332,7 +332,7 @@ void RobotStateMachine::statechart_process() {
                     
                     /** Check exit condition: after turning 180º >> go to NORMAL_ROAMING */
                     if (robot->sensores.sum_angle > 180) {
-                        currentUnDocking_subState = DISABLED;
+                        currentUnDocking_subState = RobotStates::DISABLED;
                         roaming_entDef(); // go to NORMAL_ROAMING
                         break; // exit immediately from TurnAwayFromDock
                     }
@@ -349,7 +349,7 @@ void RobotStateMachine::statechart_process() {
             break; // exit super-state UN_DOCKING
         } // end case UN_DOCKING
 
-        case ROAMING:
+        case RobotStates::ROAMING:
         {
             /**
              * NORMAL_ROAMING super-state
@@ -371,19 +371,19 @@ void RobotStateMachine::statechart_process() {
             /** Check exit conditions: if battery-level < 15% OR 'Dock' button is pressed >> go to DOCKING */
             if (robot->sensores.battery_level < 15 || robot->check_btnDock()) {
                 //NormalOperate_exit();
-                currentSuperState = DOCKING;
-                currentState = DOCKING;
+                currentSuperState = RobotStates::DOCKING;
+                currentState = RobotStates::DOCKING;
                 robot->gotoDock();
                 break; // exit from NORMAL_ROAMING immediately
             } else if (robot->check_btnClean()) {
                 //NormalOperate_exit();
-                currentSuperState = IDLE;
-                currentState = IDLE;
+                currentSuperState = RobotStates::IDLE;
+                currentState = RobotStates::IDLE;
                 break; // exit from NORMAL_ROAMING immediately
             } else if (robot->check_btnSpot()) {
                 //NormalOperate_exit();
-                currentSuperState = SHUTDOWN;
-                currentState = SHUTDOWN;
+                currentSuperState = RobotStates::SHUTDOWN;
+                currentState = RobotStates::SHUTDOWN;
                 break; // exit from NORMAL_ROAMING immediately
             }
 
@@ -396,7 +396,7 @@ void RobotStateMachine::statechart_process() {
             switch (currentRoaming_subState) {
                     // State TrackingByCamera
                     // Description: Seguimiento mediante la camara.
-                case TrackingByCamera:
+                case RobotStates::TrackingByCamera:
                 {
                     /**
                      * NORMAL_ROAMING->TrackingByCamera sub-state
@@ -415,15 +415,15 @@ void RobotStateMachine::statechart_process() {
 
                     // TODO: Resumir Qué se hace en los siguientes if-else:
                     if (robot->sensores.bl == true || robot->sensores.br == true) {
-                        currentTrackingByCamera_subState = DISABLED;
-                        currentFollowingUser_subState = DISABLED;
-                        currentSearchingUser_subState = DISABLED;
+                        currentTrackingByCamera_subState = RobotStates::DISABLED;
+                        currentFollowingUser_subState = RobotStates::DISABLED;
+                        currentSearchingUser_subState = RobotStates::DISABLED;
                         dodgingObstacle_entDef();
                         break; // Salir inmediatamente del sub-estado
                     } else if (robot->sensores.cliff == true) {
-                        currentTrackingByCamera_subState = DISABLED;
-                        currentFollowingUser_subState = DISABLED;
-                        currentSearchingUser_subState = DISABLED;
+                        currentTrackingByCamera_subState = RobotStates::DISABLED;
+                        currentFollowingUser_subState = RobotStates::DISABLED;
+                        currentSearchingUser_subState = RobotStates::DISABLED;
                         avoidingCliff_entDef();
 
                     }
@@ -434,7 +434,7 @@ void RobotStateMachine::statechart_process() {
                      *  - NORMAL_ROAMING->TrackingByCamera->SearchingUser
                      */
                     switch (currentTrackingByCamera_subState) {
-                        case FollowingUser:
+                        case RobotStates::FollowingUser:
                         {
                             /**
                              * NORMAL_ROAMING->TrackingByCamera->FollowingUser sub-sub-state
@@ -453,7 +453,7 @@ void RobotStateMachine::statechart_process() {
                             // Acercarse todo lo que se pueda sin invadir su espacio.
 
                             if (robot->cam->isUserInView == false) {
-                                currentFollowingUser_subState = DISABLED;
+                                currentFollowingUser_subState = RobotStates::DISABLED;
                                 searchingUser_entDef();
                                 break; // Salir inmediatamente del sub-estado
                             }
@@ -464,7 +464,7 @@ void RobotStateMachine::statechart_process() {
                              *  - NORMAL_ROAMING->TrackingByCamera->FollowingUser->PathBlocked
                              */
                             switch (currentFollowingUser_subState) {
-                                case FollowingUser_GettingCloser:
+                                case RobotStates::FollowingUser_GettingCloser:
                                 {
                                     /**
                                      * NORMAL_ROAMING->TrackingByCamera->FollowingUser->ApproachUser sub-sub-sub-state
@@ -479,8 +479,8 @@ void RobotStateMachine::statechart_process() {
                                     robot->computeCameraApproach();
                                     if (robot->lidar->isObstacle == true) {
                                         robot->reproducirSonidoBloqueado();
-                                        currentFollowingUser_subState = FollowingUser_ObstacleInBetween;
-                                        currentState = FollowingUser_ObstacleInBetween;
+                                        currentFollowingUser_subState = RobotStates::FollowingUser_ObstacleInBetween;
+                                        currentState = RobotStates::FollowingUser_ObstacleInBetween;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
@@ -491,7 +491,7 @@ void RobotStateMachine::statechart_process() {
                                     // Description: Obstaculo en el camino
                                     // El obstaculo puede ser una persona o un onstaculo real
                                     // Puedo rotar si la persona se mueve y retroceder
-                                case FollowingUser_ObstacleInBetween:
+                                case RobotStates::FollowingUser_ObstacleInBetween:
                                 {
                                     /**
                                      * NORMAL_ROAMING->TrackingByCamera->FollowingUser->PathBlocked sub-sub-sub-state
@@ -507,8 +507,8 @@ void RobotStateMachine::statechart_process() {
                                     robot->computeCameraWithObstacle();
                                     if (robot->lidar->isObstacle == false) { 
                                         robot->reproducirSonidoDesbloqueado();
-                                        currentFollowingUser_subState = FollowingUser_GettingCloser;
-                                        currentState = FollowingUser_GettingCloser;
+                                        currentFollowingUser_subState = RobotStates::FollowingUser_GettingCloser;
+                                        currentState = RobotStates::FollowingUser_GettingCloser;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
@@ -522,7 +522,7 @@ void RobotStateMachine::statechart_process() {
                             break; // end case "FollowingUser"
                         } // end "FollowingUser"
 
-                        case SearchingUser:
+                        case RobotStates::SearchingUser:
                         {
                             /**
                              * NORMAL_ROAMING->TrackingByCamera->SearchingUser sub-sub-state
@@ -540,7 +540,7 @@ void RobotStateMachine::statechart_process() {
                              */
 
                             switch (currentSearchingUser_subState) {
-                                case SearchingUser_TurnToEmptyHallway:
+                                case RobotStates::SearchingUser_TurnToEmptyHallway:
                                 {
                                     /**
                                      * NORMAL_ROAMING->TrackingByCamera->SearchingUser->Look360Around sub-sub-sub-state
@@ -553,15 +553,15 @@ void RobotStateMachine::statechart_process() {
 
                                     robot->setMotores_actual(motores_LEFT);
                                     if (robot->sensores.sum_angle > robot->lidar->computedAngle) {
-                                        currentSearchingUser_subState = SearchingUser_TraverseEmptyHallway;
-                                        currentState = SearchingUser_TraverseEmptyHallway;
+                                        currentSearchingUser_subState = RobotStates::SearchingUser_TraverseEmptyHallway;
+                                        currentState = RobotStates::SearchingUser_TraverseEmptyHallway;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end case "SearchingUser_Look360Around"
                                 } // end SearchingUser_Look360Around
 
-                                case SearchingUser_FindEmptyHallway:
+                                case RobotStates::SearchingUser_FindEmptyHallway:
                                 {
                                     /**
                                      * NORMAL_ROAMING->TrackingByCamera->SearchingUser->Look360Around sub-sub-sub-state
@@ -575,13 +575,13 @@ void RobotStateMachine::statechart_process() {
                                     robot->sensores.sum_angle = 0;
                                     robot->lidar->computeLidarTripPersonOutOfView();
                                     
-                                    currentSearchingUser_subState = SearchingUser_TurnToEmptyHallway;
-                                    currentState = SearchingUser_TurnToEmptyHallway;
+                                    currentSearchingUser_subState = RobotStates::SearchingUser_TurnToEmptyHallway;
+                                    currentState = RobotStates::SearchingUser_TurnToEmptyHallway;
 
                                     break; // end case "SearchingUser_FindEmptyHallway"
                                 } // end SearchingUser_FindEmptyHallway
 
-                                case SearchingUser_TraverseEmptyHallway:
+                                case RobotStates::SearchingUser_TraverseEmptyHallway:
                                 {
                                     /**
                                      * NORMAL_ROAMING->TrackingByCamera->SearchingUser->TraverseEmptyHallway sub-sub-sub-state
@@ -597,15 +597,15 @@ void RobotStateMachine::statechart_process() {
                                     if (robot->sensores.sum_distance > robot->lidar->computedDistance) {
                                         robot->sensores.sum_angle = 0;
                                         
-                                        currentSearchingUser_subState = SearchingUser_Look360Around;
-                                        currentState = SearchingUser_Look360Around;
+                                        currentSearchingUser_subState = RobotStates::SearchingUser_Look360Around;
+                                        currentState = RobotStates::SearchingUser_Look360Around;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end case "SearchingUser_TraverseEmptyHallway"
                                 } // end SearchingUser_TraverseEmptyHallway
 
-                                case SearchingUser_Look360Around:
+                                case RobotStates::SearchingUser_Look360Around:
                                 {
                                     /**
                                      * NORMAL_ROAMING->TrackingByCamera->SearchingUser->Look360Around sub-sub-sub-state
@@ -619,8 +619,8 @@ void RobotStateMachine::statechart_process() {
 
                                     robot->setMotores_actual(motores_LEFT);
                                     if (robot->sensores.sum_angle > 360) {
-                                        currentSearchingUser_subState = SearchingUser_FindEmptyHallway;
-                                        currentState = SearchingUser_FindEmptyHallway;
+                                        currentSearchingUser_subState = RobotStates::SearchingUser_FindEmptyHallway;
+                                        currentState = RobotStates::SearchingUser_FindEmptyHallway;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
@@ -643,7 +643,7 @@ void RobotStateMachine::statechart_process() {
                     break; // end case "TrackingByCamera"
                 } // end TrackingByCamera
 
-                case DodgingObstacle:
+                case RobotStates::DodgingObstacle:
                 {
                     /**
                      * NORMAL_ROAMING->DodgingObstacle sub-state
@@ -659,8 +659,8 @@ void RobotStateMachine::statechart_process() {
                      */
 
                     if (robot->sensores.cliff == true) {
-                        currentCrashAlgorithm_subState = DISABLED;
-                        currentDodgingObstacle_subState = DISABLED;
+                        currentCrashAlgorithm_subState = RobotStates::DISABLED;
+                        currentDodgingObstacle_subState = RobotStates::DISABLED;
                         avoidingCliff_entDef();
                         break; // Salir inmediatamente del sub-estado
                     }
@@ -671,7 +671,7 @@ void RobotStateMachine::statechart_process() {
                      *  - Crash algorithm
                      */
                     switch (currentDodgingObstacle_subState) {
-                        case MovingBackFromObstacle:
+                        case RobotStates::MovingBackFromObstacle:
                         {
                             /**
                              * NORMAL_ROAMING->DodgingObstacle->MovingBackFromObstacle sub-sub-state
@@ -693,7 +693,7 @@ void RobotStateMachine::statechart_process() {
                             break; // end case MovingBackFromObstacle
                         } // end MovingBackFromObstacle
 
-                        case CrashAlgorithm:
+                        case RobotStates::CrashAlgorithm:
                         {
                             /**
                              * NORMAL_ROAMING->DodgingObstacle->CrashAlgorithm sub-sub-state
@@ -711,10 +711,10 @@ void RobotStateMachine::statechart_process() {
                              */
 
                             if (robot->sensores.bl == true || robot->sensores.br == true) {
-                                currentCrashAlgorithm_subState = DISABLED;
+                                currentCrashAlgorithm_subState = RobotStates::DISABLED;
                                 robot->sensores.sum_distance = 0;
-                                currentDodgingObstacle_subState = MovingBackFromObstacle;
-                                currentState = MovingBackFromObstacle;
+                                currentDodgingObstacle_subState = RobotStates::MovingBackFromObstacle;
+                                currentState = RobotStates::MovingBackFromObstacle;
                                 break; // Salir inmediatamente del sub-estado
                             }
 
@@ -727,7 +727,7 @@ void RobotStateMachine::statechart_process() {
                              *  - RecoverTrajectory
                              */
                             switch (currentCrashAlgorithm_subState) {
-                                case CrashAlgorithm_Dodge:
+                                case RobotStates::CrashAlgorithm_Dodge:
                                 {
                                     /**
                                      * NORMAL_ROAMING->DodgingObstacle->CrashAlgorithm sub-sub-state
@@ -740,15 +740,15 @@ void RobotStateMachine::statechart_process() {
 
                                     robot->setMotores_actual(motores_LEFT);
                                     if (robot->sensores.sum_angle > 25) {
-                                        currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
-                                        currentState = CrashAlgorithm_DodgeParallel;
+                                        currentCrashAlgorithm_subState = RobotStates::CrashAlgorithm_DodgeParallel;
+                                        currentState = RobotStates::CrashAlgorithm_DodgeParallel;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end case CrashAlgorithm_Dodge
                                 } // end CrashAlgorithm_Dodge
 
-                                case CrashAlgorithm_DodgeParallel:
+                                case RobotStates::CrashAlgorithm_DodgeParallel:
                                 {
                                     /**
                                      * NORMAL_ROAMING->DodgingObstacle->CrashAlgorithm->DodgeParallel sub-sub-sub-state
@@ -762,68 +762,68 @@ void RobotStateMachine::statechart_process() {
 
                                     robot->setMotores_actual(motores_LEFT);
                                     if (robot->sensores.lbump_front == false) {
-                                        currentCrashAlgorithm_subState = CrashAlgorithm_GoForward;
-                                        currentState = CrashAlgorithm_GoForward;
+                                        currentCrashAlgorithm_subState = RobotStates::CrashAlgorithm_GoForward;
+                                        currentState = RobotStates::CrashAlgorithm_GoForward;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end CrashAlgorithm_DodgeParallel
                                 } // end CrashAlgorithm_DodgeParallel
 
-                                case CrashAlgorithm_GoForward:
+                                case RobotStates::CrashAlgorithm_GoForward:
                                 {
                                     // State NormalOperate >> DodgingObstacle >> CrashAlgorithm >> GoForward
                                     robot->setMotores_actual(motores_FWD);
                                     if (robot->sensores.lbump_side == false) {
                                         robot->sensores.sum_distance = 0;
-                                        currentCrashAlgorithm_subState = CrashAlgorithm_GoForwardExtended;
-                                        currentState = CrashAlgorithm_GoForwardExtended;
+                                        currentCrashAlgorithm_subState = RobotStates::CrashAlgorithm_GoForwardExtended;
+                                        currentState = RobotStates::CrashAlgorithm_GoForwardExtended;
                                         break; // Salir inmediatamente del sub-estado
                                     } else if (robot->sensores.lbump_front == true) {
-                                        currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
-                                        currentState = CrashAlgorithm_DodgeParallel;
+                                        currentCrashAlgorithm_subState = RobotStates::CrashAlgorithm_DodgeParallel;
+                                        currentState = RobotStates::CrashAlgorithm_DodgeParallel;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end CrashAlgorithm_GoForward
                                 } // end CrashAlgorithm_GoForward
 
-                                case CrashAlgorithm_GoForwardExtended:
+                                case RobotStates::CrashAlgorithm_GoForwardExtended:
                                 {
                                     // State CrashAlgorithm_GoForwardExtended
                                     robot->setMotores_actual(motores_FWD);
                                     if (robot->sensores.sum_distance > 300) {
-                                        currentCrashAlgorithm_subState = CrashAlgorithm_RecoverTrajectory;
-                                        currentState = CrashAlgorithm_RecoverTrajectory;
+                                        currentCrashAlgorithm_subState = RobotStates::CrashAlgorithm_RecoverTrajectory;
+                                        currentState = RobotStates::CrashAlgorithm_RecoverTrajectory;
                                         break; // Salir inmediatamente del sub-estado
                                     } else if (robot->sensores.lbump_front == false && robot->sensores.lbump_side == true) {
-                                        currentCrashAlgorithm_subState = CrashAlgorithm_GoForward;
-                                        currentState = CrashAlgorithm_GoForward;
+                                        currentCrashAlgorithm_subState = RobotStates::CrashAlgorithm_GoForward;
+                                        currentState = RobotStates::CrashAlgorithm_GoForward;
                                         break; // Salir inmediatamente del sub-estado
                                     } else if (robot->sensores.lbump_front == true) {
-                                        currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
-                                        currentState = CrashAlgorithm_DodgeParallel;
+                                        currentCrashAlgorithm_subState = RobotStates::CrashAlgorithm_DodgeParallel;
+                                        currentState = RobotStates::CrashAlgorithm_DodgeParallel;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
                                     break; // end CrashAlgorithm_GoForwardExtended
                                 } // end CrashAlgorithm_GoForwardExtended
 
-                                case CrashAlgorithm_RecoverTrajectory:
+                                case RobotStates::CrashAlgorithm_RecoverTrajectory:
                                 {
                                     // State CrashAlgorithm_RecoverTrajectory
                                     robot->setMotores_actual(motores_RIGHT);
                                     if (robot->sensores.sum_angle > -25 && robot->sensores.sum_angle < 25) {
-                                        currentDodgingObstacle_subState = DISABLED;
+                                        currentDodgingObstacle_subState = RobotStates::DISABLED;
                                         TrackingByCamera_entDef();
                                         break; // Salir inmediatamente del sub-estado
                                     } else if (robot->sensores.lbump_front == true) {
-                                        currentCrashAlgorithm_subState = CrashAlgorithm_DodgeParallel;
+                                        currentCrashAlgorithm_subState = RobotStates::CrashAlgorithm_DodgeParallel;
                                         break; // Salir inmediatamente del sub-estado
-                                        currentState = CrashAlgorithm_DodgeParallel;
+                                        currentState = RobotStates::CrashAlgorithm_DodgeParallel;
                                     } else if (robot->sensores.lbump_front == false && robot->sensores.lbump_side == true) {
-                                        currentCrashAlgorithm_subState = CrashAlgorithm_GoForward;
-                                        currentState = CrashAlgorithm_GoForward;
+                                        currentCrashAlgorithm_subState = RobotStates::CrashAlgorithm_GoForward;
+                                        currentState = RobotStates::CrashAlgorithm_GoForward;
                                         break; // Salir inmediatamente del sub-estado
                                     }
 
@@ -847,7 +847,7 @@ void RobotStateMachine::statechart_process() {
                     break; // end case DodgingObstacle
                 }// end DodgingObstacle
 
-                case AvoidingCliff:
+                case RobotStates::AvoidingCliff:
                 {
                     // State CliffAhead
                     // Description: Barranco detectado.
@@ -859,23 +859,23 @@ void RobotStateMachine::statechart_process() {
                      *  - Go Forward
                      */
                     switch (currentAvoidingCliff_subState) {
-                        case TurnAwayFromCliff:
+                        case RobotStates::TurnAwayFromCliff:
                         {
                             // State CliffAhead_Rotate180
                             if (robot->sensores.sum_angle > 180) {
-                                currentAvoidingCliff_subState = LeaveCliffBehind;
-                                currentState = LeaveCliffBehind;
+                                currentAvoidingCliff_subState = RobotStates::LeaveCliffBehind;
+                                currentState = RobotStates::LeaveCliffBehind;
                                 break; // Salir inmediatamente del sub-estado
                             }
 
                             break; // end CliffAhead_Rotate180
                         } // end CliffAhead_Rotate180
 
-                        case LeaveCliffBehind:
+                        case RobotStates::LeaveCliffBehind:
                         {
                             // State LeaveCliffBehind
                             if (robot->sensores.sum_distance > 300) {
-                                currentAvoidingCliff_subState = DISABLED;
+                                currentAvoidingCliff_subState = RobotStates::DISABLED;
                                 TrackingByCamera_entDef();
                                 break; // Salir inmediatamente del sub-estado
                             }
