@@ -120,66 +120,65 @@ void Lidar::LidarThread() {
                 sleep(10);
                 muestra3 = myX4Lidar.GetSampleData();
 
-                // TODO: Procear: Ajustar muestras para centrarlas
+                //TODO: check if result is empty to avoid segmentation fault
+                if (muestra1 != 0 and muestra2 != 0 and muestra3 != 0) {
 
-                // Procesar: Convertit 0 en infinito
-                int i;
-                for (i = 0; i < 360; i++) {
+                    // TODO: Procesar: Ajustar muestras para centrarlas
 
-                    if (muestra1[i] == 0) muestra1[i] = INT_MAX;
-                    if (muestra2[i] == 0) muestra2[i] = INT_MAX;
-                    if (muestra3[i] == 0) muestra3[i] = INT_MAX;
+                    // Procesar: Convertir 0 en infinito
+                    int i;
+                    for (i = 0; i < 360; i++) {
+                        if (muestra1 != 0)
+                            if (muestra1[i] == 0) muestra1[i] = INT_MAX; // TODO CRITICAL: can throw SIGSEGV (segmentation fault))
+                        if (muestra2[i] == 0) muestra2[i] = INT_MAX;
+                        if (muestra3[i] == 0) muestra3[i] = INT_MAX;
+                    }
 
-                }
+                    // Hacer medias de los valores ignorando los infinitos
+                    for (i = 0; i < 360; i++) {
+                        if (muestra1[i] != INT_MAX && muestra2[i] != INT_MAX && muestra3[i] != INT_MAX) {
+                            lastSample[i] = muestra1[i] != INT_MAX + muestra2[i] != INT_MAX + muestra3[i] != INT_MAX;
+                            lastSample[i] /= 3;
+                        } else lastSample[i] = INT_MAX;
+                    }
 
-                // Hacer medias de los valores ignorando los infinitos
+                    // Comprobar si la delantera esta libre
 
-                for (i = 0; i < 360; i++) {
+                    int numObstacles = 0;
 
-                    if (muestra1[i] != INT_MAX && muestra2[i] != INT_MAX && muestra3[i] != INT_MAX) {
-                        lastSample[i] = muestra1[i] != INT_MAX + muestra2[i] != INT_MAX + muestra3[i] != INT_MAX;
-                        lastSample[i] /= 3;
-                    } else lastSample[i] = INT_MAX;
+                    for (i = 315; i < 405; i++) {
+                        if (lastSample[i % 360] <= OBSTACLEMINDISTANCE && lastSample[(i + 1) % 360] <= OBSTACLEMINDISTANCE) {
+                            numObstacles++;
+                        }
+                    }
 
-                }
+                    if (numObstacles > 0) isFrontLibre = false;
+                    else isFrontLibre = true;
+
+                    // Comprobar si la trasera esta libre
+
+                    numObstacles = 0;
+
+                    for (i = 135; i < 225; i++) {
+                        if (lastSample[i % 360] <= OBSTACLEMINDISTANCE && lastSample[(i + 1) % 360] <= OBSTACLEMINDISTANCE) {
+                            numObstacles++;
+                        }
+                    }
+
+                    if (numObstacles > 0) {
+                        isBackLibre = false;
+                    } else {
+                        isBackLibre = true;
+                    }
+
+                    isObstacle = (!isBackLibre || !isFrontLibre);
+                } // segmentation fault check
 
                 // Liberar muestras para evitar memory leak
                 free(muestra1);
                 free(muestra2);
                 free(muestra3);
 
-                // Comprobar si la delantera esta libre
-
-                int numObstacles = 0;
-
-                for (i = 315; i < 405; i++) {
-
-                    if (lastSample[i % 360] <= OBSTACLEMINDISTANCE && lastSample[(i + 1) % 360] <= OBSTACLEMINDISTANCE) {
-                        numObstacles++;
-                    }
-                }
-
-                if (numObstacles > 0) isFrontLibre = false;
-                else isFrontLibre = true;
-
-                // Comprobar si la trasera esta libre
-
-                numObstacles = 0;
-
-                for (i = 135; i < 225; i++) {
-
-                    if (lastSample[i % 360] <= OBSTACLEMINDISTANCE && lastSample[(i + 1) % 360] <= OBSTACLEMINDISTANCE) {
-                        numObstacles++;
-                    }
-                }
-
-                if (numObstacles > 0) {
-                    isBackLibre = false;
-                } else {
-                    isBackLibre = true;
-                }
-
-                isObstacle = (!isBackLibre || !isFrontLibre);
 
                 break;
             }

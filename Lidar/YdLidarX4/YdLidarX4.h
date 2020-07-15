@@ -150,7 +150,7 @@ namespace YdLidarX4 {
 
         DeviceInformation deviceinfo; // TODO: Documentar
 
-        int sock; // TODO: Documentar
+        int sockfd; // TODO: Documentar
 
         /**
          * TODO: Documentar

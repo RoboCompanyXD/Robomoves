@@ -4,6 +4,7 @@
  */
 
 #include <netinet/in.h>
+#include <fcntl.h>
 
 #include "YdLidarX4.h"
 
@@ -30,17 +31,14 @@ namespace YdLidarX4 {
      * @return 
      */
     bool YdLidarX4Controller::ConnectToServer() {
-        // Preparar socket
-        struct hostent* he;
-        struct sockaddr_in addr;
-
-        he = gethostbyname("127.0.0.1");
-
-        if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-            perror("socket");
+        // Create IPv4 stream socket
+        if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+            perror("Could not create socket");
             exit(1);
         }
 
+        struct hostent* he = gethostbyname("127.0.0.1");
+        struct sockaddr_in addr;
         addr.sin_family = AF_INET;
         addr.sin_port = htons(PORT);
         addr.sin_addr = *((struct in_addr*) he->h_addr);
@@ -48,11 +46,17 @@ namespace YdLidarX4 {
 
         // Conectar a servidor
         std::cout << "Connecting to LIDAR server: " << addr.sin_addr.s_addr << std::endl;
-        int sock_response = -1;
-        if (sock_response = connect(sock, (struct sockaddr*) &addr, sizeof (struct sockaddr)) == -1) {
+        int sock_response = sock_response = connect(sockfd, (struct sockaddr*) &addr, sizeof (struct sockaddr));
+        if (sock_response == -1) {
             perror("connect");
             exit(1);
         }
+        /*while (sock_response == EAGAIN || sock_response == EWOULDBLOCK) {
+            //perror("Could not connect to socket");
+            //exit(1);
+            sleep(100);
+            sock_response = sock_response = connect(sockfd, (struct sockaddr*) &addr, sizeof (struct sockaddr));
+        }*/
         std::cout << "Socket connection response: " << sock_response << std::endl;
 
         // Declarar fields del objeto
@@ -94,7 +98,7 @@ namespace YdLidarX4 {
         string command_str = _create_command(command);
         std::cout << "Sending command to YdLidar socket" << command_str << std::endl;
         int sock_response = 0;
-        if (sock_response = send(sock, command_str.c_str(), command_str.length(), 0) == -1) {
+        if (sock_response = send(sockfd, command_str.c_str(), command_str.length(), 0) == -1) {
             std::cout << "Error sending command " << command_str.c_str() << std::endl;
             std::cout << "Socket response: " << sock_response << std::endl;
             perror("send");
@@ -113,7 +117,7 @@ namespace YdLidarX4 {
 
         // 1- Leer respuesta del servidor
         char* buffer = (char*) calloc(BUFF_SIZE, sizeof (char));
-        if (read(sock, buffer, BUFF_SIZE) == 0) {
+        if (read(sockfd, buffer, BUFF_SIZE) == 0) {
             perror("read");
             return false;
         }
@@ -231,7 +235,7 @@ namespace YdLidarX4 {
             }
             is_connected = false;
             is_scanning = false;
-            close(sock);
+            close(sockfd);
             return true;
         } else {
             return false;
@@ -274,6 +278,9 @@ namespace YdLidarX4 {
     /**
      * Obtener muestra:
      * Obtiene una muestra de datos y devuelve un pointer a un vector de muestras
+     * 
+     * TODO CRITICAL: when accessing the returning array, DO check that the returned int* is !=0
+     *                Otherwise you'll get a SIGSEGV (segmentation fault) error!!!
      */
     int* YdLidarX4Controller::GetSampleData() {
         if (is_connected && is_scanning) {
