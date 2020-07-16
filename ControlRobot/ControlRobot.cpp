@@ -11,8 +11,6 @@
 
 #include<bitset>
 
-using namespace std;
-
 namespace ControlRobot {
 
 #define BAUD 115200

@@ -7,7 +7,6 @@
 
 #include "OCVCam.h"
 
-using namespace std;
 using namespace cv;
 
 /**
@@ -50,8 +49,8 @@ int OCVCam::AnalyzeCam() {
     clock_t start_t, end_t;
     start_t = clock();
 
-    vector<int> compression_params;
-    vector<Rect> bodies;
+    std::vector<int> compression_params;
+    std::vector<Rect> bodies;
 
     compression_params.push_back(IMWRITE_JPEG_QUALITY);
     compression_params.push_back(90);
@@ -135,7 +134,7 @@ int OCVCam::AnalyzeCam() {
         if (bodies.size() > 0) {
             frames_nodetect = 0;
             isUserInView = true;
-            cout << "Vector size: " << bodies.size() << endl;
+            std::cout << "Vector size: " << bodies.size() << std::endl;
             for (int i = 0; i < bodies.size(); i++) {
                 //cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
                 rectangle(mask_grey, Point(bodies[i].x, bodies[i].y), Point(bodies[i].x + bodies[i].width, bodies[i].y + bodies[i].height), Scalar(255, 255, 255), FILLED);

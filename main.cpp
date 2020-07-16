@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
     // Crear Threads Camara y Lidar
     CamThread = thread(&CameraThreadFunc,cam);
     LidarThread = thread(&LidarThreadFunc, lidar);
-    lidar->setLidarScanning(); // TODO CRITICAL: is this OK?
+    lidar->setLidarScanning();
     
     while(1){
         sleep(100);

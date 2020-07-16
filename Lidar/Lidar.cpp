@@ -10,8 +10,6 @@
 #include "Lidar.h"
 #include "YdLidarX4/YdLidarX4.h"
 
-using namespace std;
-
 /**
  * Lidar Class constructor
  */

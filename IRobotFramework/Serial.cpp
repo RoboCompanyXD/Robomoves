@@ -9,8 +9,6 @@
 
 #include "Serial.h"
 
-using namespace std;
-
 /*
  * Serial Class Constructor
  * TODO: documentar

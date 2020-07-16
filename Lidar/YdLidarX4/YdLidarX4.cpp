@@ -8,8 +8,6 @@
 
 #include "YdLidarX4.h"
 
-using namespace std;
-
 namespace YdLidarX4 {
 
     /**
@@ -66,10 +64,10 @@ namespace YdLidarX4 {
         int* sample;
         sampledata = sample;
 
-        deviceinfo.firmware_version = string();
-        deviceinfo.hardware_version = string();
-        deviceinfo.modelnumber = string();
-        deviceinfo.serial_number = string();
+        deviceinfo.firmware_version = std::string();
+        deviceinfo.hardware_version = std::string();
+        deviceinfo.modelnumber = std::string();
+        deviceinfo.serial_number = std::string();
 
         return true; // TODO: actually check if connection was successful
     }
@@ -81,11 +79,11 @@ namespace YdLidarX4 {
      *
      * Params: Numero de comando, debe pertenecer al struct cmd
      */
-    string YdLidarX4Controller::_create_command(int command) {
+    std::string YdLidarX4Controller::_create_command(int command) {
         const char* json = "{\"command\":\"0\"}";
         auto cmd_json = json::parse(json);
         cmd_json["command"] = command;
-        string cmd_str = cmd_json.dump();
+        std::string cmd_str = cmd_json.dump();
         return cmd_str;
     }
 
@@ -95,7 +93,7 @@ namespace YdLidarX4 {
      * Params: Numero de comando, debe pertenecer al struct cmd
      */
     bool YdLidarX4Controller::_send_command(int command) {
-        string command_str = _create_command(command);
+        std::string command_str = _create_command(command);
         std::cout << "Sending command to YdLidar socket" << command_str << std::endl;
         int sock_response = 0;
         if (sock_response = send(sockfd, command_str.c_str(), command_str.length(), 0) == -1) {
