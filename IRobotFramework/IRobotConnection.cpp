@@ -177,6 +177,12 @@ void IRobotConnection::power() {
     connection.send(aux.instruction, aux.length);
 }
 
+void IRobotConnection::lowSideDrivers( char outputBit )
+{
+        Instruction aux = iRobotInstructionGenerator.lowSideDrivers(outputBit);
+        connection.send(aux.instruction, aux.length);
+}
+
 // UTILIZAN INSTRUCCIONES ANTIGUAS
 
 /*
@@ -187,11 +193,7 @@ void IRobotConnection::demo( char code )
         connection.send(aux.instruction, aux.length);
 }
 
-void IRobotConnection::lowSideDrivers( char outputBit )
-{
-        Instruction aux = iRobotInstructionGenerator.lowSideDrivers(outputBit);
-        connection.send(aux.instruction, aux.length);
-}
+
 
 void IRobotConnection::pwmLowSideDrivers( int driver2,int driver1, int driver0 )
 {

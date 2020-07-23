@@ -101,6 +101,17 @@ Instruction iRobotInstructionSet::drive(int speed, int radius) {
     return aux;
 }
 
+Instruction iRobotInstructionSet::lowSideDrivers(   char outputBit )
+{
+        int miSize = 2;
+        Instruction aux;
+        aux.instruction = (  char*)malloc(miSize * sizeof(  char));
+        aux.instruction[0] = iRobotInstructions::LOW_SIDE_DRIVERS;
+        aux.instruction[1] = outputBit;
+        aux.length = miSize;
+        return aux;
+}
+
 Instruction iRobotInstructionSet::leds(int ledBit, int ledColor, int ledIntensity) {
     int miSize = 4;
     Instruction aux;
@@ -390,16 +401,6 @@ Instruction iRobotInstructionSet::demo(   char code )
         return aux;
 }
 
-Instruction iRobotInstructionSet::lowSideDrivers(   char outputBit )
-{
-        int miSize = 2;
-        Instruction aux;
-        aux.instruction = (  char*)malloc(miSize * sizeof(  char));
-        aux.instruction[0] = iRobotInstructions::LOW_SIDE_DRIVERS;
-        aux.instruction[1] = outputBit;
-        aux.length = miSize;
-        return aux;
-}
 
 Instruction iRobotInstructionSet::pwmLowSideDrivers( int driver2,int driver1, int driver0 )
 {

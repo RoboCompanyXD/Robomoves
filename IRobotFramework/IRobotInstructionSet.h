@@ -80,7 +80,7 @@ namespace iRobotInstructions {
     static const char COVER = (char) 135;
     //static const   char DEMO = (  char) 136;
     static const char DRIVE = (char) 137;
-    //static const   char LOW_SIDE_DRIVERS = (  char) 138;
+    static const char LOW_SIDE_DRIVERS = (char) 138;
     static const char LEDS = (char) 139;
     static const char SONG = (char) 140;
     static const char PLAY = (char) 141;
@@ -156,6 +156,7 @@ namespace iRobotSensorPackage {
 }
 
 class iRobotInstructionSet {
+
 private:
     //************************************
     // Method:    intHightByte
@@ -190,7 +191,7 @@ public:
     Instruction cover();
     //Instruction demo(  char code);
     Instruction drive(int speed, int radius);
-    //Instruction lowSideDrivers(  char outputBit);
+    Instruction lowSideDrivers(char outputBit);
     Instruction leds(int ledBit, int ledColor, int ledIntensity);
     Instruction song(int songNumber, int songSize, char *song);
     Instruction playSong(int songNumber);

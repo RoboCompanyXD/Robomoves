@@ -431,6 +431,14 @@ namespace ControlRobot {
     void ControlRobot::gotoDock() {
         robot->coverAndDock();
     }
+    
+    /**
+     * TODO: documentar
+     * @param motorId
+     */
+    void ControlRobot::powerMotorDriver(char motorsSetup){
+        robot->lowSideDrivers(motorsSetup);
+    }
 
     /**
      * TODO: documentar

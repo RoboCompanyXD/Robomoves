@@ -76,7 +76,7 @@ public:
     void cover();
     //void demo(  char code);
     void drive(int speed, int radius);
-    //void lowSideDrivers(  char outputBit);
+    void lowSideDrivers(  char outputBit);
     void leds(int ledBit, int ledColor, int ledIntensity);
     void song(int songNumber, int songSize, char *song);
     void playSong(int songNumber);

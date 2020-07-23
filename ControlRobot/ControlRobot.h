@@ -115,6 +115,12 @@ namespace ControlRobot {
 
         /**
          * TODO: documentar
+         * @param motorId
+         */
+        void powerMotorDriver(char motorId);
+        
+        /**
+         * TODO: documentar
          * 
          * @param state
          */
