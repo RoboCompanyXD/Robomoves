@@ -43,21 +43,10 @@ namespace ControlRobot {
     /**
      * ControlRobot class default constructor
      * 
-     * TODO: se puede borrar este constructor?
+     * TODO: Doc
      */
     ControlRobot::ControlRobot() {
-    }
-
-    /**
-     * Class Constructor
-     * 
-     * @param l
-     * @param c
-     */
-    ControlRobot::ControlRobot(Lidar * l, OCVCam * c) {
-        this->lidar = l;
-        this->cam = c;
-
+       
         // Instanciar maquina de estados con una referencia a esta misma clase
         this->stateMachine = new RobotStateMachine(this);
     }
@@ -109,27 +98,36 @@ namespace ControlRobot {
         // Comando 132 modo full
         robot->full();
         delay(500); // Esperamos medio segundo a que cambie de modo
-        
+
         //grabamos SonidoBloqueado
         char SonidoBloqueado[4];
         SonidoBloqueado[0] = 62;
         SonidoBloqueado[1] = 5;
         SonidoBloqueado[2] = 77;
         SonidoBloqueado[3] = 5;
-        robot->song(1,4,SonidoBloqueado);
-        
+        robot->song(1, 4, SonidoBloqueado);
+
         //grabamos SonidoDesBloqueado
         char SonidoDesBloqueado[4];
         SonidoDesBloqueado[0] = 62;
         SonidoDesBloqueado[1] = 5;
         SonidoDesBloqueado[2] = 47;
         SonidoDesBloqueado[3] = 5;
-        robot->song(1,4,SonidoDesBloqueado);
+        robot->song(1, 4, SonidoDesBloqueado);
 
         estado_actual = READY;
         estado_anterior = READY;
         motores_actual = STOP;
         motores_anterior = STOP;
+        
+        // Instanciar Objetos globales
+        cam = new OCVCam();
+        lidar = new Lidar();
+
+        // Crear Threads Camara y Lidar
+        CamThread = thread(&CameraThreadFunc, cam);
+        LidarThread = thread(&LidarThreadFunc, lidar);
+        lidar->setLidarScanning();
     }
 
     /**
@@ -162,10 +160,11 @@ namespace ControlRobot {
         iRobotSensors::CHARGINGSOURCES,
         iRobotSensors::CHARGE,
         iRobotSensors::CAPACITY
-        
+
     };
 
-    /** TODO: Documentar variable*/char lsensores2[] = {
+    /** TODO: Documentar variable*/
+    char lsensores2[] = {
         iRobotSensors::BUTTONS,
         iRobotSensors::BUMPERS_AND_WHEELDROPS,
     };
@@ -179,7 +178,7 @@ namespace ControlRobot {
     void ControlRobot::leerSensores() {
 
         data = robot->queryList(lsensores, nsensores);
-        
+
         sensores.buttons = data[0];
         sensores.bumpers = data[1];
         sensores.lightbumper = data[2];
@@ -189,13 +188,13 @@ namespace ControlRobot {
         sensores.lbcr = data[6];
         sensores.lbfr = data[7];
         sensores.lbr = data[8];
-        
+
         if (data[9] > 32767)sensores.distance = data[9] - 65536;
         else sensores.distance = data[9];
 
         if (data[10] > 32767)sensores.angle = data[10] - 65536;
         else sensores.angle = data[10];
-        
+
         sensores.cliff_left = data[11];
         sensores.cliff_frontleft = data[12];
         sensores.cliff_frontright = data[13];
@@ -209,7 +208,7 @@ namespace ControlRobot {
 
         sensores.sum_distance += sensores.distance;
         sensores.sum_angle += sensores.angle;
-        
+
         clean_anterior = sensores.button_clean;
         if (sensores.buttons & 0b00000001 != 0) sensores.button_clean = true;
         else sensores.button_clean = false;
@@ -219,18 +218,18 @@ namespace ControlRobot {
         dock_anterior = sensores.button_dock;
         if (sensores.buttons & 0b00000100 != 0) sensores.button_dock = true;
         else sensores.button_dock = false;
-        
+
         if ((sensores.lightbumper & 0b00011110) != 0) sensores.lbump_front = true;
         else sensores.lbump_front = false; //4 lightbumps centrales
         if ((sensores.lightbumper & 0b00100000) != 0) sensores.lbump_side = true;
         else sensores.lbump_side = false; // lightbump lateral dcho
-        
+
         if (sensores.charger_available & 0b00000010 != 0) sensores.IsDocked = true;
         else sensores.IsDocked = false;
-        
+
         sensores.cliff = sensores.cliff_frontleft || sensores.cliff_frontright || sensores.cliff_left || sensores.cliff_right;
-             
-        
+
+
     }
 
     /**
@@ -454,7 +453,7 @@ namespace ControlRobot {
      * Play "un-blocked" sound
      */
     void ControlRobot::reproducirSonidoDesbloqueado() {
-        robot->playSong(2);   
+        robot->playSong(2);
     };
 
     //// TODO: ¿por qué no poner los metodos anteriores dentro de la definición de la clase?
@@ -475,3 +474,13 @@ namespace ControlRobot {
     };
 
 } // namespace ControlRobot
+
+void CameraThreadFunc(OCVCam * camptr) {
+
+    camptr->AnalyzeCam();
+}
+
+void LidarThreadFunc(Lidar * lidarptr) {
+
+    lidarptr->LidarThread();
+}

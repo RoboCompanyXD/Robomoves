@@ -16,32 +16,13 @@
 #include <stdio.h>
 #include <python3.7/Python.h> 
 
-// Variables globales de la camara, el lidar y el robot
-Lidar * lidar;
-OCVCam * cam;
+// Variable globale del robot
+
 ControlRobot::ControlRobot * mRobotController;
 
-// Variables globales de los threads
+// Variable globale del thread de lidarserver
 thread LidarServerThread;
-thread LidarThread;
-thread CamThread;
 
-void CameraThreadFunc(OCVCam * camptr) {
-
-    camptr->AnalyzeCam();
-}
-
-void LidarThreadFunc(Lidar * lidarptr) {
-
-    lidarptr->LidarThread();
-}
-
-void exit_end() {
-    lidar->exitLidarThread();
-    cam->exitCamThread();
-
-    sleep(1);
-}
 
 void LidarServerThreadFunc() {
     char filename[] = "YdLidarX4PythonInterface/lidarator.py";
@@ -65,17 +46,8 @@ int main(int argc, char** argv) {
 
     //startLidarServer(); // Lanzar servidor del YlidarX4
 
-    // Instanciar Objetos globales
-    cam = new OCVCam();
-    lidar = new Lidar();
-
     // Inctanciar Controlrobot y pasarle Camara Lidar
-    mRobotController = new ControlRobot::ControlRobot(lidar, cam);
-
-    // Crear Threads Camara y Lidar
-    CamThread = thread(&CameraThreadFunc,cam);
-    LidarThread = thread(&LidarThreadFunc, lidar);
-    lidar->setLidarScanning();
+    mRobotController = new ControlRobot::ControlRobot();
     
     while(1){
         sleep(100);

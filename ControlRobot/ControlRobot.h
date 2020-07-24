@@ -31,7 +31,6 @@ namespace ControlRobot {
      * 
      */
     class ControlRobot {
-
     public:
 
         /**
@@ -55,6 +54,10 @@ namespace ControlRobot {
         // TODO: ¿Por qué no hacer private estas variables?
         Lidar * lidar; // TODO documentar
         OCVCam * cam; // TODO documentar
+
+        // Threads para la cámara y el lidar
+        thread LidarThread;
+        thread CamThread;
 
         RobotStateMachine * stateMachine; // TODO: refactor to Smart Pointer
 
@@ -177,7 +180,7 @@ namespace ControlRobot {
 
 
     private:
-        
+
         // TODO: refactor to Smart Pointer
         IRobotConnection * robot; // TODO: documentar
 
@@ -185,7 +188,6 @@ namespace ControlRobot {
          * TODO: documentar
          */
         struct Sensores_iCreate {
-
             // variables para almacenar información del
             // sensor de acantilado frontal izquierdo
             unsigned int front_left;
@@ -210,7 +212,7 @@ namespace ControlRobot {
             bool button_minute; // Sensor Virtual
             bool button_schedule; // Sensor Virtual
             bool button_clock; // Sensor Virtual
-            
+
             unsigned int bumpers;
             bool bl; // Sensor Virtual
             bool br; // Sensor Virtual
@@ -221,12 +223,12 @@ namespace ControlRobot {
             int sum_distance; // Sensor Virtual
 
             unsigned int lightbumper;
-            unsigned int lbl; 
-            unsigned int lbfl; 
-            unsigned int lbcl; 
-            unsigned int lbcr; 
-            unsigned int lbfr; 
-            unsigned int lbr; 
+            unsigned int lbl;
+            unsigned int lbfl;
+            unsigned int lbcl;
+            unsigned int lbcr;
+            unsigned int lbfr;
+            unsigned int lbr;
 
             bool lbump_front; // Sensor Virtual
             bool lbump_side; // Sensor Virtual
@@ -251,7 +253,6 @@ namespace ControlRobot {
         }; // struct Sensores_iCreate
 
         struct Actuadores_iCreate {
-
             int vel_der; // variable de velocidad para el comando Drive direct
             int vel_izq; // variable de velocidad para el comando Drive direct
 
@@ -265,7 +266,7 @@ namespace ControlRobot {
         char estado_anterior;
         char motores_actual;
         char motores_anterior;
-        
+
         bool dock_anterior;
         bool clean_anterior;
         bool spot_anterior;
