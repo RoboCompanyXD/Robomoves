@@ -22,9 +22,9 @@ OCVCam * cam;
 ControlRobot::ControlRobot * mRobotController;
 
 // Variables globales de los threads
-thread LidarServerThread;
-thread LidarThread;
-thread CamThread;
+std::thread LidarServerThread;
+std::thread LidarThread;
+std::thread CamThread;
 
 void CameraThreadFunc(OCVCam * camptr) {
 
@@ -57,7 +57,7 @@ void LidarServerThreadFunc() {
 
 void startLidarServer() {
     // Crear thread y ejecutar programa de python
-    LidarServerThread = thread(LidarServerThreadFunc);
+    LidarServerThread = std::thread(LidarServerThreadFunc);
 }
 
 int main(int argc, char** argv) {
@@ -73,8 +73,8 @@ int main(int argc, char** argv) {
     mRobotController = new ControlRobot::ControlRobot(lidar, cam);
 
     // Crear Threads Camara y Lidar
-    CamThread = thread(&CameraThreadFunc,cam);
-    LidarThread = thread(&LidarThreadFunc, lidar);
+    CamThread = std::thread(&CameraThreadFunc,cam);
+    LidarThread = std::thread(&LidarThreadFunc, lidar);
     lidar->setLidarScanning();
     
     while(1){

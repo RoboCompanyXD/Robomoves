@@ -7,15 +7,13 @@
 
 #include "OCVCam.h"
 
-using namespace cv;
-
 /**
  * Class constructor
  */
 OCVCam::OCVCam() {
-    
+
     runCamThread = true;
-    
+
 }
 
 /**
@@ -50,22 +48,22 @@ int OCVCam::AnalyzeCam() {
     start_t = clock();
 
     std::vector<int> compression_params;
-    std::vector<Rect> bodies;
+    std::vector<cv::Rect> bodies;
 
-    compression_params.push_back(IMWRITE_JPEG_QUALITY);
+    compression_params.push_back(cv::IMWRITE_JPEG_QUALITY);
     compression_params.push_back(90);
 
-    VideoCapture cap(0);
-    Mat frame, hsv_frame, mask, frame_gray, mask_grey, final_mask;
+    cv::VideoCapture cap(0);
+    cv::Mat frame, hsv_frame, mask, frame_gray, mask_grey, final_mask;
     int frames_nodetect = 0;
 
-    Moments mu;
-    Point2f mc;
-    frame_width = cap.get(CAP_PROP_FRAME_WIDTH);
-    frame_height = cap.get(CAP_PROP_FRAME_HEIGHT);
+    cv::Moments mu;
+    cv::Point2f mc;
+    frame_width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
+    frame_height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
 
     //Mat mask_grey(frame_height,frame_width);
-    mask_grey = Mat::zeros(Size(frame_width, frame_height), CV_8UC1);
+    mask_grey = cv::Mat::zeros(cv::Size(frame_width, frame_height), CV_8UC1);
 
     /*
      * Directorio en el que se guarda la captura
@@ -82,44 +80,48 @@ int OCVCam::AnalyzeCam() {
     /*
      * Rango del color a detectar
      */
-    Scalar lower_yellow = Scalar(24, 135, 93, 0);
-    Scalar upper_yellow = Scalar(42, 252, 255, 0);
-    Scalar lower_green = Scalar(54, 145, 16, 0);
-    Scalar upper_green = Scalar(100, 255, 128, 0);
+    cv::Scalar lower_yellow = cv::Scalar(24, 135, 93, 0);
+    cv::Scalar upper_yellow = cv::Scalar(42, 252, 255, 0);
+    cv::Scalar lower_green = cv::Scalar(54, 145, 16, 0);
+    cv::Scalar upper_green = cv::Scalar(100, 255, 128, 0);
 
 
 
     /*
      * Haar-cascade Detection
      */
-    CascadeClassifier body_classifier;
-    body_classifier = CascadeClassifier("/home/pi/pedestrian-detection/haarcascade_upperbody.xml");
+    //bool fileAvailable = cv::CascadeClassifier.load("/home/pi/pedestrian-detection/haarcascade_upperbody.xml");
+    //if (!fileAvailable) {
+    //    perror("Could not load file: /home/pi/pedestrian-detection/haarcascade_upperbody.xml")
+    //}
+    cv::CascadeClassifier body_classifier;
+    body_classifier = cv::CascadeClassifier("/home/pi/pedestrian-detection/haarcascade_upperbody.xml");
 
     while (runCamThread) {
         cap >> frame;
 
         /** Detección del color */
 
-        cvtColor(frame, hsv_frame, COLOR_BGR2HSV); //Cambio del espacio de color
-        inRange(hsv_frame, lower_green, upper_green, mask); //Filtrado
+        cv::cvtColor(frame, hsv_frame, cv::COLOR_BGR2HSV); //Cambio del espacio de color
+        cv::inRange(hsv_frame, lower_green, upper_green, mask); //Filtrado
 
-        erode(mask, mask, getStructuringElement(MORPH_ELLIPSE, Size(2, 2))); //Erosionar
+        cv::erode(mask, mask, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(2, 2))); //Erosionar
 
-//        mu = moments(mask); // Calculo momentos y posicion
-//        if (mu.m00 > 30000) {
-//            mc = Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
-//            x = int(mc.x);
-//            y = int(mc.y);
-//            area = int(mu.m00);
-//        } else {
-//            mc = Point2f(0, 0);
-//            x = 0;
-//            y = 0;
-//            area = 0;
-//        }
+        //        mu = moments(mask); // Calculo momentos y posicion
+        //        if (mu.m00 > 30000) {
+        //            mc = Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
+        //            x = int(mc.x);
+        //            y = int(mc.y);
+        //            area = int(mu.m00);
+        //        } else {
+        //            mc = Point2f(0, 0);
+        //            x = 0;
+        //            y = 0;
+        //            area = 0;
+        //        }
 
-        cvtColor(frame, frame_gray, COLOR_BGR2GRAY); // cambio a grises
-        resize(frame_gray, frame_gray, Size(), 0.25, 0.25, INTER_LINEAR);
+        cv::cvtColor(frame, frame_gray, cv::COLOR_BGR2GRAY); // cambio a grises
+        cv::resize(frame_gray, frame_gray, cv::Size(), 0.25, 0.25, cv::INTER_LINEAR);
 
         /** Deteccion de upperbodies */
 
@@ -128,16 +130,16 @@ int OCVCam::AnalyzeCam() {
         /** Prueba para utilizar las 9 ultimos frames en el que se ha detectado persona */
 
         if (frames_nodetect > 9) {
-            mask_grey = Mat::zeros(Size(frame_width, frame_height), CV_8UC1);
+            mask_grey = cv::Mat::zeros(cv::Size(frame_width, frame_height), CV_8UC1);
             isUserInView = false;
         }
         if (bodies.size() > 0) {
             frames_nodetect = 0;
             isUserInView = true;
-            std::cout << "Vector size: " << bodies.size() << std::endl;
+            std::cout << "Vector size: " << bodies.size() << std::endl; // TODO: remove this
             for (int i = 0; i < bodies.size(); i++) {
                 //cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
-                rectangle(mask_grey, Point(bodies[i].x, bodies[i].y), Point(bodies[i].x + bodies[i].width, bodies[i].y + bodies[i].height), Scalar(255, 255, 255), FILLED);
+                cv::rectangle(mask_grey, cv::Point(bodies[i].x, bodies[i].y), cv::Point(bodies[i].x + bodies[i].width, bodies[i].y + bodies[i].height), cv::Scalar(255, 255, 255), cv::FILLED);
                 //rectangle(frame,Point(bodies[i].x,bodies[i].y),Point(bodies[i].x+bodies[i].width,bodies[i].y+bodies[i].height),Scalar(0, 255, 255), 2);
                 //rectangle(mask,Point(xp,yp),Point(xp+50,yp+100),Scalar(255, 255, 255), 2);
             }
@@ -147,17 +149,17 @@ int OCVCam::AnalyzeCam() {
 
         /** Interseccion de deteccion por color y reconocimiento */
 
-        bitwise_and(mask, mask_grey, final_mask); //interseccion de deteccion por color y reconocimiento
-        
-        
-        mu = moments(final_mask); // Calculo momentos y posicion
+        cv::bitwise_and(mask, mask_grey, final_mask); //interseccion de deteccion por color y reconocimiento
+
+
+        mu = cv::moments(final_mask); // Calculo momentos y posicion
         if (mu.m00 > 30000) {
-            mc = Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
+            mc = cv::Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
             x = int(mc.x);
             y = int(mc.y);
             area = int(mu.m00);
         } else {
-            mc = Point2f(0, 0);
+            mc = cv::Point2f(0, 0);
             x = 0;
             y = 0;
             area = 0;
@@ -195,7 +197,7 @@ int OCVCam::AnalyzeCam() {
     return 0;
 } //end int OCVCam(void)
 
-void OCVCam::exitCamThread(){
+void OCVCam::exitCamThread() {
 
     runCamThread = false;
 }

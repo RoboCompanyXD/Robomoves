@@ -97,10 +97,10 @@ namespace ControlRobot {
         //robot->setVerboseMode(true);
 
         // Iniciamos la conexion:
-        cout << "Connecting... ";
+        std::cout << "Connecting... ";
         //robot->connect();
         robot->connect(BAUD);
-        cout << "Done!!\n" << endl;
+        std::cout << "Done!!\n" << std::endl;
 
         // Comando 128 start
         robot->start();
@@ -238,7 +238,7 @@ namespace ControlRobot {
      */
     void ControlRobot::imprimirInfo(void) {
         if (estado_anterior != estado_actual) {
-            cout << "ESTADO: " << estado_actual << "         MOTORES: " << motores_actual << endl;
+            std::cout << "ESTADO: " << estado_actual << "         MOTORES: " << motores_actual << std::endl;
         }
     }
 
