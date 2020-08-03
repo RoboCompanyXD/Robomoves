@@ -304,7 +304,7 @@ void RobotStateMachine::statechart_process() {
 
                     /** In this state: set wheels to travel backwards */
                     robot->setMotores_actual(motores_BACK);
-                    
+
                     /** Check exit condition: after moving (backwards) 30cm >> go to Rotate180 */
                     if (robot->sensores.sum_distance < -300) {
                         robot->sensores.sum_angle = 0;
@@ -329,7 +329,7 @@ void RobotStateMachine::statechart_process() {
 
                     /** In this state: turn around 180º*/
                     robot->setMotores_actual(motores_LEFT);
-                    
+
                     /** Check exit condition: after turning 180º >> go to NORMAL_ROAMING */
                     if (robot->sensores.sum_angle > 180) {
                         currentUnDocking_subState = RobotStates::DISABLED;
@@ -505,7 +505,7 @@ void RobotStateMachine::statechart_process() {
 
                                     // Ejecutar funcion de calculo de aproximacion con obstaculo
                                     robot->computeCameraWithObstacle();
-                                    if (robot->lidar->isObstacle == false) { 
+                                    if (robot->lidar->isObstacle == false) {
                                         robot->reproducirSonidoDesbloqueado();
                                         currentFollowingUser_subState = RobotStates::FollowingUser_GettingCloser;
                                         currentState = RobotStates::FollowingUser_GettingCloser;
@@ -574,7 +574,7 @@ void RobotStateMachine::statechart_process() {
 
                                     robot->sensores.sum_angle = 0;
                                     robot->lidar->computeLidarTripPersonOutOfView();
-                                    
+
                                     currentSearchingUser_subState = RobotStates::SearchingUser_TurnToEmptyHallway;
                                     currentState = RobotStates::SearchingUser_TurnToEmptyHallway;
 
@@ -596,7 +596,7 @@ void RobotStateMachine::statechart_process() {
                                     // TODO: resumir lo que se hace en este if
                                     if (robot->sensores.sum_distance > robot->lidar->computedDistance) {
                                         robot->sensores.sum_angle = 0;
-                                        
+
                                         currentSearchingUser_subState = RobotStates::SearchingUser_Look360Around;
                                         currentState = RobotStates::SearchingUser_Look360Around;
                                         break; // Salir inmediatamente del sub-estado
@@ -684,7 +684,7 @@ void RobotStateMachine::statechart_process() {
                              */
 
                             robot->setMotores_actual(motores_BACK);
-                            
+
                             if (robot->sensores.sum_distance < -30) {
                                 CrashAlgorithm_entDef();
                                 break; // Salir inmediatamente del sub-estado
@@ -913,5 +913,25 @@ void RobotStateMachine::statechart_process() {
  * TODO: documentar
  */
 void RobotStateMachine::endBehavior() {
+
+}
+
+bool RobotStateMachine::isEndCondition() {
+    if (currentState == RobotStates::END_STATE_MACHINE) return true;
+    else return false;
+}
+
+void RobotStateMachine::printCurrentStates() {
+
+    std::cout << "currentSuperState: " << RobotStateNames[currentSuperState] << std::endl;
+    std::cout << "currentState: " << RobotStateNames[currentState] << std::endl;
+    std::cout << "currentUnDocking_subState: " << RobotStateNames[currentUnDocking_subState] << std::endl;
+    std::cout << "currentRoaming_subState: " << RobotStateNames[currentRoaming_subState] << std::endl;
+    std::cout << "currentTrackingByCamera_subState: " << RobotStateNames[currentTrackingByCamera_subState] << std::endl;
+    std::cout << "currentSearchingUser_subState: " << RobotStateNames[currentSearchingUser_subState] << std::endl;
+    std::cout << "currentFollowingUser_subState: " << RobotStateNames[currentFollowingUser_subState] << std::endl;
+    std::cout << "currentDodgingObstacle_subState: " << RobotStateNames[currentDodgingObstacle_subState] << std::endl;
+    std::cout << "currentCrashAlgorithm_subState: " << RobotStateNames[currentCrashAlgorithm_subState] << std::endl;
+    std::cout << "currentAvoidingCliff_subState: "<<RobotStateNames[currentAvoidingCliff_subState]<<std::endl;
 
 }

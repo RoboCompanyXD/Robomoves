@@ -60,6 +60,15 @@ namespace ControlRobot {
         thread CamThread;
 
         RobotStateMachine * stateMachine; // TODO: refactor to Smart Pointer
+        
+        /**
+         * Realizar el comportamiento normal del sistema ller sensores, logica de estados, mover actuadores
+         */
+        void doBehavior();
+        
+        /**Terminar comportamiento, destruir objetos
+         */
+        void endBehavior();
 
         /**
          * Initialize controller and stablish connection to the real robot device.
@@ -96,7 +105,8 @@ namespace ControlRobot {
         /**
          * 
          */
-        void logicaEstados(int x, int y, int area, int frame_width, int frame_height);
+        //void logicaEstados(int x, int y, int area, int frame_width, int frame_height);
+        void logicaEstados();
 
         /**
          * TODO: documentar
@@ -262,8 +272,6 @@ namespace ControlRobot {
 
         Actuadores_iCreate actuadores;
 
-        char estado_actual; // TODO: estas variables no tendrían que estar aquí, sino en la clase RobotStateMachine
-        char estado_anterior;
         char motores_actual;
         char motores_anterior;
 

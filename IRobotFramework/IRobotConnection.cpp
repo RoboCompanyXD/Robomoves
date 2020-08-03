@@ -29,6 +29,7 @@ IRobotConnection::IRobotConnection(const char * connectionType) {
 }
 
 IRobotConnection::~IRobotConnection(void) {
+    connection.disconnect();
 
 }
 

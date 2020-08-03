@@ -8,6 +8,8 @@
 #ifndef ROBOT_STATE_MACHINE_H
 #define	ROBOT_STATE_MACHINE_H
 
+#define toname( name ) # name
+
 //#include "../ControlRobot/ControlRobot.h"
 
 namespace ControlRobot {
@@ -21,7 +23,6 @@ namespace ControlRobot {
  * 
  */
 class RobotStateMachine {
-
 public:
 
     /**
@@ -39,6 +40,16 @@ public:
      * TODO: documentar metodo
      */
     void statechart_process();
+
+    /**
+     * TODO: Documentar
+     */
+    bool isEndCondition();
+    
+    /**
+     * TODO: Documentar
+     */
+    void printCurrentStates();
 
 private:
 
@@ -104,6 +115,8 @@ private:
      */
     void endBehavior(); // TODO BORRAR?
 
+
+
 protected:
 
     /**
@@ -115,9 +128,8 @@ protected:
 
     /** Unique identifiers for all the different states of the state machine */
     enum class RobotStates {
-
         DISABLED = 0,
-        IDLE = 1, 
+        IDLE = 1,
         SHUTDOWN,
         DOCKING,
         UN_DOCKING,
@@ -145,7 +157,40 @@ protected:
         /***/AvoidingCliff,
         /*****/TurnAwayFromCliff,
         /*****/LeaveCliffBehind,
-        END_STATE_MACHINE // TODO CRITICAL: REMOVE???
+        END_STATE_MACHINE
+    };
+
+    const char* RobotStateNames[] ={
+        toname(DISABLED),
+        toname(IDLE),
+        toname(SHUTDOWN),
+        toname(DOCKING),
+        toname(UN_DOCKING),
+        /**/toname(TurnAwayFromDock),
+        /**/toname(ExitDock),
+        toname(ROAMING),
+        /**/toname(TrackingByCamera),
+        /*****/toname(SearchingUser),
+        /********/toname(SearchingUser_TurnToEmptyHallway),
+        /********/toname(SearchingUser_Look360Around),
+        /********/toname(SearchingUser_TraverseEmptyHallway),
+        /********/toname(SearchingUser_FindEmptyHallway),
+        /*****/toname(FollowingUser),
+        /********/toname(FollowingUser_GettingCloser),
+        /********/toname(FollowingUser_ObstacleInBetween),
+        /***/toname(DodgingObstacle),
+        /*****/toname(MovingBackFromObstacle),
+        /*****/toname(CrashAlgorithm),
+        /********/toname(CrashAlorithmEndHelperState),
+        /********/toname(CrashAlgorithm_RecoverTrajectory),
+        /********/toname(CrashAlgorithm_GoForwardExtended),
+        /********/toname(CrashAlgorithm_GoForward),
+        /********/toname(CrashAlgorithm_DodgeParallel),
+        /********/toname(CrashAlgorithm_Dodge),
+        /***/toname(AvoidingCliff),
+        /*****/toname(TurnAwayFromCliff),
+        /*****/toname(LeaveCliffBehind),
+        toname(END_STATE_MACHINE)
     };
 
     /** Define the flags for the state-machine */

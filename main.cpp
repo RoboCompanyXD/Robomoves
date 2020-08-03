@@ -23,7 +23,7 @@ ControlRobot::ControlRobot * mRobotController;
 // Variable globale del thread de lidarserver
 thread LidarServerThread;
 
-
+// TODO: Probar esta o buscar una manera de lanzar el codigo del servidor
 void LidarServerThreadFunc() {
     char filename[] = "YdLidarX4PythonInterface/lidarator.py";
     FILE* fp;
@@ -49,12 +49,16 @@ int main(int argc, char** argv) {
     // Inctanciar Controlrobot y pasarle Camara Lidar
     mRobotController = new ControlRobot::ControlRobot();
     
-    while(1){
-        sleep(100);
+    while(!mRobotController.condicionSalida()){
+        
+        mRobotController.doBehavior();
+        
+        
+        //sleep(100);
     }
     
-    CamThread.join();
-    LidarThread.join();
+    mRobotController.endBehavior();
+
 
     return 0;
 }

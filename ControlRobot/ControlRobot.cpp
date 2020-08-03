@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include<bitset>
+#include <thread>
 
 namespace ControlRobot {
 
@@ -46,7 +47,7 @@ namespace ControlRobot {
      * TODO: Doc
      */
     ControlRobot::ControlRobot() {
-       
+
         // Instanciar maquina de estados con una referencia a esta misma clase
         this->stateMachine = new RobotStateMachine(this);
     }
@@ -59,6 +60,57 @@ namespace ControlRobot {
         stateMachine = NULL;
         delete robot;
         robot = NULL;
+    }
+
+    /**
+     * Rutina de funcionamiento normal
+     */
+    ControlRobot::doBehavior() {
+
+        leerSensores();
+        logicaEstados();
+        imprimirInfo();
+        moverActuadores();
+
+    }
+
+    /**
+     * Terminar con todo y destruir objetos
+     */
+    ControlRobot::endBehavior() {
+
+        // Poner el lidar en Idle y esperar
+        lidar->setLidarIdle();
+        sleep(100);
+
+        // Detenel thread del lidar
+        lidar->exitLidarThread();
+
+        // Detener el thread de la camara
+        OCVCam.exitCamThread();
+
+        // Esperar a que los threads teminen
+        CamThread.join();
+        LidarThread.join();
+
+        // Destruir los threads
+        CamThread.~thread();
+        LidarThread.~thread();
+
+        // Stop (deshacer modo full)
+        finalizacion();
+        
+        // Cerrar conexion serie
+        robot->disconnect();
+        
+        // Destruir objeto robot
+        robot->~IRobotConnection();
+        
+        // Destruir maquina de estados
+        RobotStateMachine.~RobotStateMachine();
+        
+        // Cerrar servidor python
+        // TODO: Mandar señal SIGTSTP al programa python
     }
 
     /**
@@ -115,11 +167,9 @@ namespace ControlRobot {
         SonidoDesBloqueado[3] = 5;
         robot->song(1, 4, SonidoDesBloqueado);
 
-        estado_actual = READY;
-        estado_anterior = READY;
         motores_actual = STOP;
         motores_anterior = STOP;
-        
+
         // Instanciar Objetos globales
         cam = new OCVCam();
         lidar = new Lidar();
@@ -236,9 +286,13 @@ namespace ControlRobot {
      * TODO: documentar metodo
      */
     void ControlRobot::imprimirInfo(void) {
-        if (estado_anterior != estado_actual) {
-            cout << "ESTADO: " << estado_actual << "         MOTORES: " << motores_actual << endl;
-        }
+        
+        std::cout <<"ESTADO DE STATECHART: " << endl;
+        
+        RobotStateMachine.printCurrentStates();
+        
+        std::cout <<"ESTADO DE MOTORES: " << motores_actual << endl;
+        
     }
 
     /**
@@ -246,7 +300,9 @@ namespace ControlRobot {
      * - Detallar un poco cada estado
      * - Indicar donde se encuentra la documentación completa (grafo de estados etc)
      */
-    void ControlRobot::logicaEstados(int x, int y, int area, int frame_width, int frame_height) {
+    //void logicaEstados(int x, int y, int area, int frame_width, int frame_height);
+
+    void logicaEstados() {
 
         this->stateMachine->statechart_process();
         /*
@@ -375,7 +431,8 @@ namespace ControlRobot {
      * TODO: documentar
      */
     bool ControlRobot::condicionSalida() {
-        if (sensores.buttons == 0b10000000)return true;
+        //if (sensores.buttons == 0b10000000)return true;
+        if (stateMachine->isEndCondition()) return true;
         return false;
     }
 
